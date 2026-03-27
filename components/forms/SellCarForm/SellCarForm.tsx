@@ -24,6 +24,7 @@ export default function SellCarForm({ sourcePage = '/vende-tu-auto' }: SellCarFo
     formState: { errors },
   } = useForm<SellCarFormData>({
     resolver: zodResolver(sellCarFormSchema),
+    mode: 'onBlur',
     defaultValues: {
       sourcePage,
     },
@@ -97,7 +98,10 @@ export default function SellCarForm({ sourcePage = '/vende-tu-auto' }: SellCarFo
             placeholder="Tu nombre"
           />
           {errors.name && (
-            <span className={styles.error}>{errors.name.message}</span>
+            <span className={styles.error}>
+              <AlertCircle size={16} />
+              {errors.name.message}
+            </span>
           )}
         </div>
 
@@ -111,7 +115,10 @@ export default function SellCarForm({ sourcePage = '/vende-tu-auto' }: SellCarFo
             placeholder="Ej: 2234567890"
           />
           {errors.phone && (
-            <span className={styles.error}>{errors.phone.message}</span>
+            <span className={styles.error}>
+              <AlertCircle size={16} />
+              {errors.phone.message}
+            </span>
           )}
         </div>
       </div>
@@ -126,7 +133,10 @@ export default function SellCarForm({ sourcePage = '/vende-tu-auto' }: SellCarFo
           placeholder="tu@email.com"
         />
         {errors.email && (
-          <span className={styles.error}>{errors.email.message}</span>
+          <span className={styles.error}>
+            <AlertCircle size={16} />
+            {errors.email.message}
+          </span>
         )}
       </div>
 
@@ -141,7 +151,10 @@ export default function SellCarForm({ sourcePage = '/vende-tu-auto' }: SellCarFo
             placeholder="Ej: Ford"
           />
           {errors.carBrand && (
-            <span className={styles.error}>{errors.carBrand.message}</span>
+            <span className={styles.error}>
+              <AlertCircle size={16} />
+              {errors.carBrand.message}
+            </span>
           )}
         </div>
 
@@ -155,7 +168,10 @@ export default function SellCarForm({ sourcePage = '/vende-tu-auto' }: SellCarFo
             placeholder="Ej: Focus"
           />
           {errors.carModel && (
-            <span className={styles.error}>{errors.carModel.message}</span>
+            <span className={styles.error}>
+              <AlertCircle size={16} />
+              {errors.carModel.message}
+            </span>
           )}
         </div>
       </div>

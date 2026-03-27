@@ -1,14 +1,17 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { addImage } from '@/app/actions/images';
 import styles from './ImageUploader.module.css';
 
 export interface ImageData {
   publicId: string;
   url: string;
+  secureUrl: string;
   width: number;
   height: number;
   order: number;
+  format?: string;
 }
 
 interface ImageUploaderProps {
@@ -61,13 +64,23 @@ export default function ImageUploader({
 
         const data = await response.json();
 
-        return {
+        const imageData: ImageData = {
           publicId: data.publicId,
           url: data.url,
+          secureUrl: data.url,
           width: data.width,
           height: data.height,
+          format: data.format,
           order: images.length + index,
-        } as ImageData;
+        };
+
+        // Persist to database
+        const addResult = await addImage(carId, imageData);
+        if (!addResult.success) {
+          throw new Error(addResult.error || 'Error al guardar la imagen');
+        }
+
+        return imageData;
       } catch (err) {
         throw err;
       }

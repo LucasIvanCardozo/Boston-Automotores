@@ -2,16 +2,25 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import AdminCarForm from '@/components/forms/AdminCarForm/AdminCarForm';
+import CompleteCarForm from '@/components/forms/AdminCarForm/CompleteCarForm';
 import { updateCar } from '@/app/actions/cars';
-import type { CarCreateInput } from '@/lib/schemas/car';
+import type { CarCreateInput, CarSpecs } from '@/lib/schemas/car';
 
-interface EditCarFormProps {
+interface EditCarPageClientProps {
   carId: string;
-  initialData: Partial<CarCreateInput>;
+  initialData: Partial<CarCreateInput & { specs: CarSpecs | null }>;
+  existingImages: Array<{ id: string; url: string; publicId: string; order: number; width?: number; height?: number }>;
+  existingTechnicalSheet?: { publicId: string; url: string; filename: string };
+  carName: string;
 }
 
-export default function EditCarForm({ carId, initialData }: EditCarFormProps) {
+export default function EditCarPageClient({
+  carId,
+  initialData,
+  existingImages,
+  existingTechnicalSheet,
+  carName,
+}: EditCarPageClientProps) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +38,6 @@ export default function EditCarForm({ carId, initialData }: EditCarFormProps) {
         return;
       }
 
-      // Redirect to the cars list on success
       router.push('/admin/autos');
       router.refresh();
     } catch (err) {
@@ -40,6 +48,15 @@ export default function EditCarForm({ carId, initialData }: EditCarFormProps) {
 
   return (
     <div>
+      <header style={{ marginBottom: 'var(--space-6)' }}>
+        <h1 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'bold', margin: 0 }}>
+          Editar Vehículo
+        </h1>
+        <p style={{ color: 'var(--color-text-muted)', marginTop: 'var(--space-1)' }}>
+          {carName}
+        </p>
+      </header>
+
       {error && (
         <div style={{
           padding: 'var(--space-4)',
@@ -53,9 +70,12 @@ export default function EditCarForm({ carId, initialData }: EditCarFormProps) {
         </div>
       )}
 
-      <AdminCarForm
+      <CompleteCarForm
+        carId={carId}
         initialData={initialData}
         onSubmit={handleSubmit}
+        existingImages={existingImages}
+        existingTechnicalSheet={existingTechnicalSheet}
         isLoading={isLoading}
       />
     </div>

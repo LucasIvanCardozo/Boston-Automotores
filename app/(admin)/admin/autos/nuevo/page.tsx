@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import SimpleCarForm from '@/components/forms/AdminCarForm/SimpleCarForm';
+import CompleteCarForm from '@/components/forms/AdminCarForm/CompleteCarForm';
 import { createCar } from '@/app/actions/cars';
 
 export default function NuevoAutoPage() {
@@ -23,9 +23,14 @@ export default function NuevoAutoPage() {
         return;
       }
 
-      // Redirect to the cars list on success
-      router.push('/admin/autos');
-      router.refresh();
+      // Redirect to the edit page for the newly created car to add images
+      if (result.data?.id) {
+        router.push(`/admin/autos/${result.data.id}/editar`);
+        router.refresh();
+      } else {
+        router.push('/admin/autos');
+        router.refresh();
+      }
     } catch (err) {
       setError('Error inesperado. Por favor intenta de nuevo.');
       setIsLoading(false);
@@ -56,7 +61,7 @@ export default function NuevoAutoPage() {
         </div>
       )}
 
-      <SimpleCarForm />
+      <CompleteCarForm onSubmit={handleSubmit} isLoading={isLoading} />
     </div>
   );
 }

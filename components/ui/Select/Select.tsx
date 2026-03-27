@@ -1,6 +1,7 @@
 'use client';
 
 import { forwardRef, type SelectHTMLAttributes, type ReactNode } from 'react';
+import { AlertCircle } from 'lucide-react';
 import styles from './Select.module.css';
 
 export interface SelectOption {
@@ -16,6 +17,7 @@ export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement
   options: SelectOption[];
   placeholder?: string;
   leftIcon?: ReactNode;
+  showErrorIcon?: boolean;
 }
 
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
@@ -27,6 +29,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
       options,
       placeholder,
       leftIcon,
+      showErrorIcon = true,
       className = '',
       id,
       ...props
@@ -78,6 +81,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
         </div>
         {error && (
           <span id={`${selectId}-error`} className={styles.error} role="alert">
+            {showErrorIcon && <AlertCircle size={16} className={styles.errorIcon} />}
             {error}
           </span>
         )}

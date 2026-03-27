@@ -24,6 +24,7 @@ export default function ContactForm({ sourcePage = '/contacto' }: ContactFormPro
     formState: { errors },
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
+    mode: 'onBlur',
     defaultValues: {
       sourcePage,
     },
@@ -96,7 +97,10 @@ export default function ContactForm({ sourcePage = '/contacto' }: ContactFormPro
           placeholder="Tu nombre"
         />
         {errors.name && (
-          <span className={styles.error}>{errors.name.message}</span>
+          <span className={styles.error}>
+            <AlertCircle size={16} />
+            {errors.name.message}
+          </span>
         )}
       </div>
 
@@ -111,7 +115,10 @@ export default function ContactForm({ sourcePage = '/contacto' }: ContactFormPro
             placeholder="tu@email.com"
           />
           {errors.email && (
-            <span className={styles.error}>{errors.email.message}</span>
+            <span className={styles.error}>
+              <AlertCircle size={16} />
+              {errors.email.message}
+            </span>
           )}
         </div>
 
@@ -125,7 +132,10 @@ export default function ContactForm({ sourcePage = '/contacto' }: ContactFormPro
             placeholder="Ej: 2234567890"
           />
           {errors.phone && (
-            <span className={styles.error}>{errors.phone.message}</span>
+            <span className={styles.error}>
+              <AlertCircle size={16} />
+              {errors.phone.message}
+            </span>
           )}
         </div>
       </div>
@@ -140,7 +150,10 @@ export default function ContactForm({ sourcePage = '/contacto' }: ContactFormPro
           placeholder="¿En qué podemos ayudarte?"
         />
         {errors.message && (
-          <span className={styles.error}>{errors.message.message}</span>
+          <span className={styles.error}>
+            <AlertCircle size={16} />
+            {errors.message.message}
+          </span>
         )}
       </div>
 

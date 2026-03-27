@@ -66,6 +66,7 @@
 
 .inputError {
   border-color: var(--color-error);
+  background-color: #FEF2F2;
 }
 
 .inputError:focus {
@@ -73,6 +74,9 @@
 }
 
 .error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
   font-size: var(--font-size-sm);
   color: var(--color-error);
 }

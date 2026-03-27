@@ -25,6 +25,9 @@ model Car {
   images         Image[]
   technicalSheet TechnicalSheet?
 
+  // Technical specifications (JSON)
+  specs Json?
+
   // Soft delete
   deletedAt DateTime?
 

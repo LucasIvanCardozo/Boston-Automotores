@@ -1,7 +1,42 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getAdminCar, updateCar } from '@/app/actions/cars';
-import EditCarForm from './EditCarForm';
+import { getAdminCar } from '@/app/actions/cars';
+import EditCarPageClient from './EditCarPageClient';
+import type { CarCreateInput, CarSpecs } from '@/lib/schemas/car';
+
+// Extended car type with relations
+interface CarWithRelations {
+  id: string;
+  brand: string;
+  model: string;
+  year: number;
+  price: unknown;
+  mileage: number;
+  fuelType: 'nafta' | 'diesel' | 'electrico' | 'hibrido' | 'gnc';
+  transmission: 'manual' | 'automatica' | 'cvt';
+  status: 'available' | 'sold' | 'reserved';
+  featured: boolean;
+  description: string | null;
+  features: string[];
+  specs: CarSpecs | unknown | null;
+  deletedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+  images: Array<{
+    id: string;
+    url: string;
+    secureUrl: string;
+    publicId?: string;
+    width?: number;
+    height?: number;
+    order?: number;
+  }>;
+  technicalSheet?: {
+    publicId: string;
+    url: string;
+    filename: string;
+  } | null;
+}
 
 export const metadata: Metadata = {
   title: 'Editar Vehículo | Boston Automotores',
@@ -22,36 +57,51 @@ export default async function EditCarPage({ params }: PageProps) {
     notFound();
   }
 
-  const car = result.data;
+  // Cast to our extended type
+  const car = result.data as CarWithRelations;
 
   // Transform the car data to match the form expected format
-  const initialData = {
+  const initialData: Partial<CarCreateInput & { specs?: CarSpecs | null }> = {
     brand: car.brand,
     model: car.model,
     year: car.year,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    price: Number(car.price as any),
+    price: typeof car.price === 'object' && car.price !== null 
+      ? Number((car.price as { toString: () => string }).toString())
+      : Number(car.price),
     mileage: car.mileage,
-    fuelType: car.fuelType as 'nafta' | 'diesel' | 'electrico' | 'hibrido' | 'gnc',
-    transmission: car.transmission as 'manual' | 'automatica' | 'cvt',
-    status: car.status as 'available' | 'sold' | 'reserved',
+    fuelType: car.fuelType,
+    transmission: car.transmission,
+    status: car.status,
     featured: car.featured,
     description: car.description || '',
     features: car.features || [],
+    specs: car.specs && car.specs !== null ? car.specs as CarSpecs : undefined,
   };
 
-  return (
-    <div>
-      <header style={{ marginBottom: 'var(--space-6)' }}>
-        <h1 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'bold', margin: 0 }}>
-          Editar Vehículo
-        </h1>
-        <p style={{ color: 'var(--color-text-muted)', marginTop: 'var(--space-1)' }}>
-          {car.brand} {car.model} ({car.year})
-        </p>
-      </header>
+  // Transform images
+  const existingImages = car.images.map((img, idx) => ({
+    id: img.id,
+    url: img.url,
+    publicId: img.publicId || img.secureUrl,
+    order: img.order ?? idx,
+    width: img.width || 0,
+    height: img.height || 0,
+  }));
 
-      <EditCarForm carId={id} initialData={initialData} />
-    </div>
+  // Transform technical sheet
+  const existingTechnicalSheet = car.technicalSheet ? {
+    publicId: car.technicalSheet.publicId,
+    url: car.technicalSheet.url,
+    filename: car.technicalSheet.filename,
+  } : undefined;
+
+  return (
+    <EditCarPageClient
+      carId={id}
+      initialData={initialData}
+      existingImages={existingImages}
+      existingTechnicalSheet={existingTechnicalSheet}
+      carName={`${car.brand} ${car.model} (${car.year})`}
+    />
   );
 }

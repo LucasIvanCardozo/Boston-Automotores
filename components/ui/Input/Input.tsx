@@ -1,6 +1,7 @@
 'use client';
 
 import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react';
+import { AlertCircle } from 'lucide-react';
 import styles from './Input.module.css';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -9,6 +10,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   hint?: string;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
+  showErrorIcon?: boolean;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -19,6 +21,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       hint,
       leftIcon,
       rightIcon,
+      showErrorIcon = true,
       className = '',
       id,
       ...props
@@ -49,6 +52,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         </div>
         {error && (
           <span id={`${inputId}-error`} className={styles.error} role="alert">
+            {showErrorIcon && <AlertCircle size={16} className={styles.errorIcon} />}
             {error}
           </span>
         )}

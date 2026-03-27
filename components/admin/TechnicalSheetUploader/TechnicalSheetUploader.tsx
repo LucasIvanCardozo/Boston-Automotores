@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Button from '@/components/ui/Button/Button';
+import { uploadTechnicalSheet, deleteTechnicalSheet } from '@/app/actions/documents';
 import styles from './TechnicalSheetUploader.module.css';
 
 interface TechnicalSheetUploaderProps {
   carId: string;
   initialSheet?: {
+    publicId: string;
     url: string;
     filename: string;
   };
@@ -24,11 +26,25 @@ export default function TechnicalSheetUploader({
   const [error, setError] = useState<string | null>(null);
   const [uploadedFile, setUploadedFile] = useState(initialSheet || null);
 
+  // Debug: Log carId when it changes
+  useEffect(() => {
+    console.log('[TechnicalSheetUploader] Mounted/Updated with carId:', JSON.stringify(carId), 'initialSheet:', !!initialSheet);
+  }, [carId, initialSheet]);
+
   const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
   const ALLOWED_TYPE = 'application/pdf';
 
   const handleFileSelect = useCallback(async (file: File | null) => {
     if (!file) return;
+
+    // CRITICAL: Validate carId before upload
+    console.log('[TechnicalSheetUploader] handleFileSelect called with carId:', JSON.stringify(carId), 'file:', file.name);
+    
+    if (!carId || typeof carId !== 'string' || carId.trim() === '') {
+      setError('Error: ID de vehículo no disponible. Por favor recarga la página.');
+      console.error('[TechnicalSheetUploader] ERROR: carId is invalid:', carId);
+      return;
+    }
 
     if (file.type !== ALLOWED_TYPE) {
       setError('Solo se permiten archivos PDF');
@@ -44,34 +60,20 @@ export default function TechnicalSheetUploader({
     setIsUploading(true);
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('carId', carId);
-      formData.append('type', 'technical-sheet');
+      console.log('[TechnicalSheetUploader] Calling uploadTechnicalSheet with carId:', carId);
+      const result = await uploadTechnicalSheet(carId, file);
 
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al subir el archivo');
+      if (!result.success) {
+        throw new Error(result.error || 'Error al subir el archivo');
       }
 
-      const data = await response.json();
-
       const sheetData = {
-        publicId: data.publicId,
-        url: data.url,
+        publicId: result.document?.publicId || '',
+        url: result.document?.url || '',
         filename: file.name,
       };
 
-      setUploadedFile({
-        url: data.url,
-        filename: file.name,
-      });
-
+      setUploadedFile(sheetData);
       onUploadComplete?.(sheetData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al subir la ficha técnica');
@@ -84,20 +86,10 @@ export default function TechnicalSheetUploader({
     if (!uploadedFile) return;
 
     try {
-      const response = await fetch('/api/upload', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          carId,
-          type: 'technical-sheet',
-        }),
-      });
+      const result = await deleteTechnicalSheet(carId);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al eliminar el archivo');
+      if (!result.success) {
+        throw new Error(result.error || 'Error al eliminar el archivo');
       }
 
       setUploadedFile(null);
@@ -154,7 +146,7 @@ export default function TechnicalSheetUploader({
           type="file"
           id="technical-sheet-upload"
           className={styles.fileInput}
-          accept=".pdf,application/pdf"
+          accept=".pdf"
           onChange={(e) => handleFileSelect(e.target.files?.[0] || null)}
           disabled={isUploading}
         />

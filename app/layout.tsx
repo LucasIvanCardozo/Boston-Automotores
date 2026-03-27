@@ -1,6 +1,4 @@
 import type { Metadata } from 'next';
-import Header from '@/components/layout/Header/Header';
-import Footer from '@/components/layout/Footer/Footer';
 import GoogleAnalytics from '@/components/analytics/GoogleAnalytics';
 import './globals.css';
 
@@ -75,9 +73,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
       </head>
       <body>
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        {children}
         
         {/* Google Analytics - only loads in production */}
         {gaId && <GoogleAnalytics gaId={gaId} />}

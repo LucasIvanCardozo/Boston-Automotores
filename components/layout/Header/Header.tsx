@@ -20,10 +20,6 @@ export default function Header() {
         </Link>
 
         <Navigation />
-
-        <Link href="/catalogo" className={styles.ctaButton}>
-          Ver Catálogo
-        </Link>
       </div>
     </header>
   );

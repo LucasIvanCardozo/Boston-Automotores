@@ -53,7 +53,7 @@ const nextConfig = {
           },
         ],
       },
-    ];
+    ]
   },
 
   // Redirects for common paths
@@ -66,18 +66,12 @@ const nextConfig = {
         destination: '/api/admin/:path*',
         permanent: false,
       },
-    ];
+    ]
   },
 
   // Static export configuration (optional - uncomment for static hosting)
   // output: 'export',
   // trailingSlash: true,
+}
 
-  // Experimental features for performance
-  experimental: {
-    // Optimize package imports for smaller bundles
-    optimizePackageImports: ['@prisma/client', 'cloudinary'],
-  },
-};
-
-export default nextConfig;
+export default nextConfig

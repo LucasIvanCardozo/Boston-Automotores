@@ -3,8 +3,8 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { carCreateSchema, carUpdateSchema, carDeleteSchema, toggleFeaturedSchema } from '@/lib/schemas/car';
-import type { CarCreateInput, CarUpdateInput } from '@/lib/schemas/car';
+import { carCreateSchema, carUpdateSchema, carDeleteSchema, toggleFeaturedSchema, carSpecsSchema } from '@/lib/schemas/car';
+import type { CarCreateInput, CarUpdateInput, CarSpecs } from '@/lib/schemas/car';
 import { requireAuth } from '@/lib/auth';
 
 export interface CarResult {
@@ -29,6 +29,7 @@ export interface CarListResult {
     featured: boolean;
     description: string | null;
     features: string[];
+    specs: CarSpecs | null;
     deletedAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
@@ -39,6 +40,63 @@ export interface CarListResult {
     }>;
   }>;
   total?: number;
+}
+
+/**
+ * Parse specs from FormData (handles both JSON string and individual fields)
+ */
+function parseSpecsFromFormData(formData: FormData): CarSpecs | undefined {
+  const specsStr = formData.get('specs');
+  
+  if (specsStr && typeof specsStr === 'string') {
+    try {
+      const parsed = JSON.parse(specsStr);
+      const validation = carSpecsSchema.safeParse(parsed);
+      if (validation.success) {
+        return validation.data;
+      }
+    } catch {
+      // If parsing fails, try to build from individual fields
+    }
+  }
+  
+  // Fallback: build specs from individual fields
+  const sensors = formData.getAll('specs.sensors');
+  const securityFeatures = formData.getAll('specs.securityFeatures');
+  const comfortFeatures = formData.getAll('specs.comfortFeatures');
+  
+  const specs: Partial<CarSpecs> = {};
+  
+  const engine = formData.get('specs.engine');
+  if (engine) specs.engine = engine as string;
+  
+  const steering = formData.get('specs.steering');
+  if (steering) specs.steering = steering as CarSpecs['steering'];
+  
+  const color = formData.get('specs.color');
+  if (color) specs.color = color as string;
+  
+  const doors = formData.get('specs.doors');
+  if (doors) specs.doors = parseInt(doors as string, 10);
+  
+  const wheels = formData.get('specs.wheels');
+  if (wheels) specs.wheels = wheels as string;
+  
+  const wheelSize = formData.get('specs.wheelSize');
+  if (wheelSize) specs.wheelSize = wheelSize as string;
+  
+  const audioSystem = formData.get('specs.audioSystem');
+  if (audioSystem) specs.audioSystem = audioSystem as string;
+  
+  const headlights = formData.get('specs.headlights');
+  if (headlights) specs.headlights = headlights as CarSpecs['headlights'];
+  
+  if (sensors.length > 0) specs.sensors = sensors as string[];
+  if (securityFeatures.length > 0) specs.securityFeatures = securityFeatures as string[];
+  if (comfortFeatures.length > 0) specs.comfortFeatures = comfortFeatures as string[];
+  
+  const validation = carSpecsSchema.safeParse(specs);
+  return validation.success ? validation.data : undefined;
 }
 
 /**
@@ -62,8 +120,16 @@ export async function createCar(formData: FormData): Promise<CarResult> {
     status: (formData.get('status') as CarCreateInput['status']) || 'available',
     featured: formData.get('featured') === 'true',
     description: (formData.get('description') as string) || undefined,
-    features: [],
+    features: formData.get('features')
+      ? (JSON.parse(formData.get('features') as string) as string[])
+      : [],
   };
+
+  // Parse specs from formData
+  const specs = parseSpecsFromFormData(formData);
+  if (specs) {
+    rawData.specs = specs;
+  }
 
   const validation = carCreateSchema.safeParse(rawData);
   if (!validation.success) {
@@ -102,21 +168,32 @@ export async function updateCar(id: string, formData: FormData): Promise<CarResu
     return { success: false, error: 'ID de vehículo inválido' };
   }
 
-  const rawData: CarUpdateInput = {
+  // Build raw data object - uses explicit type to bypass TS inference issues with partial types
+  // The schema validation at runtime is what matters
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rawData: Record<string, any> = {
     brand: formData.get('brand') as string,
     model: formData.get('model') as string,
     year: formData.get('year') ? parseInt(formData.get('year') as string, 10) : undefined,
-    price: formData.get('price') ? parseInt(formData.get('price') as string, 10) : undefined,
+    price: formData.get('price') !== null && formData.get('price') !== ''
+      ? parseInt(formData.get('price') as string, 10)
+      : undefined,
     mileage: formData.get('mileage') ? parseInt(formData.get('mileage') as string, 10) : undefined,
-    fuelType: formData.get('fuelType') as CarUpdateInput['fuelType'],
-    transmission: formData.get('transmission') as CarUpdateInput['transmission'],
-    status: (formData.get('status') as CarUpdateInput['status']) || undefined,
+    fuelType: formData.get('fuelType') as string,
+    transmission: formData.get('transmission') as string,
+    status: formData.get('status') as string || undefined,
     featured: formData.get('featured') === 'true' ? true : formData.get('featured') === 'false' ? false : undefined,
     description: formData.get('description') as string || undefined,
     features: formData.get('features')
       ? (JSON.parse(formData.get('features') as string) as string[])
       : undefined,
   };
+
+  // Parse specs from formData
+  const specs = parseSpecsFromFormData(formData);
+  if (specs) {
+    rawData.specs = specs;
+  }
 
   const validation = carUpdateSchema.safeParse(rawData);
   if (!validation.success) {
@@ -134,7 +211,8 @@ export async function updateCar(id: string, formData: FormData): Promise<CarResu
     revalidatePath(`/admin/autos/${id}/editar`);
     revalidatePath('/catalogo');
 
-    return { success: true, data: car };
+    // Don't return car data - contains Decimal fields that can't serialize to client
+    return { success: true };
   } catch (error) {
     console.error('Error updating car:', error);
     return { success: false, error: 'Error al actualizar el vehículo' };
@@ -263,9 +341,11 @@ export async function getAdminCars(options?: {
     ]);
 
     // Convert Decimal to number for client components
-    const serializedCars = cars.map(car => ({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const serializedCars = cars.map((car: any) => ({
       ...car,
       price: Number(car.price),
+      specs: car.specs as CarSpecs | null,
     }));
 
     return { success: true, cars: serializedCars, total };

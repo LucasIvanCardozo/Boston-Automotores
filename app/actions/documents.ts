@@ -18,6 +18,14 @@ export async function uploadTechnicalSheet(
   carId: string,
   file: File
 ): Promise<DocumentResult> {
+  // CRITICAL: Validate carId before ANY operation
+  console.log('[uploadTechnicalSheet] Received carId:', JSON.stringify(carId), 'type:', typeof carId);
+  
+  if (!carId || typeof carId !== 'string' || carId.trim() === '') {
+    console.error('[uploadTechnicalSheet] ERROR: Invalid or missing carId', { carId });
+    return { success: false, error: 'ID de vehículo inválido o faltante' };
+  }
+
   try {
     await requireAuth();
   } catch {
@@ -72,6 +80,11 @@ export async function uploadTechnicalSheet(
 
     // Generate public ID
     const publicId = generateTechnicalSheetPublicId(carId);
+    console.log('[uploadTechnicalSheet] Uploading with:', {
+      carId,
+      publicId,
+      folder: `client-boston/documents`,
+    });
 
     // Upload to Cloudinary
     const result = await uploadDocument(dataUri, {

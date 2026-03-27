@@ -85,6 +85,7 @@ export type CarCountAggregateOutputType = {
   featured: number
   description: number
   features: number
+  specs: number
   deletedAt: number
   createdAt: number
   updatedAt: number
@@ -151,6 +152,7 @@ export type CarCountAggregateInputType = {
   featured?: true
   description?: true
   features?: true
+  specs?: true
   deletedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -256,6 +258,7 @@ export type CarGroupByOutputType = {
   featured: boolean
   description: string | null
   features: string[]
+  specs: runtime.JsonValue | null
   deletedAt: Date | null
   createdAt: Date
   updatedAt: Date
@@ -297,6 +300,7 @@ export type CarWhereInput = {
   featured?: Prisma.BoolFilter<"Car"> | boolean
   description?: Prisma.StringNullableFilter<"Car"> | string | null
   features?: Prisma.StringNullableListFilter<"Car">
+  specs?: Prisma.JsonNullableFilter<"Car">
   deletedAt?: Prisma.DateTimeNullableFilter<"Car"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Car"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Car"> | Date | string
@@ -317,6 +321,7 @@ export type CarOrderByWithRelationInput = {
   featured?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   features?: Prisma.SortOrder
+  specs?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -340,6 +345,7 @@ export type CarWhereUniqueInput = Prisma.AtLeast<{
   featured?: Prisma.BoolFilter<"Car"> | boolean
   description?: Prisma.StringNullableFilter<"Car"> | string | null
   features?: Prisma.StringNullableListFilter<"Car">
+  specs?: Prisma.JsonNullableFilter<"Car">
   deletedAt?: Prisma.DateTimeNullableFilter<"Car"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Car"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Car"> | Date | string
@@ -360,6 +366,7 @@ export type CarOrderByWithAggregationInput = {
   featured?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   features?: Prisma.SortOrder
+  specs?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -386,6 +393,7 @@ export type CarScalarWhereWithAggregatesInput = {
   featured?: Prisma.BoolWithAggregatesFilter<"Car"> | boolean
   description?: Prisma.StringNullableWithAggregatesFilter<"Car"> | string | null
   features?: Prisma.StringNullableListFilter<"Car">
+  specs?: Prisma.JsonNullableWithAggregatesFilter<"Car">
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Car"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Car"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Car"> | Date | string
@@ -404,6 +412,7 @@ export type CarCreateInput = {
   featured?: boolean
   description?: string | null
   features?: Prisma.CarCreatefeaturesInput | string[]
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -424,6 +433,7 @@ export type CarUncheckedCreateInput = {
   featured?: boolean
   description?: string | null
   features?: Prisma.CarCreatefeaturesInput | string[]
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -444,6 +454,7 @@ export type CarUpdateInput = {
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.CarUpdatefeaturesInput | string[]
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -464,6 +475,7 @@ export type CarUncheckedUpdateInput = {
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.CarUpdatefeaturesInput | string[]
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -484,6 +496,7 @@ export type CarCreateManyInput = {
   featured?: boolean
   description?: string | null
   features?: Prisma.CarCreatefeaturesInput | string[]
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -502,6 +515,7 @@ export type CarUpdateManyMutationInput = {
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.CarUpdatefeaturesInput | string[]
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -520,6 +534,7 @@ export type CarUncheckedUpdateManyInput = {
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.CarUpdatefeaturesInput | string[]
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -546,6 +561,7 @@ export type CarCountOrderByAggregateInput = {
   featured?: Prisma.SortOrder
   description?: Prisma.SortOrder
   features?: Prisma.SortOrder
+  specs?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -700,6 +716,7 @@ export type CarCreateWithoutImagesInput = {
   featured?: boolean
   description?: string | null
   features?: Prisma.CarCreatefeaturesInput | string[]
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -719,6 +736,7 @@ export type CarUncheckedCreateWithoutImagesInput = {
   featured?: boolean
   description?: string | null
   features?: Prisma.CarCreatefeaturesInput | string[]
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -754,6 +772,7 @@ export type CarUpdateWithoutImagesInput = {
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.CarUpdatefeaturesInput | string[]
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -773,6 +792,7 @@ export type CarUncheckedUpdateWithoutImagesInput = {
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.CarUpdatefeaturesInput | string[]
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -792,6 +812,7 @@ export type CarCreateWithoutTechnicalSheetInput = {
   featured?: boolean
   description?: string | null
   features?: Prisma.CarCreatefeaturesInput | string[]
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -811,6 +832,7 @@ export type CarUncheckedCreateWithoutTechnicalSheetInput = {
   featured?: boolean
   description?: string | null
   features?: Prisma.CarCreatefeaturesInput | string[]
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -846,6 +868,7 @@ export type CarUpdateWithoutTechnicalSheetInput = {
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.CarUpdatefeaturesInput | string[]
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -865,6 +888,7 @@ export type CarUncheckedUpdateWithoutTechnicalSheetInput = {
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.CarUpdatefeaturesInput | string[]
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -915,6 +939,7 @@ export type CarSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   featured?: boolean
   description?: boolean
   features?: boolean
+  specs?: boolean
   deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -936,6 +961,7 @@ export type CarSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
   featured?: boolean
   description?: boolean
   features?: boolean
+  specs?: boolean
   deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -954,6 +980,7 @@ export type CarSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extension
   featured?: boolean
   description?: boolean
   features?: boolean
+  specs?: boolean
   deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -972,12 +999,13 @@ export type CarSelectScalar = {
   featured?: boolean
   description?: boolean
   features?: boolean
+  specs?: boolean
   deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CarOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "brand" | "model" | "year" | "price" | "mileage" | "fuelType" | "transmission" | "status" | "featured" | "description" | "features" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["car"]>
+export type CarOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "brand" | "model" | "year" | "price" | "mileage" | "fuelType" | "transmission" | "status" | "featured" | "description" | "features" | "specs" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["car"]>
 export type CarInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   images?: boolean | Prisma.Car$imagesArgs<ExtArgs>
   technicalSheet?: boolean | Prisma.Car$technicalSheetArgs<ExtArgs>
@@ -1005,6 +1033,7 @@ export type $CarPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     featured: boolean
     description: string | null
     features: string[]
+    specs: runtime.JsonValue | null
     deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -1445,6 +1474,7 @@ export interface CarFieldRefs {
   readonly featured: Prisma.FieldRef<"Car", 'Boolean'>
   readonly description: Prisma.FieldRef<"Car", 'String'>
   readonly features: Prisma.FieldRef<"Car", 'String[]'>
+  readonly specs: Prisma.FieldRef<"Car", 'Json'>
   readonly deletedAt: Prisma.FieldRef<"Car", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Car", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Car", 'DateTime'>

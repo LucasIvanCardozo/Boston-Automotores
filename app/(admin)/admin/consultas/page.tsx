@@ -1,11 +1,7 @@
-import { Suspense } from 'react';
 import type { Metadata } from 'next';
-import { getLeads, updateLeadStatus, deleteLead } from '@/app/actions/leads';
-import AdminTable from '@/components/admin/AdminTable/AdminTable';
+import { getLeads } from '@/app/actions/leads';
+import ConsultasTable from './ConsultasTable';
 import Button from '@/components/ui/Button/Button';
-import Badge from '@/components/ui/Badge/Badge';
-import Modal from '@/components/ui/Modal/Modal';
-import LeadDetails from './LeadDetails';
 import styles from './consultas.module.css';
 
 export const metadata: Metadata = {
@@ -31,30 +27,6 @@ interface LeadRow {
   carMileage?: number;
   message?: string;
 }
-
-interface Column {
-  key: string;
-  header: string;
-  sortable?: boolean;
-  render?: (row: LeadRow) => React.ReactNode;
-}
-
-const statusVariants: Record<LeadStatus, 'primary' | 'warning' | 'success'> = {
-  new: 'primary',
-  contacted: 'warning',
-  closed: 'success',
-};
-
-const statusLabels: Record<LeadStatus, string> = {
-  new: 'Nueva',
-  contacted: 'Contactada',
-  closed: 'Cerrada',
-};
-
-const typeLabels: Record<LeadType, string> = {
-  sell_car: 'Vende su auto',
-  contact: 'Contacto',
-};
 
 interface PageProps {
   searchParams: Promise<{
@@ -96,64 +68,6 @@ export default async function AdminLeadsPage({ searchParams }: PageProps) {
 
   const total = result.total || 0;
   const totalPages = Math.ceil(total / 20);
-
-  const columns: Column[] = [
-    {
-      key: 'createdAt',
-      header: 'Fecha',
-      sortable: true,
-      render: (row) => (
-        <span className={styles.date}>
-          {new Date(row.createdAt).toLocaleDateString('es-AR', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric',
-          })}
-        </span>
-      ),
-    },
-    {
-      key: 'type',
-      header: 'Tipo',
-      render: (row) => (
-        <Badge variant={row.type === 'sell_car' ? 'info' : 'default'}>
-          {typeLabels[row.type]}
-        </Badge>
-      ),
-    },
-    {
-      key: 'name',
-      header: 'Nombre',
-      render: (row) => <span className={styles.name}>{row.name}</span>,
-    },
-    {
-      key: 'email',
-      header: 'Email',
-      render: (row) => (
-        <a href={`mailto:${row.email}`} className={styles.email}>
-          {row.email}
-        </a>
-      ),
-    },
-    {
-      key: 'phone',
-      header: 'Teléfono',
-      render: (row) => (
-        <a href={`tel:${row.phone}`} className={styles.phone}>
-          {row.phone}
-        </a>
-      ),
-    },
-    {
-      key: 'status',
-      header: 'Estado',
-      render: (row) => (
-        <Badge variant={statusVariants[row.status]}>
-          {statusLabels[row.status]}
-        </Badge>
-      ),
-    },
-  ];
 
   const buildUrl = (pageNum: number) => {
     const params = new URLSearchParams();
@@ -210,12 +124,7 @@ export default async function AdminLeadsPage({ searchParams }: PageProps) {
       </div>
 
       <div className={styles.tableWrapper}>
-        <AdminTable
-          columns={columns}
-          data={leads}
-          keyExtractor={(row) => row.id}
-          emptyMessage="No hay consultas que mostrar"
-        />
+        <ConsultasTable leads={leads} />
       </div>
 
       {totalPages > 1 && (
