@@ -1,10 +1,10 @@
-'use client';
+'use client'
 
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import Image from 'next/image';
-import { ArrowRight, Car } from 'lucide-react';
-import styles from './Hero.module.css';
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import Image from 'next/image'
+import { ArrowRight, Car } from 'lucide-react'
+import styles from './Hero.module.css'
 
 export default function Hero() {
   return (
@@ -14,6 +14,7 @@ export default function Hero() {
           src="/assets/default.jpg"
           alt="Boston Automotores - Concesionaria de autos"
           fill
+          loading="eager"
           priority
           className={styles.backgroundImage}
           sizes="100vw"
@@ -28,13 +29,8 @@ export default function Hero() {
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className={styles.textContent}
         >
-          <h1 className={styles.title}>
-            Tu próximo auto te está esperando
-          </h1>
-          <p className={styles.subtitle}>
-            Más de 20 años vendiendo autos usados de calidad en Mar del Plata.
-            Financiación disponible y garantía incluida.
-          </p>
+          <h1 className={styles.title}>Tu próximo auto te está esperando</h1>
+          <p className={styles.subtitle}>Más de 20 años vendiendo autos usados de calidad en Mar del Plata. Financiación disponible y garantía incluida.</p>
 
           <div className={styles.ctaGroup}>
             <Link href="/catalogo" className={styles.primaryButton}>
@@ -64,5 +60,5 @@ export default function Hero() {
         </motion.div>
       </div>
     </section>
-  );
+  )
 }
