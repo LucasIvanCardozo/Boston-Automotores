@@ -144,7 +144,7 @@
   }
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .toggleButton {
     display: none;
   }
@@ -167,11 +167,5 @@
 
   .actions {
     display: none;
-  }
-}
-
-@media (min-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(4, 1fr);
   }
 }

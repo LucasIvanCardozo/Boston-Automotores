@@ -36,8 +36,8 @@
 }
 
 .iconWrapper {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%);
   backdrop-filter: blur(10px);
   border-radius: 50%;
@@ -53,7 +53,7 @@
 }
 
 .title {
-  font-size: var(--font-size-4xl);
+  font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-inverse);
   margin-bottom: var(--space-4);
@@ -61,7 +61,7 @@
 }
 
 .subtitle {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   color: rgba(255, 255, 255, 0.9);
   margin-bottom: var(--space-8);
   line-height: var(--line-height-relaxed);
@@ -70,7 +70,8 @@
 
 .stats {
   display: flex;
-  gap: var(--space-8);
+  flex-direction: column;
+  gap: var(--space-4);
   margin-bottom: var(--space-10);
   flex-wrap: wrap;
   justify-content: center;
@@ -81,7 +82,7 @@
   align-items: center;
   gap: var(--space-2);
   color: rgba(255, 255, 255, 0.85);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
 }
 
@@ -93,10 +94,10 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-4) var(--space-8);
+  padding: var(--space-3) var(--space-6);
   background: var(--color-text-inverse);
   color: var(--color-primary);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
   font-weight: var(--font-weight-bold);
   text-decoration: none;
   border-radius: var(--radius-full);
@@ -110,31 +111,31 @@
   background: #ffffff;
 }
 
-@media (max-width: 640px) {
+@media (min-width: 768px) {
   .title {
-    font-size: var(--font-size-3xl);
+    font-size: var(--font-size-4xl);
   }
 
   .subtitle {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-xl);
   }
 
   .iconWrapper {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
   }
 
   .stats {
-    flex-direction: column;
-    gap: var(--space-4);
+    flex-direction: row;
+    gap: var(--space-8);
   }
 
   .statItem {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
   }
 
   .ctaButton {
-    padding: var(--space-3) var(--space-6);
-    font-size: var(--font-size-base);
+    padding: var(--space-4) var(--space-8);
+    font-size: var(--font-size-lg);
   }
 }

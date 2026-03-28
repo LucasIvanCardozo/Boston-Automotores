@@ -43,7 +43,7 @@
   display: none;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .logoText {
     display: block;
     font-size: var(--font-size-xl);
@@ -53,9 +53,7 @@
     width: 64px;
     height: 64px;
   }
-}
 
-@media (min-width: 768px) {
   .ctaButton {
     display: inline-flex;
     align-items: center;

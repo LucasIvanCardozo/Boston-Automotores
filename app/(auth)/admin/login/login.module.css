@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: var(--space-8);
+  padding: var(--space-4);
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
 }
 
@@ -18,7 +18,7 @@
 }
 
 .header {
-  padding: var(--space-8) var(--space-8) var(--space-6);
+  padding: var(--space-6) var(--space-6) var(--space-4);
   text-align: center;
   background-color: var(--color-background);
   border-bottom: 1px solid var(--color-border);
@@ -43,7 +43,7 @@
 }
 
 .formContainer {
-  padding: var(--space-8);
+  padding: var(--space-6);
 }
 
 .footer {
@@ -57,16 +57,16 @@
   margin-bottom: 0;
 }
 
-@media (max-width: 480px) {
+@media (min-width: 768px) {
   .loginPage {
-    padding: var(--space-4);
+    padding: var(--space-8);
   }
 
   .header {
-    padding: var(--space-6) var(--space-6) var(--space-4);
+    padding: var(--space-8) var(--space-8) var(--space-6);
   }
 
   .formContainer {
-    padding: var(--space-6);
+    padding: var(--space-8);
   }
 }

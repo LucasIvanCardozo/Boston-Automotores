@@ -247,16 +247,6 @@
 }
 
 /* Responsive */
-@media (min-width: 640px) {
-  .valuesGrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .offerGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 @media (min-width: 768px) {
   .storyGrid {
     grid-template-columns: 1fr 1fr;
@@ -267,6 +257,14 @@
   }
 
   .contactGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .valuesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .offerGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 

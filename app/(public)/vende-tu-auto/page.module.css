@@ -228,7 +228,7 @@
 }
 
 /* Responsive */
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .benefitsGrid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -255,9 +255,7 @@
   .sectionTitle {
     font-size: var(--font-size-3xl);
   }
-}
 
-@media (min-width: 768px) {
   .processStep:not(:last-child)::after {
     content: '';
     display: block;

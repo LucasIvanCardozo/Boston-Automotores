@@ -85,8 +85,14 @@
 
 .actions {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   gap: var(--space-2);
+}
+
+.actionButton {
+  width: 100%;
+  text-align: center;
 }
 
 .actionButton {
@@ -143,15 +149,15 @@
   gap: var(--space-2);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Tablet+ */
+@media (min-width: 768px) {
   .actions {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
   }
 
   .actionButton {
-    width: 100%;
+    width: auto;
     text-align: center;
   }
 }

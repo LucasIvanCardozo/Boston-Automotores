@@ -25,7 +25,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--space-4);
 }
 
@@ -139,7 +139,7 @@
 
 .checkboxGroup {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: var(--space-3);
   padding: var(--space-3);
   background-color: var(--color-background);
@@ -192,10 +192,15 @@
 
 .actions {
   display: flex;
+  flex-direction: column;
   justify-content: flex-end;
   gap: var(--space-4);
   padding-top: var(--space-4);
   border-top: 1px solid var(--color-border);
+}
+
+.actions button {
+  width: 100%;
 }
 
 .submitError {
@@ -216,21 +221,22 @@
   font-size: var(--font-size-sm);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Tablet+ */
+@media (min-width: 768px) {
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 
   .actions {
-    flex-direction: column;
+    flex-direction: row;
   }
 
   .actions button {
-    width: 100%;
+    width: auto;
   }
 
   .checkboxGroup {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 }

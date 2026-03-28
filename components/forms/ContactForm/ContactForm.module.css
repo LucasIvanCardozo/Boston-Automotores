@@ -17,12 +17,6 @@
   gap: var(--space-4);
 }
 
-@media (min-width: 640px) {
-  .row {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 .field {
   display: flex;
   flex-direction: column;
