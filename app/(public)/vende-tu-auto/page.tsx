@@ -41,7 +41,7 @@ const processSteps = [
   {
     number: 2,
     title: 'Evaluamos',
-    description: 'Nuestro equipo进行检查 y te ofrecemos la mejor tasación.',
+    description: 'Nuestro equipo evalúa tu vehículo y te ofrecemos la mejor tasación.',
   },
   {
     number: 3,
