@@ -97,6 +97,7 @@ You can now log in at /admin/login
   }
 
   await prisma.$disconnect()
+  process.exit(0)
 }
 
 main()

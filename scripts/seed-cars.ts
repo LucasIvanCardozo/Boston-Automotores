@@ -528,6 +528,7 @@ async function seed() {
   console.log(`   Reservados: ${sampleCars.filter(c => c.status === 'reserved').length}`);
 
   await prisma.$disconnect();
+  process.exit(0);
 }
 
 seed().catch((error) => {
