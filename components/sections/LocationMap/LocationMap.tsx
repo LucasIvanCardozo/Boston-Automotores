@@ -6,14 +6,14 @@ import styles from './LocationMap.module.css';
 
 const businessInfo = {
   address: 'Av. Colón 4469, Mar del Plata, Argentina',
-  phone: '+54 223 456-7890',
-  email: 'info@bostonautomotores.com',
+  phone: '+54 9 223 632-9761',
+  email: 'bostonautomotores@hotmail.com',
   hours: 'Lunes a Viernes: 9:00 - 18:00 | Sábados: 9:00 - 13:00',
-  coordinates: '-38.0176,-57.6346',
 };
 
 export default function LocationMap() {
-  const mapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3113.4876!2d${businessInfo.coordinates.split(',')[1]}!3d${businessInfo.coordinates.split(',')[0]}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzjCsDAxJzAzLjQiUyA1N8KwMzgnMDYuNCJX!5e0!3m2!1ses!2sar!4v1600000000000!5m2!1ses!2sar`;
+  // Proper Google Maps embed URL for Av. Colón 4469, Mar del Plata
+  const mapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3142.4769!2d-57.5712!3d-38.0176!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9584dec4cd4f9d0b%3A0x2b0a2c1e45c9b!2sAv.%20Col%C3%B3n%204469%2C%20Mar%20del%20Plata!5e0!3m2!1ses!2sar!4v1704067200000!5m2!1ses!2sar`;
 
   return (
     <section className={styles.section}>

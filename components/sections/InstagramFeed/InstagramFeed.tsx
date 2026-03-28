@@ -1,17 +1,27 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Instagram } from 'lucide-react';
+import { Camera, Heart, MessageCircle } from 'lucide-react';
 import styles from './InstagramFeed.module.css';
 
-const placeholderPosts = [
-  { id: 1, title: 'Ford Territory', color: '#1a1a1a' },
-  { id: 2, title: 'Chevrolet Tracker', color: '#2d5a9e' },
-  { id: 3, title: 'VW Amarok', color: '#3d3d3d' },
-  { id: 4, title: 'Toyota Corolla', color: '#8b0000' },
-  { id: 5, title: 'Jeep Compass', color: '#1a3d1a' },
-  { id: 6, title: 'Peugeot 208', color: '#4a4a4a' },
-];
+// Instagram icon SVG inline (lucide-react Instagram is deprecated)
+const InstagramIcon = ({ size = 64 }: { size?: number }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+  </svg>
+);
 
 export default function InstagramFeed() {
   return (
@@ -22,49 +32,59 @@ export default function InstagramFeed() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.5 }}
-          className={styles.header}
+          className={styles.content}
         >
+          {/* Icono grande de Instagram */}
+          <motion.div 
+            className={styles.iconWrapper}
+            animate={{ 
+              scale: [1, 1.1, 1],
+              rotate: [0, 5, -5, 0]
+            }}
+            transition={{ 
+              duration: 4, 
+              repeat: Infinity, 
+              ease: 'easeInOut' 
+            }}
+          >
+            <InstagramIcon size={64} />
+          </motion.div>
+
           <h2 className={styles.title}>Seguinos en Instagram</h2>
+          
           <p className={styles.subtitle}>
-            Mirá nuestros últimos ingresos y novedades
+            Descubrí nuestros últimos ingresos, promociones exclusivas y 
+            todo lo que tenemos para ofrecerte. ¡Sé parte de nuestra comunidad!
           </p>
-          <a
-            href="https://instagram.com/bostonautomotores"
+
+          {/* Stats decorativos */}
+          <div className={styles.stats}>
+            <div className={styles.statItem}>
+              <Camera size={20} />
+              <span>Publicaciones diarias</span>
+            </div>
+            <div className={styles.statItem}>
+              <Heart size={20} />
+              <span>Ofertas exclusivas</span>
+            </div>
+            <div className={styles.statItem}>
+              <MessageCircle size={20} />
+              <span>Atención personalizada</span>
+            </div>
+          </div>
+
+          <motion.a
+            href="https://www.instagram.com/boston_automotores"
             target="_blank"
             rel="noopener noreferrer"
-            className={styles.instagramLink}
+            className={styles.ctaButton}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <Instagram size={20} />
-            @bostonautomotores
-          </a>
+            <InstagramIcon size={24} />
+            <span>@boston_automotores</span>
+          </motion.a>
         </motion.div>
-
-        <div className={styles.grid}>
-          {placeholderPosts.map((post, index) => (
-            <motion.a
-              key={post.id}
-              href="https://instagram.com/bostonautomotores"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.post}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              whileHover={{ scale: 1.05 }}
-            >
-              <div
-                className={styles.postImage}
-                style={{ backgroundColor: post.color }}
-              >
-                <Instagram size={32} className={styles.placeholderIcon} />
-              </div>
-              <div className={styles.postOverlay}>
-                <Instagram size={24} />
-              </div>
-            </motion.a>
-          ))}
-        </div>
       </div>
     </section>
   );

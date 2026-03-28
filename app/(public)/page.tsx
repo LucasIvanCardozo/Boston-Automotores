@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 import { prisma } from '@/lib/prisma';
 import Hero from '@/components/sections/Hero/Hero';
+import Services from '@/components/sections/Services/Services';
 import FeaturedCars from '@/components/sections/FeaturedCars/FeaturedCars';
-import Metrics from '@/components/sections/Metrics/Metrics';
 import InstagramFeed from '@/components/sections/InstagramFeed/InstagramFeed';
 import LocationMap from '@/components/sections/LocationMap/LocationMap';
 import Loading from '@/components/ui/Loading/Loading';
@@ -41,10 +41,10 @@ export default async function HomePage() {
   return (
     <>
       <Hero />
+      <Services />
       <Suspense fallback={<Loading />}>
         <FeaturedCars cars={featuredCars} />
       </Suspense>
-      <Metrics />
       <InstagramFeed />
       <LocationMap />
     </>
