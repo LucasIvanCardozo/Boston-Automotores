@@ -110,10 +110,27 @@ export async function getLead(id: string): Promise<LeadResult> {
 export async function updateLeadStatus(
   id: string,
   status: LeadStatus
-): Promise<LeadResult> {
+): Promise<{ success: boolean; error?: string }> {
+  'use server';
+  
+  console.log('updateLeadStatus called with:', { id, status });
+  
+  // Validate inputs
+  if (!id || typeof id !== 'string') {
+    console.log('Invalid ID');
+    return { success: false, error: 'ID de consulta inválido' };
+  }
+  
+  if (!status || !['new', 'contacted', 'closed'].includes(status)) {
+    console.log('Invalid status');
+    return { success: false, error: 'Estado inválido' };
+  }
+
   try {
     await requireAuth();
-  } catch {
+    console.log('Auth passed');
+  } catch (authError) {
+    console.error('Auth error:', authError);
     return { success: false, error: 'No autorizado' };
   }
 
@@ -125,13 +142,15 @@ export async function updateLeadStatus(
         contactedAt: status === 'contacted' ? new Date() : undefined,
       },
     });
+    
+    console.log('Lead updated:', lead.id);
 
     revalidatePath('/admin/consultas');
 
-    return { success: true, lead };
+    return { success: true };
   } catch (error) {
-    console.error('Error updating lead status:', error);
-    return { success: false, error: 'Error al actualizar la consulta' };
+    console.error('Error updating lead:', error);
+    return { success: false, error: 'Error al actualizar' };
   }
 }
 

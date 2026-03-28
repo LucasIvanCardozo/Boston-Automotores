@@ -6,11 +6,12 @@ import { prisma } from '@/lib/prisma';
 import { carCreateSchema, carUpdateSchema, carDeleteSchema, toggleFeaturedSchema, carSpecsSchema } from '@/lib/schemas/car';
 import type { CarCreateInput, CarUpdateInput, CarSpecs } from '@/lib/schemas/car';
 import { requireAuth } from '@/lib/auth';
+import { hardDeleteCar } from '@/lib/car-deletion';
 
 export interface CarResult {
   success: boolean;
   error?: string;
-  data?: Awaited<ReturnType<typeof prisma.car.findUnique>>;
+  data?: Record<string, unknown>;
 }
 
 export interface CarListResult {
@@ -146,7 +147,14 @@ export async function createCar(formData: FormData): Promise<CarResult> {
     revalidatePath('/admin/autos/nuevo');
     revalidatePath('/catalogo');
 
-    return { success: true, data: car };
+    // Convert Decimal to Number for serialization
+    return { 
+      success: true, 
+      data: {
+        ...car,
+        price: Number(car.price),
+      }
+    };
   } catch (error) {
     console.error('Error creating car:', error);
     return { success: false, error: 'Error al crear el vehículo' };
@@ -220,7 +228,8 @@ export async function updateCar(id: string, formData: FormData): Promise<CarResu
 }
 
 /**
- * Delete a car (soft delete)
+ * Delete a car (hard delete)
+ * This permanently deletes the car and all associated assets (images, PDF)
  */
 export async function deleteCar(id: string): Promise<CarResult> {
   try {
@@ -235,15 +244,20 @@ export async function deleteCar(id: string): Promise<CarResult> {
   }
 
   try {
-    const car = await prisma.car.update({
-      where: { id },
-      data: { deletedAt: new Date() },
-    });
+    // Use hard delete service
+    const deleteResult = await hardDeleteCar(id);
+
+    if (!deleteResult.success) {
+      return { 
+        success: false, 
+        error: deleteResult.error || 'Error al eliminar el vehículo' 
+      };
+    }
 
     revalidatePath('/admin/autos');
     revalidatePath('/catalogo');
 
-    return { success: true, data: car };
+    return { success: true };
   } catch (error) {
     console.error('Error deleting car:', error);
     return { success: false, error: 'Error al eliminar el vehículo' };

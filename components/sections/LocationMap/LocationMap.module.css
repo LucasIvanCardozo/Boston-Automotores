@@ -1,6 +1,18 @@
 .section {
   padding: var(--space-12) 0;
   background: var(--color-background);
+  /* Optimize rendering performance */
+  content-visibility: auto;
+  contain-intrinsic-size: 0 600px;
+}
+
+/* Prevent flickering during animations */
+.header,
+.mapWrapper,
+.infoCard {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .container {

@@ -44,7 +44,7 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  overflow-y: auto;
+  overflow: visible;
 }
 
 .contentWrapper {
@@ -60,6 +60,9 @@
   perspective: 1000px;
   margin-bottom: var(--space-8);
   flex-shrink: 0;
+  /* Add horizontal padding to prevent cutting off the glow effect */
+  padding: 0 var(--space-8);
+  max-width: 100%;
 }
 
 .logo3D {

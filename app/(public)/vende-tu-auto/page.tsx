@@ -135,12 +135,12 @@ export default function SellCarPage() {
         <div className={styles.container}>
           <h2 className={styles.sectionTitle}>También podés contactarnos directamente</h2>
           <div className={styles.contactAlternatives}>
-            <a href="tel:+5492234567890" className={styles.contactButton}>
+            <a href="tel:+5492236329761" className={styles.contactButton}>
               <Phone size={20} />
               <span>Llamar ahora</span>
             </a>
             <a
-              href="https://wa.me/5492234567890?text=Hola!%20Quiero%20vender%20mi%20auto"
+              href="https://wa.me/5492236329761?text=Hola!%20Quiero%20vender%20mi%20auto"
               target="_blank"
               rel="noopener noreferrer"
               className={`${styles.contactButton} ${styles.whatsappButton}`}

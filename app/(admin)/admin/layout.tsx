@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { verifyToken } from '@/lib/auth';
 import AdminSidebar from '@/components/layout/AdminSidebar/AdminSidebar';
+import Toaster from '@/components/ui/Toaster/Toaster';
 import styles from './layout.module.css';
 
 const ADMIN_COOKIE_NAME = 'admin_session';
@@ -23,6 +24,7 @@ export default async function AdminLayout({
     <div className={styles.adminLayout}>
       <AdminSidebar />
       <main className={styles.mainContent}>{children}</main>
+      <Toaster position="top-right" />
     </div>
   );
 }

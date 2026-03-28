@@ -2,6 +2,9 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .header {
@@ -32,6 +35,8 @@
   background-color: var(--color-surface);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .filterForm {
@@ -40,6 +45,18 @@
   align-items: stretch;
   gap: var(--space-3);
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.filterForm > * {
+  max-width: 100%;
+}
+
+.loadingIndicator {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  padding: var(--space-2) 0;
 }
 
 .searchInput {
@@ -73,7 +90,14 @@
   background-color: var(--color-surface);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
-  overflow: hidden;
+  width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tableWrapper > * {
+  min-width: 900px;
 }
 
 /* Table cell styles */
@@ -96,6 +120,361 @@
 .email:hover,
 .phone:hover {
   text-decoration: underline;
+}
+
+.whatsappLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: #25d366;
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+}
+
+.whatsappLink:hover {
+  text-decoration: underline;
+}
+
+/* Action buttons */
+.actionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--ease-out);
+}
+
+.actionButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.whatsappButton {
+  background-color: #25d366;
+  color: white;
+}
+
+.whatsappButton:hover {
+  background-color: #128c7e;
+}
+
+.contactButton {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.contactButton:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.closeButton {
+  background-color: var(--color-success);
+  color: white;
+}
+
+.closeButton:hover {
+  background-color: #15803d;
+}
+
+.reopenButton {
+  background-color: var(--color-surface);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+.reopenButton:hover {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+.updatingText {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+/* Icon action buttons */
+.actionButtons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: var(--space-2);
+  white-space: nowrap;
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--ease-out);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.iconButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.iconButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.whatsappButton {
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+  color: white;
+}
+
+.whatsappButton:hover {
+  background: linear-gradient(135deg, #128c7e 0%, #075e54 100%);
+}
+
+.emailButton {
+  background: linear-gradient(135deg, #ea4335 0%, #c5221f 100%);
+  color: white;
+}
+
+.emailButton:hover {
+  background: linear-gradient(135deg, #c5221f 0%, #a50e0e 100%);
+}
+
+.contactButton {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: white;
+}
+
+.contactButton:hover {
+  filter: brightness(1.1);
+}
+
+.closeButton {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: white;
+}
+
+.closeButton:hover {
+  filter: brightness(1.1);
+}
+
+.reopenButton {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+}
+
+.reopenButton:hover {
+  filter: brightness(1.1);
+}
+
+.viewButton {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: white;
+}
+
+.viewButton:hover {
+  filter: brightness(1.1);
+}
+
+.emailText {
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--space-4);
+  width: 100%;
+}
+
+.modalContent {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 600px;
+  max-height: calc(100vh - var(--space-8));
+  overflow-y: auto;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.modalTitle {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.modalClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: all var(--transition-fast);
+}
+
+.modalClose:hover {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+.modalBody {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.detailSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-4);
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.detailLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detailValue {
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+}
+
+.detailLink {
+  font-size: var(--font-size-base);
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.detailLink:hover {
+  text-decoration: underline;
+}
+
+.messageBox {
+  background-color: var(--color-background);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  line-height: var(--line-height-relaxed);
+  white-space: pre-wrap;
+}
+
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-background);
+}
+
+.modalButtonWhatsapp,
+.modalButtonEmail {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.modalButtonWhatsapp {
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+  color: white;
+}
+
+.modalButtonWhatsapp:hover {
+  filter: brightness(1.1);
+}
+
+.modalButtonEmail {
+  background: linear-gradient(135deg, #ea4335 0%, #c5221f 100%);
+  color: white;
+}
+
+.modalButtonEmail:hover {
+  filter: brightness(1.1);
 }
 
 /* Pagination */

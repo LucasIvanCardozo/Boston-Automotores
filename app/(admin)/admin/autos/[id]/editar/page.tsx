@@ -57,8 +57,8 @@ export default async function EditCarPage({ params }: PageProps) {
     notFound();
   }
 
-  // Cast to our extended type
-  const car = result.data as CarWithRelations;
+  // Cast to our extended type (first to unknown, then to target type)
+  const car = result.data as unknown as CarWithRelations;
 
   // Transform the car data to match the form expected format
   const initialData: Partial<CarCreateInput & { specs?: CarSpecs | null }> = {

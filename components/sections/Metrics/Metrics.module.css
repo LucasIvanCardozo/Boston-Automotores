@@ -3,6 +3,18 @@
   background: var(--color-primary-dark);
   position: relative;
   overflow: hidden;
+  /* Optimize rendering performance */
+  content-visibility: auto;
+  contain-intrinsic-size: 0 300px;
+}
+
+/* Prevent flickering during animations */
+.metric,
+.valueWrapper,
+.value {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .section::before {

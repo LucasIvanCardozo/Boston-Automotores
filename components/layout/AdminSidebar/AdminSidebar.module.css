@@ -59,7 +59,7 @@
   right: 0;
   bottom: 0;
   width: 80%;
-  max-width: 280px;
+  max-width: 200px;
   background-color: var(--color-surface);
   z-index: var(--z-fixed);
   transform: translateX(100%);

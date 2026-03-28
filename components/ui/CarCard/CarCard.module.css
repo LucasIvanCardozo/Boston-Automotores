@@ -19,6 +19,8 @@
   position: relative;
   aspect-ratio: 16 / 10;
   background: var(--color-background);
+  /* Prevent layout shift while image loads */
+  overflow: hidden;
 }
 
 .image {

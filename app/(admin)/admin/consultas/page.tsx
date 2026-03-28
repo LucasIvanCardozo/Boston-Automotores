@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getLeads } from '@/app/actions/leads';
 import ConsultasTable from './ConsultasTable';
+import ConsultasFilters from './ConsultasFilters';
 import Button from '@/components/ui/Button/Button';
 import styles from './consultas.module.css';
 
@@ -89,39 +90,7 @@ export default async function AdminLeadsPage({ searchParams }: PageProps) {
         </div>
       </header>
 
-      <div className={styles.filters}>
-        <form method="get" className={styles.filterForm}>
-          <input
-            type="text"
-            name="search"
-            placeholder="Buscar por nombre, email o teléfono..."
-            defaultValue={search}
-            className={styles.searchInput}
-          />
-          <select
-            name="status"
-            defaultValue={status || ''}
-            className={styles.filterSelect}
-          >
-            <option value="">Todos los estados</option>
-            <option value="new">Nueva</option>
-            <option value="contacted">Contactada</option>
-            <option value="closed">Cerrada</option>
-          </select>
-          <select
-            name="type"
-            defaultValue={type || ''}
-            className={styles.filterSelect}
-          >
-            <option value="">Todos los tipos</option>
-            <option value="contact">Contacto</option>
-            <option value="sell_car">Vende su auto</option>
-          </select>
-          <Button type="submit" variant="secondary" size="sm">
-            Filtrar
-          </Button>
-        </form>
-      </div>
+      <ConsultasFilters />
 
       <div className={styles.tableWrapper}>
         <ConsultasTable leads={leads} />

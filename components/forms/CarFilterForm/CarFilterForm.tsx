@@ -2,75 +2,54 @@
 
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useState, useCallback, useTransition } from 'react';
-import { Search, X, SlidersHorizontal } from 'lucide-react';
+import { Search, X, SlidersHorizontal, Car, DollarSign, Gauge } from 'lucide-react';
 import Button from '@/components/ui/Button/Button';
 import styles from './CarFilterForm.module.css';
 
-const brands = [
-  'Audi', 'BMW', 'Chevrolet', 'Citroën', 'Fiat', 'Ford', 'Honda', 'Hyundai',
-  'Jeep', 'Kia', 'Mercedes-Benz', 'Nissan', 'Peugeot',
-  'Renault', 'Toyota', 'Volkswagen', 'Volvo',
-];
+interface Filters {
+  brand: string;
+  maxPrice: string;
+  maxMileage: string;
+}
 
-const fuelTypes = [
-  { value: 'nafta', label: 'Nafta' },
-  { value: 'diesel', label: 'Diesel' },
-  { value: 'electrico', label: 'Eléctrico' },
-  { value: 'hibrido', label: 'Híbrido' },
-  { value: 'gnc', label: 'GNC' },
-];
+interface CarFilterFormProps {
+  availableBrands: string[];
+}
 
-const transmissions = [
-  { value: 'manual', label: 'Manual' },
-  { value: 'automatica', label: 'Automática' },
-  { value: 'cvt', label: 'CVT' },
-];
-
-const currentYear = new Date().getFullYear();
-const years = Array.from({ length: currentYear - 1999 }, (_, i) => currentYear - i);
-
-export default function CarFilterForm() {
+export default function CarFilterForm({ availableBrands }: CarFilterFormProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Get current filters from URL
-  const getFiltersFromURL = useCallback(() => ({
+  const getFiltersFromURL = useCallback((): Filters => ({
     brand: searchParams.get('brand') || '',
-    minYear: searchParams.get('minYear') || '',
-    maxYear: searchParams.get('maxYear') || '',
-    minPrice: searchParams.get('minPrice') || '',
     maxPrice: searchParams.get('maxPrice') || '',
     maxMileage: searchParams.get('maxMileage') || '',
-    fuelType: searchParams.get('fuelType') || '',
-    transmission: searchParams.get('transmission') || '',
   }), [searchParams]);
 
   const [filters, setFilters] = useState(getFiltersFromURL);
 
   // Update URL with filters using replace
-  const updateURL = useCallback((newFilters: typeof filters) => {
+  const updateURL = useCallback((newFilters: Filters) => {
     const params = new URLSearchParams();
     
-    Object.entries(newFilters).forEach(([key, value]) => {
-      if (value && value !== '0') {
-        params.set(key, value);
-      }
-    });
+    if (newFilters.brand) params.set('brand', newFilters.brand);
+    if (newFilters.maxPrice) params.set('maxPrice', newFilters.maxPrice);
+    if (newFilters.maxMileage) params.set('maxMileage', newFilters.maxMileage);
 
     const queryString = params.toString();
     const newURL = queryString ? `${pathname}?${queryString}` : pathname;
     
-    // Use startTransition for smooth UI updates
     startTransition(() => {
       router.replace(newURL, { scroll: false });
     });
   }, [pathname, router]);
 
   // Handle filter change - updates state and URL immediately
-  const handleFilterChange = (field: keyof typeof filters, value: string) => {
+  const handleFilterChange = (field: keyof Filters, value: string) => {
     const newFilters = { ...filters, [field]: value };
     setFilters(newFilters);
     updateURL(newFilters);
@@ -78,15 +57,10 @@ export default function CarFilterForm() {
 
   // Reset all filters
   const handleReset = () => {
-    const emptyFilters = {
+    const emptyFilters: Filters = {
       brand: '',
-      minYear: '',
-      maxYear: '',
-      minPrice: '',
       maxPrice: '',
       maxMileage: '',
-      fuelType: '',
-      transmission: '',
     };
     setFilters(emptyFilters);
     startTransition(() => {
@@ -96,13 +70,89 @@ export default function CarFilterForm() {
 
   const activeFilterCount = Object.values(filters).filter(Boolean).length;
 
+  // Build pagination URLs with current filters
+  const buildPaginationUrl = (page: number) => {
+    const params = new URLSearchParams();
+    if (filters.brand) params.set('brand', filters.brand);
+    if (filters.maxPrice) params.set('maxPrice', filters.maxPrice);
+    if (filters.maxMileage) params.set('maxMileage', filters.maxMileage);
+    params.set('page', page.toString());
+    return `${pathname}?${params.toString()}`;
+  };
+
   return (
-    <div className={styles.wrapper}>
-      {/* Mobile Toggle */}
+    <>
+      {/* Desktop: Inline filter row */}
+      <div className={styles.filterRow}>
+        {/* Brand */}
+        <div className={styles.filterField}>
+          <label htmlFor="brand" className={styles.filterLabel}>
+            <Car size={14} />
+            Marca
+          </label>
+          <select
+            id="brand"
+            value={filters.brand}
+            onChange={(e) => handleFilterChange('brand', e.target.value)}
+            className={styles.filterSelect}
+          >
+            <option value="">Todas las marcas</option>
+            {availableBrands.map((brand) => (
+              <option key={brand} value={brand}>{brand}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Max Price */}
+        <div className={styles.filterField}>
+          <label htmlFor="maxPrice" className={styles.filterLabel}>
+            <DollarSign size={14} />
+            Precio máximo
+          </label>
+          <input
+            type="number"
+            id="maxPrice"
+            value={filters.maxPrice}
+            onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
+            placeholder="Ej: 15000000"
+            className={styles.filterInput}
+          />
+        </div>
+
+        {/* Max Mileage */}
+        <div className={styles.filterField}>
+          <label htmlFor="maxMileage" className={styles.filterLabel}>
+            <Gauge size={14} />
+            Kilometraje máximo
+          </label>
+          <input
+            type="number"
+            id="maxMileage"
+            value={filters.maxMileage}
+            onChange={(e) => handleFilterChange('maxMileage', e.target.value)}
+            placeholder="Ej: 50000"
+            className={styles.filterInput}
+          />
+        </div>
+
+        {/* Actions */}
+        <div className={styles.filterActions}>
+          <button
+            type="button"
+            onClick={handleReset}
+            className={`${styles.filterButton} ${styles.filterButtonSecondary}`}
+            disabled={activeFilterCount === 0}
+          >
+            Limpiar
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile: Toggle button */}
       <button
-        className={styles.toggleButton}
-        onClick={() => setIsExpanded(!isExpanded)}
-        aria-expanded={isExpanded}
+        type="button"
+        className={styles.mobileFilterToggle}
+        onClick={() => setIsDrawerOpen(true)}
       >
         <SlidersHorizontal size={18} />
         Filtros
@@ -111,148 +161,134 @@ export default function CarFilterForm() {
         )}
       </button>
 
-      {/* Filter Form */}
-      <div className={`${styles.form} ${isExpanded ? styles.formExpanded : ''}`}>
-        <div className={styles.formHeader}>
-          <h3 className={styles.formTitle}>Filtrar Autos</h3>
-          <button
-            className={styles.closeButton}
-            onClick={() => setIsExpanded(false)}
-            aria-label="Cerrar filtros"
-          >
-            <X size={20} />
-          </button>
-        </div>
-
-        {isPending && (
-          <div className={styles.loadingIndicator}>
-            Actualizando...
-          </div>
-        )}
-
-        <div className={styles.grid}>
-          {/* Brand */}
-          <div className={styles.field}>
-            <label htmlFor="brand" className={styles.label}>Marca</label>
-            <select
-              id="brand"
-              value={filters.brand}
-              onChange={(e) => handleFilterChange('brand', e.target.value)}
-              className={styles.select}
+      {/* Mobile: Filter drawer */}
+      <div className={`${styles.filterDrawer} ${isDrawerOpen ? styles.filterDrawerOpen : ''}`}>
+        <div 
+          className={styles.filterDrawerBackdrop} 
+          onClick={() => setIsDrawerOpen(false)} 
+        />
+        <div className={styles.filterDrawerContent}>
+          <div className={styles.filterDrawerHandle} />
+          
+          <div className={styles.filterDrawerHeader}>
+            <h3 className={styles.filterDrawerTitle}>Filtros</h3>
+            <button
+              type="button"
+              className={styles.filterDrawerClose}
+              onClick={() => setIsDrawerOpen(false)}
+              aria-label="Cerrar"
             >
-              <option value="">Todas las marcas</option>
-              {brands.map((brand) => (
-                <option key={brand} value={brand}>{brand}</option>
-              ))}
-            </select>
+              <X size={20} />
+            </button>
           </div>
 
-          {/* Fuel Type */}
-          <div className={styles.field}>
-            <label htmlFor="fuelType" className={styles.label}>Combustible</label>
-            <select
-              id="fuelType"
-              value={filters.fuelType}
-              onChange={(e) => handleFilterChange('fuelType', e.target.value)}
-              className={styles.select}
+          {isPending && (
+            <div className={styles.loadingIndicator}>
+              Actualizando...
+            </div>
+          )}
+
+          <div className={styles.filterDrawerGrid}>
+            {/* Brand */}
+            <div className={styles.filterDrawerField}>
+              <label htmlFor="mobile-brand" className={styles.filterLabel}>
+                <Car size={14} />
+                Marca
+              </label>
+              <select
+                id="mobile-brand"
+                value={filters.brand}
+                onChange={(e) => handleFilterChange('brand', e.target.value)}
+                className={styles.filterSelect}
+              >
+                <option value="">Todas las marcas</option>
+                {availableBrands.map((brand) => (
+                  <option key={brand} value={brand}>{brand}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Max Price */}
+            <div className={styles.filterDrawerField}>
+              <label htmlFor="mobile-maxPrice" className={styles.filterLabel}>
+                <DollarSign size={14} />
+                Precio máximo
+              </label>
+              <input
+                type="number"
+                id="mobile-maxPrice"
+                value={filters.maxPrice}
+                onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
+                placeholder="Ej: 15000000"
+                className={styles.filterInput}
+              />
+            </div>
+
+            {/* Max Mileage */}
+            <div className={styles.filterDrawerField}>
+              <label htmlFor="mobile-maxMileage" className={styles.filterLabel}>
+                <Gauge size={14} />
+                Kilometraje máximo
+              </label>
+              <input
+                type="number"
+                id="mobile-maxMileage"
+                value={filters.maxMileage}
+                onChange={(e) => handleFilterChange('maxMileage', e.target.value)}
+                placeholder="Ej: 50000"
+                className={styles.filterInput}
+              />
+            </div>
+          </div>
+
+          <div className={styles.filterDrawerActions}>
+            <Button 
+              variant="secondary" 
+              size="sm" 
+              onClick={handleReset}
             >
-              <option value="">Todos</option>
-              {fuelTypes.map((type) => (
-                <option key={type.value} value={type.value}>{type.label}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Transmission */}
-          <div className={styles.field}>
-            <label htmlFor="transmission" className={styles.label}>Transmisión</label>
-            <select
-              id="transmission"
-              value={filters.transmission}
-              onChange={(e) => handleFilterChange('transmission', e.target.value)}
-              className={styles.select}
+              Limpiar
+            </Button>
+            <Button 
+              variant="primary" 
+              size="sm" 
+              onClick={() => setIsDrawerOpen(false)}
             >
-              <option value="">Todas</option>
-              {transmissions.map((trans) => (
-                <option key={trans.value} value={trans.value}>{trans.label}</option>
-              ))}
-            </select>
+              Aplicar
+            </Button>
           </div>
-
-          {/* Year Range */}
-          <div className={styles.field}>
-            <label className={styles.label}>Año desde</label>
-            <select
-              value={filters.minYear}
-              onChange={(e) => handleFilterChange('minYear', e.target.value)}
-              className={styles.select}
-            >
-              <option value="">Cualquiera</option>
-              {years.map((year) => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label}>Año hasta</label>
-            <select
-              value={filters.maxYear}
-              onChange={(e) => handleFilterChange('maxYear', e.target.value)}
-              className={styles.select}
-            >
-              <option value="">Cualquiera</option>
-              {years.map((year) => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Price Range */}
-          <div className={styles.field}>
-            <label className={styles.label}>Precio mínimo</label>
-            <input
-              type="number"
-              value={filters.minPrice}
-              onChange={(e) => handleFilterChange('minPrice', e.target.value)}
-              placeholder="Ej: 5000000"
-              className={styles.input}
-            />
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label}>Precio máximo</label>
-            <input
-              type="number"
-              value={filters.maxPrice}
-              onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
-              placeholder="Ej: 20000000"
-              className={styles.input}
-            />
-          </div>
-
-          {/* Mileage */}
-          <div className={styles.field}>
-            <label className={styles.label}>Kilometraje máximo</label>
-            <input
-              type="number"
-              value={filters.maxMileage}
-              onChange={(e) => handleFilterChange('maxMileage', e.target.value)}
-              placeholder="Ej: 50000"
-              className={styles.input}
-            />
-          </div>
-        </div>
-
-        <div className={styles.actions}>
-          <Button variant="secondary" size="sm" onClick={handleReset}>
-            Limpiar filtros
-          </Button>
-          <Button variant="primary" size="sm" onClick={() => setIsExpanded(false)}>
-            Ver resultados
-          </Button>
         </div>
       </div>
-    </div>
+
+      {/* Active filter tags (shown when filters are active) */}
+      {activeFilterCount > 0 && (
+        <div className={styles.activeFilters}>
+          {filters.brand && (
+            <span className={styles.activeFilterTag}>
+              {filters.brand}
+              <button onClick={() => handleFilterChange('brand', '')} aria-label="Quitar filtro">
+                <X size={12} />
+              </button>
+            </span>
+          )}
+          {filters.maxPrice && (
+            <span className={styles.activeFilterTag}>
+              Hasta ${parseInt(filters.maxPrice).toLocaleString('es-AR')}
+              <button onClick={() => handleFilterChange('maxPrice', '')} aria-label="Quitar filtro">
+                <X size={12} />
+              </button>
+            </span>
+          )}
+          {filters.maxMileage && (
+            <span className={styles.activeFilterTag}>
+              {parseInt(filters.maxMileage).toLocaleString('es-AR')} km
+              <button onClick={() => handleFilterChange('maxMileage', '')} aria-label="Quitar filtro">
+                <X size={12} />
+              </button>
+            </span>
+          )}
+        </div>
+      )}
+    </>
   );
 }

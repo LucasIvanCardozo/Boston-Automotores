@@ -7,7 +7,7 @@ interface ContactCTAProps {
   carName: string;
 }
 
-const phoneNumber = '+5492234567890';
+const phoneNumber = '+5492236329761';
 const whatsappMessage = encodeURIComponent(`Hola! Me interesa el ${'vehiculo'}. ¿Está disponible?`);
 
 export default function ContactCTA({ carName }: ContactCTAProps) {
@@ -38,7 +38,7 @@ export default function ContactCTA({ carName }: ContactCTAProps) {
         </a>
 
         <a
-          href="mailto:info@bostonautomotores.com"
+          href="mailto:bostonautomotores@hotmail.com"
           className={styles.emailButton}
         >
           <Mail size={20} />

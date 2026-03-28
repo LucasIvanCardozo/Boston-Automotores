@@ -3,6 +3,18 @@
   background: linear-gradient(135deg, #1e293b 0%, #0f172a 50%, var(--color-primary-dark) 100%);
   position: relative;
   overflow: hidden;
+  /* Optimize rendering performance */
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+
+/* Prevent flickering during animations */
+.content,
+.iconWrapper,
+.stats {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .section::before {

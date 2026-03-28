@@ -4,35 +4,39 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import CompleteCarForm from '@/components/forms/AdminCarForm/CompleteCarForm';
 import { createCar } from '@/app/actions/cars';
+import { notifyError, notifyLoading, updateNotification } from '@/lib/notifications';
+import { setFlashNotification } from '@/lib/flash-notifications';
 
 export default function NuevoAutoPage() {
   const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (formData: FormData) => {
     setIsLoading(true);
-    setError(null);
+    
+    const loadingId = notifyLoading('Creando vehículo', 'Por favor espere mientras se guarda la información...');
 
     try {
       const result = await createCar(formData);
 
       if (!result.success) {
-        setError(result.error || 'Error al crear el vehículo');
+        updateNotification(loadingId, 'error', 'Error al crear', result.error || 'No se pudo crear el vehículo');
         setIsLoading(false);
         return;
       }
 
-      // Redirect to the edit page for the newly created car to add images
-      if (result.data?.id) {
-        router.push(`/admin/autos/${result.data.id}/editar`);
-        router.refresh();
+      // Set flash notification and redirect to list page
+      const carData = result.data as { id: string; brand: string; model: string } | undefined;
+      if (carData) {
+        setFlashNotification('success', `${carData.brand} ${carData.model} ha sido creado correctamente`);
       } else {
-        router.push('/admin/autos');
-        router.refresh();
+        setFlashNotification('success', 'Vehículo creado correctamente');
       }
+      
+      router.push('/admin/autos');
+      router.refresh();
     } catch (err) {
-      setError('Error inesperado. Por favor intenta de nuevo.');
+      updateNotification(loadingId, 'error', 'Error inesperado', 'Por favor intenta de nuevo.');
       setIsLoading(false);
     }
   };
@@ -47,19 +51,6 @@ export default function NuevoAutoPage() {
           Complete todos los campos para agregar un nuevo vehículo al inventario.
         </p>
       </header>
-
-      {error && (
-        <div style={{
-          padding: 'var(--space-4)',
-          backgroundColor: 'rgba(220, 38, 38, 0.1)',
-          border: '1px solid rgba(220, 38, 38, 0.3)',
-          borderRadius: 'var(--radius-md)',
-          color: 'var(--color-error)',
-          marginBottom: 'var(--space-6)',
-        }}>
-          {error}
-        </div>
-      )}
 
       <CompleteCarForm onSubmit={handleSubmit} isLoading={isLoading} />
     </div>

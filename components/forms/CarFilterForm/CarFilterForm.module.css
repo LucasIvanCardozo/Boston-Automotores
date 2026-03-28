@@ -1,29 +1,10 @@
-.wrapper {
-  position: relative;
-}
+/* ==========================================================================
+   CarFilterForm - Simplified & Mobile-Friendly
+   ========================================================================== */
 
-.toggleButton {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-4);
-  background: var(--color-surface);
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text);
-  cursor: pointer;
-  transition: all var(--transition-fast) var(--ease-out);
-}
-
-.toggleButton:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-}
-
+/* Filter Count Badge */
 .filterCount {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 20px;
@@ -36,136 +17,324 @@
   border-radius: var(--radius-full);
 }
 
-.form {
-  display: none;
-  position: absolute;
-  top: calc(100% + var(--space-2));
-  left: 0;
-  right: 0;
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xl);
-  z-index: var(--z-dropdown);
-  padding: var(--space-6);
-}
-
-.formExpanded {
-  display: block;
-  animation: slideDown var(--transition-fast) var(--ease-out);
-}
-
-.formHeader {
+/* Desktop: Inline filter row */
+.filterRow {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-6);
+  align-items: flex-end;
+  gap: var(--space-4);
 }
 
-.formTitle {
-  font-size: var(--font-size-lg);
+.filterField {
+  flex: 1;
+  min-width: 0;
+}
+
+.filterLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text);
-  margin: 0;
+  margin-bottom: var(--space-2);
+  letter-spacing: -0.01em;
 }
 
-.closeButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-md);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  transition: all var(--transition-fast) var(--ease-out);
+.filterLabel svg {
+  color: var(--color-primary);
+  flex-shrink: 0;
 }
 
-.closeButton:hover {
-  background: var(--color-background);
-  color: var(--color-text);
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-4);
-  margin-bottom: var(--space-6);
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text);
-}
-
-.select,
-.input {
+.filterInput,
+.filterSelect {
   width: 100%;
   padding: var(--space-3) var(--space-4);
   font-size: var(--font-size-base);
   color: var(--color-text);
   background: var(--color-background);
   border: 2px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   transition: all var(--transition-fast) var(--ease-out);
+  appearance: none;
+  -webkit-appearance: none;
 }
 
-.select:focus,
-.input:focus {
+.filterInput {
+  padding-right: var(--space-4);
+}
+
+.filterInput::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.7;
+}
+
+.filterInput:focus,
+.filterSelect:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(15, 107, 190, 0.15);
+  box-shadow: 0 0 0 4px rgba(15, 107, 190, 0.12);
 }
 
-.actions {
+.filterSelect {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  padding-right: var(--space-10);
+  cursor: pointer;
+}
+
+/* Filter Actions */
+.filterActions {
   display: flex;
-  justify-content: flex-end;
   gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.filterButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast) var(--ease-out);
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.filterButtonPrimary {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  border-color: var(--color-primary);
+}
+
+.filterButtonPrimary:hover {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.filterButtonSecondary {
+  background: transparent;
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
+}
+
+.filterButtonSecondary:hover:not(:disabled) {
+  color: var(--color-text);
+  border-color: var(--color-text-muted);
+  background: var(--color-background);
+}
+
+.filterButtonSecondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Active Filter Tags */
+.activeFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
   padding-top: var(--space-4);
   border-top: 1px solid var(--color-border);
 }
 
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.activeFilterTag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  background: rgba(15, 107, 190, 0.08);
+  color: var(--color-primary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(15, 107, 190, 0.2);
 }
 
-@media (min-width: 768px) {
-  .toggleButton {
+.activeFilterTag button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin-left: var(--space-1);
+  background: transparent;
+  border: none;
+  color: var(--color-primary);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity var(--transition-fast);
+}
+
+.activeFilterTag button:hover {
+  opacity: 1;
+}
+
+/* Loading indicator */
+.loadingIndicator {
+  padding: var(--space-3);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  background: rgba(15, 107, 190, 0.05);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+}
+
+/* Mobile Filter Toggle */
+.mobileFilterToggle {
+  display: none;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--ease-out);
+}
+
+.mobileFilterToggle:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Mobile Filter Drawer */
+.filterDrawer {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--transition-normal),
+    visibility var(--transition-normal);
+}
+
+.filterDrawerOpen {
+  opacity: 1;
+  visibility: visible;
+}
+
+.filterDrawerBackdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.filterDrawerContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 85vh;
+  background: var(--color-surface);
+  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+  padding: var(--space-6);
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform var(--transition-normal) var(--ease-out);
+}
+
+.filterDrawerOpen .filterDrawerContent {
+  transform: translateY(0);
+}
+
+.filterDrawerHandle {
+  width: 40px;
+  height: 4px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  margin: 0 auto var(--space-5);
+}
+
+.filterDrawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+}
+
+.filterDrawerTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.filterDrawerClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--color-background);
+  border: none;
+  border-radius: var(--radius-full);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.filterDrawerClose:hover {
+  background: var(--color-border);
+  color: var(--color-text);
+}
+
+.filterDrawerGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.filterDrawerField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.filterDrawerActions {
+  display: flex;
+  gap: var(--space-3);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+}
+
+.filterDrawerActions > * {
+  flex: 1;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .filterRow {
     display: none;
   }
 
-  .form {
+  .mobileFilterToggle {
+    display: flex;
+  }
+
+  .filterDrawer {
     display: block;
-    position: static;
-    box-shadow: none;
-    padding: 0;
-    background: transparent;
   }
 
-  .formHeader {
-    display: none;
-  }
-
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .actions {
-    display: none;
+  .activeFilters {
+    margin-top: var(--space-3);
+    padding-top: var(--space-2);
   }
 }

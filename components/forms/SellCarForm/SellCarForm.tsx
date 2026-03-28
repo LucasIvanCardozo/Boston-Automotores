@@ -179,13 +179,21 @@ export default function SellCarForm({ sourcePage = '/vende-tu-auto' }: SellCarFo
       <div className={styles.row}>
         <div className={styles.field}>
           <label htmlFor="carYear" className={styles.label}>Año</label>
-          <input
+          <select
             id="carYear"
-            type="number"
             {...register('carYear', { valueAsNumber: true })}
             className={styles.input}
-            placeholder="Ej: 2020"
-          />
+          >
+            <option value="">Seleccionar año</option>
+            {Array.from({ length: new Date().getFullYear() - 1989 }, (_, i) => {
+              const year = new Date().getFullYear() + 1 - i;
+              return (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              );
+            })}
+          </select>
         </div>
 
         <div className={styles.field}>

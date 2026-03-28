@@ -119,7 +119,7 @@ export default function AboutPage() {
             </div>
             <div className={styles.offerItem}>
               <ThumbsUp size={24} className={styles.offerIcon} />
-              <h3 className={styles.offerTitle}> принимаем ваши автомобили</h3>
+              <h3 className={styles.offerTitle}>Aceptamos tu Usado</h3>
               <p className={styles.offerText}>
                 Te recibimos tu usado como parte de pago con la mejor tasación del mercado.
               </p>
@@ -168,13 +168,13 @@ export default function AboutPage() {
             <div className={styles.contactCard}>
               <Phone size={24} className={styles.contactIcon} />
               <h3 className={styles.contactTitle}>Teléfono</h3>
-              <a href="tel:+5492234567890" className={styles.contactLink}>+54 9 223 456-7890</a>
+              <a href="tel:+5492236329761" className={styles.contactLink}>+54 9 223 632-9761</a>
             </div>
             <div className={styles.contactCard}>
               <Mail size={24} className={styles.contactIcon} />
               <h3 className={styles.contactTitle}>Email</h3>
-              <a href="mailto:info@bostonautomotores.com" className={styles.contactLink}>
-                info@bostonautomotores.com
+              <a href="mailto:bostonautomotores@hotmail.com" className={styles.contactLink}>
+                bostonautomotores@hotmail.com
               </a>
             </div>
             <div className={styles.contactCard}>

@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import CompleteCarForm from '@/components/forms/AdminCarForm/CompleteCarForm';
 import { updateCar } from '@/app/actions/cars';
+import { notifyLoading, updateNotification, dismissNotification } from '@/lib/notifications';
+import { setFlashNotification } from '@/lib/flash-notifications';
 import type { CarCreateInput, CarSpecs } from '@/lib/schemas/car';
 
 interface EditCarPageClientProps {
@@ -22,26 +24,28 @@ export default function EditCarPageClient({
   carName,
 }: EditCarPageClientProps) {
   const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (formData: FormData) => {
     setIsLoading(true);
-    setError(null);
+    
+    const loadingId = notifyLoading('Guardando cambios', 'Por favor espere mientras se actualiza la información...');
 
     try {
       const result = await updateCar(carId, formData);
 
       if (!result.success) {
-        setError(result.error || 'Error al actualizar el vehículo');
+        updateNotification(loadingId, 'error', 'Error al actualizar', result.error || 'No se pudo actualizar el vehículo');
         setIsLoading(false);
         return;
       }
 
+      // Set flash notification and redirect (like "nuevo" page does)
+      setFlashNotification('success', `${carName} ha sido actualizado correctamente`);
       router.push('/admin/autos');
       router.refresh();
     } catch (err) {
-      setError('Error inesperado. Por favor intenta de nuevo.');
+      updateNotification(loadingId, 'error', 'Error inesperado', 'Por favor intenta de nuevo.');
       setIsLoading(false);
     }
   };
@@ -56,19 +60,6 @@ export default function EditCarPageClient({
           {carName}
         </p>
       </header>
-
-      {error && (
-        <div style={{
-          padding: 'var(--space-4)',
-          backgroundColor: 'rgba(220, 38, 38, 0.1)',
-          border: '1px solid rgba(220, 38, 38, 0.3)',
-          borderRadius: 'var(--radius-md)',
-          color: 'var(--color-error)',
-          marginBottom: 'var(--space-6)',
-        }}>
-          {error}
-        </div>
-      )}
 
       <CompleteCarForm
         carId={carId}
