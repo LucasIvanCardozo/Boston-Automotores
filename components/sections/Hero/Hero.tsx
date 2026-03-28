@@ -11,7 +11,7 @@ export default function Hero() {
     <section className={styles.hero}>
       <div className={styles.backgroundWrapper}>
         <Image
-          src="/assets/default.jpg"
+          src="/assets/portada-banner.png"
           alt="Boston Automotores - Concesionaria de autos"
           fill
           loading="eager"
@@ -27,8 +27,41 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className={styles.textContent}
+          className={styles.contentWrapper}
         >
+          {/* Logo 3D */}
+          <motion.div 
+            className={styles.logo3DContainer}
+            initial={{ opacity: 0, scale: 0.8, rotateY: -30 }}
+            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
+          >
+            <motion.div
+              className={styles.logo3D}
+              animate={{
+                y: [0, -15, 0],
+                rotateY: [-5, 5, -5],
+              }}
+              transition={{
+                y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
+                rotateY: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
+              }}
+            >
+              {/* Glow effect - Behind the logo */}
+              <div className={styles.logoGlow} />
+              <div className={styles.logoWrapper}>
+                <Image
+                  src="/assets/logo-sin-fondo.png"
+                  alt="Boston Automotores"
+                  width={400}
+                  height={200}
+                  priority
+                  className={styles.logoImage}
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+
           <h1 className={styles.title}>Tu próximo auto te está esperando</h1>
           <p className={styles.subtitle}>Más de 20 años vendiendo autos usados de calidad en Mar del Plata. Financiación disponible y garantía incluida.</p>
 

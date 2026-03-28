@@ -1,9 +1,19 @@
 .hero {
   position: relative;
-  min-height: 70vh;
+  height: calc(100vh - var(--header-height-measured, 64px));
+  height: calc(100dvh - var(--header-height-measured, 64px));
+  max-height: calc(100vh - var(--header-height-measured, 64px));
+  max-height: calc(100dvh - var(--header-height-measured, 64px));
   display: flex;
   align-items: center;
+  justify-content: center;
   overflow: hidden;
+}
+
+@supports not (height: 100dvh) {
+  .hero {
+    height: calc(100vh - var(--header-height-measured, 64px));
+  }
 }
 
 .backgroundWrapper {
@@ -20,11 +30,7 @@
 .overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(0, 0, 0, 0.75) 0%,
-    rgba(15, 59, 156, 0.6) 100%
-  );
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(15, 59, 156, 0.2) 100%);
 }
 
 .content {
@@ -33,33 +39,101 @@
   width: 100%;
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: var(--space-8) var(--container-padding);
+  padding: calc(var(--space-4) + env(safe-area-inset-top)) var(--container-padding) calc(var(--space-4) + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  overflow-y: auto;
 }
 
-.textContent {
-  max-width: 600px;
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 800px;
+}
+
+/* Logo 3D Effects */
+.logo3DContainer {
+  perspective: 1000px;
+  margin-bottom: var(--space-6);
+  flex-shrink: 0;
+}
+
+.logo3D {
+  position: relative;
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4));
+}
+
+.logoWrapper {
+  position: relative;
+  transform-style: preserve-3d;
+  z-index: 1;
+}
+
+.logoImage {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 30px rgba(59, 130, 246, 0.3));
+}
+
+.logoGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateZ(-100px);
+  width: 140%;
+  aspect-ratio: 1;
+  background: radial-gradient(ellipse 80% 60% at center, rgba(59, 130, 246, 0.3) 0%, rgba(37, 99, 235, 0.2) 30%, rgba(29, 78, 216, 0.1) 60%, transparent 75%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: pulseGlow 3s ease-in-out infinite;
+  filter: blur(20px);
+  z-index: -1;
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) translateZ(-100px) scale(0.95);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) translateZ(-100px) scale(1.05);
+  }
 }
 
 .title {
-  font-size: var(--font-size-4xl);
+  font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-inverse);
   line-height: var(--line-height-tight);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-3);
+  text-align: center;
 }
 
 .subtitle {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
   color: rgba(255, 255, 255, 0.85);
   line-height: var(--line-height-relaxed);
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-6);
+  text-align: center;
+  max-width: 600px;
 }
 
 .ctaGroup {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  margin-bottom: var(--space-10);
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  justify-content: center;
+  align-items: center;
 }
 
 .primaryButton,
@@ -83,10 +157,10 @@
 }
 
 .primaryButton:hover {
-  background: var(--color-primary-dark);
-  border-color: var(--color-primary-dark);
+  background: var(--color-surface);
+  border-color: var(--color-surface);
+  color: var(--color-primary);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
 }
 
 .secondaryButton {
@@ -105,6 +179,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-6);
+  justify-content: center;
 }
 
 .badge {
@@ -126,39 +201,81 @@
 }
 
 @media (min-width: 640px) {
-  .hero {
-    min-height: 80vh;
+  .title {
+    font-size: var(--font-size-4xl);
   }
 
-  .title {
-    font-size: var(--font-size-5xl);
+  .subtitle {
+    font-size: var(--font-size-lg);
   }
 
   .ctaGroup {
     flex-direction: row;
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
   }
 
   .trustBadges {
     gap: var(--space-10);
   }
+
+  .logoImage {
+    max-width: 350px;
+  }
+
+  .logo3DContainer {
+    margin-bottom: var(--space-8);
+  }
 }
 
 @media (min-width: 768px) {
   .hero {
-    min-height: 85vh;
+    height: calc(100vh - var(--header-height-measured, 64px));
+    height: calc(100dvh - var(--header-height-measured, 64px));
+  }
+
+  .content {
+    padding: var(--space-8) var(--container-padding);
+    overflow-y: visible;
+  }
+
+  .title {
+    font-size: 3rem;
+    margin-bottom: var(--space-4);
+  }
+
+  .subtitle {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--space-8);
+  }
+
+  .logoImage {
+    max-width: 420px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero {
+    height: calc(100vh - var(--header-height-measured, 64px));
+    height: calc(100dvh - var(--header-height-measured, 64px));
+    min-height: calc(700px - var(--header-height-measured, 64px));
   }
 
   .title {
     font-size: 3.5rem;
   }
 
-  .subtitle {
-    font-size: var(--font-size-xl);
+  .logoImage {
+    max-width: 480px;
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
   .title {
     font-size: 4rem;
+  }
+
+  .logoImage {
+    max-width: 520px;
   }
 }
