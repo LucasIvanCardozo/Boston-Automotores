@@ -3,8 +3,8 @@ import { Phone, Mail, MapPin, Instagram, Facebook } from 'lucide-react';
 import styles from './Footer.module.css';
 
 const contactInfo = {
-  phone: '+54 223 456-7890',
-  email: 'info@bostonautomotores.com',
+  phone: '+54 9 223 632-9761',
+  email: 'bostonautomotores@hotmail.com',
   address: 'Av. Colón 4469, Mar del Plata',
   hours: 'Lunes a Viernes: 9:00 - 18:00 | Sábados: 9:00 - 13:00',
 };
@@ -17,8 +17,8 @@ const quickLinks = [
 ];
 
 const socialLinks = [
-  { href: 'https://instagram.com/bostonautomotores', label: 'Instagram', icon: Instagram },
-  { href: 'https://facebook.com/bostonautomotores', label: 'Facebook', icon: Facebook },
+  { href: 'https://www.instagram.com/boston_automotores/', label: 'Instagram', icon: Instagram },
+  { href: 'https://www.facebook.com/www.bostonautomotores.com.ar/', label: 'Facebook', icon: Facebook },
 ];
 
 export default function Footer() {
