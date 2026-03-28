@@ -11,8 +11,8 @@ export default function Header() {
           <Image
             src="/assets/logo-sin-fondo.png"
             alt="Boston Automotores"
-            width={48}
-            height={48}
+            width={64}
+            height={64}
             className={styles.logoImage}
             priority
           />
