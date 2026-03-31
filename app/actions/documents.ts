@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
-import { uploadDocument, deleteAsset, generateTechnicalSheetPublicId } from '@/lib/cloudinary';
+import { uploadDocument, deleteAsset } from '@/lib/cloudinary';
 
 export interface DocumentResult {
   success: boolean;
@@ -18,11 +18,7 @@ export async function uploadTechnicalSheet(
   carId: string,
   file: File
 ): Promise<DocumentResult> {
-  // CRITICAL: Validate carId before ANY operation
-  console.log('[uploadTechnicalSheet] Received carId:', JSON.stringify(carId), 'type:', typeof carId);
-  
   if (!carId || typeof carId !== 'string' || carId.trim() === '') {
-    console.error('[uploadTechnicalSheet] ERROR: Invalid or missing carId', { carId });
     return { success: false, error: 'ID de vehículo inválido o faltante' };
   }
 
@@ -77,14 +73,6 @@ export async function uploadTechnicalSheet(
     const buffer = Buffer.from(bytes);
     const base64 = buffer.toString('base64');
     const dataUri = `data:${file.type};base64,${base64}`;
-
-    // Generate public ID
-    const publicId = generateTechnicalSheetPublicId(carId);
-    console.log('[uploadTechnicalSheet] Uploading with:', {
-      carId,
-      publicId,
-      folder: `client-boston/documents`,
-    });
 
     // Upload to Cloudinary
     const result = await uploadDocument(dataUri, {

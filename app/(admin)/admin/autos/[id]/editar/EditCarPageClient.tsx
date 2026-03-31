@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import CompleteCarForm from '@/components/forms/AdminCarForm/CompleteCarForm';
 import { updateCar } from '@/app/actions/cars';
-import { notifyLoading, updateNotification, dismissNotification } from '@/lib/notifications';
+import { notifyLoading, updateNotification } from '@/lib/notifications';
 import { setFlashNotification } from '@/lib/flash-notifications';
 import type { CarCreateInput, CarSpecs } from '@/lib/schemas/car';
 

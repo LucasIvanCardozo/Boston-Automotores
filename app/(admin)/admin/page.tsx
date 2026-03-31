@@ -1,32 +1,7 @@
+import Link from 'next/link';
 import { getSession } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
+import { getDashboardStats } from '@/lib/data/dashboard';
 import styles from './dashboard.module.css';
-
-interface DashboardStats {
-  totalCars: number;
-  availableCars: number;
-  totalLeads: number;
-  newLeads: number;
-  totalAdmins: number;
-}
-
-async function getDashboardStats(): Promise<DashboardStats> {
-  const [totalCars, availableCars, totalLeads, newLeads, totalAdmins] = await Promise.all([
-    prisma.car.count(),
-    prisma.car.count({ where: { status: 'available' } }),
-    prisma.lead.count(),
-    prisma.lead.count({ where: { status: 'new' } }),
-    prisma.admin.count(),
-  ]);
-
-  return {
-    totalCars,
-    availableCars,
-    totalLeads,
-    newLeads,
-    totalAdmins,
-  };
-}
 
 export default async function AdminDashboardPage() {
   const session = await getSession();
@@ -87,18 +62,18 @@ export default async function AdminDashboardPage() {
       <section className={styles.quickActions}>
         <h2 className={styles.sectionTitle}>Acciones Rápidas</h2>
         <div className={styles.actionsGrid}>
-          <a href="/admin/autos" className={styles.actionCard}>
+          <Link href="/admin/autos" className={styles.actionCard}>
             <span className={styles.actionIcon}>🚗</span>
             <span className={styles.actionLabel}>Gestionar Autos</span>
-          </a>
-          <a href="/admin/consultas" className={styles.actionCard}>
+          </Link>
+          <Link href="/admin/consultas" className={styles.actionCard}>
             <span className={styles.actionIcon}>📋</span>
             <span className={styles.actionLabel}>Ver Consultas</span>
-          </a>
-          <a href="/" className={styles.actionCard}>
+          </Link>
+          <Link href="/" className={styles.actionCard}>
             <span className={styles.actionIcon}>🌐</span>
             <span className={styles.actionLabel}>Ver Sitio</span>
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -117,7 +92,10 @@ export default async function AdminDashboardPage() {
 }
 
 function getGreeting(): string {
-  const hour = new Date().getHours();
+  // Use Buenos Aires timezone (UTC-3) for accurate time-of-day greetings
+  const hour = new Date(
+    new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
+  ).getHours();
   if (hour < 12) return 'Buenos días';
   if (hour < 18) return 'Buenas tardes';
   return 'Buenas noches';

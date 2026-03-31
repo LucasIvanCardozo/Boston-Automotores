@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, type SelectHTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useId, type SelectHTMLAttributes, type ReactNode } from 'react';
 import { AlertCircle } from 'lucide-react';
 import styles from './Select.module.css';
 
@@ -36,7 +36,8 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
     },
     ref
   ) => {
-    const selectId = id || `select-${Math.random().toString(36).slice(2, 9)}`;
+    const generatedId = useId();
+    const selectId = id || generatedId;
     const hasError = !!error;
 
     return (

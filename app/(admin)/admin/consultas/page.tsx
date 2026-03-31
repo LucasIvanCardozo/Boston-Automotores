@@ -1,33 +1,16 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { getLeads } from '@/app/actions/leads';
 import ConsultasTable from './ConsultasTable';
 import ConsultasFilters from './ConsultasFilters';
 import Button from '@/components/ui/Button/Button';
+import type { LeadRow, LeadStatus, LeadType } from './types';
 import styles from './consultas.module.css';
 
 export const metadata: Metadata = {
   title: 'Consultas | Boston Automotores',
   description: 'Administración de consultas y leads',
 };
-
-type LeadStatus = 'new' | 'contacted' | 'closed';
-type LeadType = 'sell_car' | 'contact';
-
-interface LeadRow {
-  id: string;
-  type: LeadType;
-  name: string;
-  email: string;
-  phone: string;
-  status: LeadStatus;
-  sourcePage: string;
-  createdAt: Date;
-  carBrand?: string;
-  carModel?: string;
-  carYear?: number;
-  carMileage?: number;
-  message?: string;
-}
 
 interface PageProps {
   searchParams: Promise<{
@@ -103,18 +86,18 @@ export default async function AdminLeadsPage({ searchParams }: PageProps) {
           </span>
           <div className={styles.pageButtons}>
             {page > 1 && (
-              <a href={buildUrl(page - 1)}>
+              <Link href={buildUrl(page - 1)}>
                 <Button variant="secondary" size="sm">
                   Anterior
                 </Button>
-              </a>
+              </Link>
             )}
             {page < totalPages && (
-              <a href={buildUrl(page + 1)}>
+              <Link href={buildUrl(page + 1)}>
                 <Button variant="secondary" size="sm">
                   Siguiente
                 </Button>
-              </a>
+              </Link>
             )}
           </div>
         </div>

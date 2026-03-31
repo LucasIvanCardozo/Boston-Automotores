@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
-import { prisma } from '@/lib/prisma'
+import Link from 'next/link'
+import { getCatalogCars, getAvailableBrands } from '@/lib/data/cars'
 import CarFilterForm from '@/components/forms/CarFilterForm/CarFilterForm'
 import CarGrid from '@/components/sections/CarGrid/CarGrid'
 import Loading from '@/components/ui/Loading/Loading'
@@ -11,10 +12,6 @@ export const metadata: Metadata = {
   description: 'Explorá nuestro catálogo de autos usados en Mar del Plata. Encontrá tu próximo vehículo con las mejores condiciones de financiación.',
 }
 
-// Force dynamic rendering to ensure filters work
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
-
 interface SearchParams {
   brand?: string
   maxPrice?: string
@@ -22,90 +19,18 @@ interface SearchParams {
   page?: string
 }
 
-async function getCars(searchParams: SearchParams) {
-  const page = parseInt(searchParams.page || '1', 10)
-  const limit = 12
-
-  const where: Record<string, unknown> = {
-    deletedAt: null,
-    status: { in: ['available', 'reserved'] },
-  }
-
-  if (searchParams.brand) {
-    where.brand = { contains: searchParams.brand, mode: 'insensitive' }
-  }
-
-  if (searchParams.maxPrice) {
-    where.price = { ...((where.price as object) || {}), lte: parseInt(searchParams.maxPrice, 10) }
-  }
-
-  if (searchParams.maxMileage) {
-    where.mileage = { ...((where.mileage as object) || {}), lte: parseInt(searchParams.maxMileage, 10) }
-  }
-
-  try {
-    const [cars, total] = await Promise.all([
-      prisma.car.findMany({
-        where,
-        orderBy: { createdAt: 'desc' },
-        skip: (page - 1) * limit,
-        take: limit,
-        include: {
-          images: {
-            orderBy: { order: 'asc' },
-            take: 1,
-          },
-        },
-      }),
-      prisma.car.count({ where }),
-    ])
-
-    return {
-      cars: cars.map((car) => ({
-        ...car,
-        price: Number(car.price),
-      })),
-      total,
-      totalPages: Math.ceil(total / limit),
-      currentPage: page,
-    }
-  } catch (error) {
-    console.error('Error fetching cars:', error)
-    return {
-      cars: [],
-      total: 0,
-      totalPages: 0,
-      currentPage: 1,
-    }
-  }
-}
-
-async function getAvailableBrands(): Promise<string[]> {
-  try {
-    const cars = await prisma.car.findMany({
-      where: {
-        deletedAt: null,
-        status: { in: ['available', 'reserved'] },
-      },
-      select: {
-        brand: true,
-      },
-      distinct: ['brand'],
-      orderBy: {
-        brand: 'asc',
-      },
-    })
-
-    return cars.map((car) => car.brand)
-  } catch (error) {
-    console.error('Error fetching brands:', error)
-    return []
-  }
+function buildPageUrl(params: SearchParams, page: number): string {
+  const query = new URLSearchParams();
+  query.set('page', String(page));
+  if (params.brand) query.set('brand', params.brand);
+  if (params.maxPrice) query.set('maxPrice', params.maxPrice);
+  if (params.maxMileage) query.set('maxMileage', params.maxMileage);
+  return query.toString();
 }
 
 export default async function CatalogPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const params = await searchParams
-  const [{ cars, total, totalPages, currentPage }, availableBrands] = await Promise.all([getCars(params), getAvailableBrands()])
+  const [{ cars, total, totalPages, currentPage }, availableBrands] = await Promise.all([getCatalogCars(params), getAvailableBrands()])
 
   return (
     <div className={styles.page}>
@@ -172,20 +97,20 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
             </div>
             <div className={styles.paginationLinks}>
               {currentPage > 1 && (
-                <a
-                  href={`?page=${currentPage - 1}${params.brand ? `&brand=${params.brand}` : ''}${params.maxPrice ? `&maxPrice=${params.maxPrice}` : ''}${params.maxMileage ? `&maxMileage=${params.maxMileage}` : ''}`}
+                <Link
+                  href={`?${buildPageUrl(params, currentPage - 1)}`}
                   className={styles.paginationLink}
                 >
                   Anterior
-                </a>
+                </Link>
               )}
               {currentPage < totalPages && (
-                <a
-                  href={`?page=${currentPage + 1}${params.brand ? `&brand=${params.brand}` : ''}${params.maxPrice ? `&maxPrice=${params.maxPrice}` : ''}${params.maxMileage ? `&maxMileage=${params.maxMileage}` : ''}`}
+                <Link
+                  href={`?${buildPageUrl(params, currentPage + 1)}`}
                   className={styles.paginationLink}
                 >
                   Siguiente
-                </a>
+                </Link>
               )}
             </div>
           </nav>

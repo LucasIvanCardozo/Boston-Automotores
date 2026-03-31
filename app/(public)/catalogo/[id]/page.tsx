@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { prisma } from '@/lib/prisma';
+import Link from 'next/link';
+import { getPublicCar, getRelatedCars } from '@/lib/data/cars';
 import ImageGallery from '@/components/ui/ImageGallery/ImageGallery';
 import Specifications from '@/components/sections/CarDetail/Specifications';
 import ContactCTA from '@/components/sections/CarDetail/ContactCTA';
@@ -11,65 +12,9 @@ interface CarDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
-async function getCar(id: string) {
-  try {
-    const car = await prisma.car.findUnique({
-      where: { id, deletedAt: null },
-      include: {
-        images: {
-          orderBy: { order: 'asc' },
-        },
-        technicalSheet: true,
-      },
-    });
-
-    if (!car) return null;
-
-    return {
-      ...car,
-      price: Number(car.price),
-    };
-  } catch (error) {
-    console.error('Error fetching car:', error);
-    return null;
-  }
-}
-
-async function getRelatedCars(currentCarId: string, brand: string) {
-  try {
-    const cars = await prisma.car.findMany({
-      where: {
-        deletedAt: null,
-        status: { in: ['available', 'reserved'] },
-        id: { not: currentCarId },
-        OR: [
-          { brand },
-          { price: { gte: 0 } },
-        ],
-      },
-      orderBy: { createdAt: 'desc' },
-      take: 5,
-      include: {
-        images: {
-          orderBy: { order: 'asc' },
-          take: 1,
-        },
-      },
-    });
-
-    return cars.map((car) => ({
-      ...car,
-      price: Number(car.price),
-    }));
-  } catch (error) {
-    console.error('Error fetching related cars:', error);
-    return [];
-  }
-}
-
 export async function generateMetadata({ params }: CarDetailPageProps): Promise<Metadata> {
   const { id } = await params;
-  const car = await getCar(id);
+  const car = await getPublicCar(id);
 
   if (!car) {
     return {
@@ -97,7 +42,7 @@ export async function generateMetadata({ params }: CarDetailPageProps): Promise<
 
 export default async function CarDetailPage({ params }: CarDetailPageProps) {
   const { id } = await params;
-  const car = await getCar(id);
+  const car = await getPublicCar(id);
 
   if (!car) {
     notFound();
@@ -134,9 +79,9 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
       <div className={styles.page}>
         <div className={styles.container}>
           <div className={styles.breadcrumb}>
-            <a href="/">Inicio</a>
+            <Link href="/">Inicio</Link>
             <span>/</span>
-            <a href="/catalogo">Catálogo</a>
+            <Link href="/catalogo">Catálogo</Link>
             <span>/</span>
             <span>{carName}</span>
           </div>

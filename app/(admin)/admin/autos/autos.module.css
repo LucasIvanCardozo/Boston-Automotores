@@ -76,6 +76,23 @@
   box-shadow: 0 0 0 3px rgba(15, 107, 190, 0.15);
 }
 
+.filterSubmit {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+  color: white;
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--transition-fast) var(--ease-out);
+  white-space: nowrap;
+}
+
+.filterSubmit:hover {
+  background-color: var(--color-primary-dark, #0a5499);
+}
+
 @media (min-width: 640px) {
   .filters {
     grid-template-columns: repeat(2, 1fr);
@@ -98,8 +115,8 @@
   }
 
   .filters {
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 2fr 1fr auto;
     align-items: center;
-    max-width: 600px;
+    max-width: 640px;
   }
 }

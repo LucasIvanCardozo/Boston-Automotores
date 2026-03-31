@@ -22,6 +22,8 @@ const nextConfig = {
   // Compress responses
   compress: true,
 
+  allowedDevOrigins: ['192.168.1.56'],
+
   // Power optimizations
   poweredByHeader: false,
 

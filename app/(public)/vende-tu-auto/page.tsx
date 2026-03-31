@@ -23,7 +23,7 @@ const benefits = [
   {
     icon: <Shield size={24} />,
     title: 'Transacción segura',
-    description: 'Pago inmediato y transferencia dokumentada para tu tranquilidad.',
+    description: 'Pago inmediato y transferencia documentada para tu tranquilidad.',
   },
   {
     icon: <Car size={24} />,

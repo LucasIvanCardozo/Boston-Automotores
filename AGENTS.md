@@ -1,201 +1,181 @@
-# AGENTS.md - Boston Automotores
+# AGENTS.md — Boston Automotores
 
-Guidelines for AI agents working on this Next.js 16 car dealership codebase.
+Guidelines for AI agents working in this Next.js 16 + Prisma 7 codebase.
 
-## Project Overview
+---
 
-- **Framework:** Next.js 16.2.1 + React 19.2.4 + TypeScript 5.6
-- **Database:** PostgreSQL + Prisma 7.0 (generated client in `/generated/prisma`)
-- **Styling:** CSS Modules + Tailwind merge
-- **Auth:** JWT with httpOnly cookies (8h expiry)
-- **File Uploads:** Cloudinary
-- **Forms:** React Hook Form + Zod validation (mode: `onBlur`)
-
-## Build/Lint/Test Commands
+## Commands
 
 ```bash
-# Development
-npm run dev              # Start dev server on :3000
-npm run build            # Production build
-npm run start            # Start production server
-
-# Linting
-npm run lint             # ESLint (next/core-web-vitals)
-
-# Database
-npm run db:generate      # Generate Prisma client
-npm run db:push          # Push schema to database
-npm run db:migrate       # Create and apply migration
-npm run db:studio        # Open Prisma Studio
-npm run db:seed          # Run seed script (tsx prisma/seed.ts)
-
-# Testing (not configured - add vitest or jest)
-# Once configured, run single test:
-# npm test -- --testNamePattern="test name"
-# npm test -- path/to/test.file.ts
+npm run dev          # Start dev server (port 3000)
+npm run build        # Production build — run to verify no type/compile errors
+npm run lint         # ESLint via next lint
+npm run db:generate  # Regenerate Prisma client after schema changes
+npm run db:push      # Push schema to DB without a migration file
+npm run db:migrate   # Create and apply a named migration
+npm run db:studio    # Open Prisma Studio
+npm run db:seed      # Seed cars (tsx prisma/seed.ts)
 ```
 
-## Code Style Guidelines
+**No test runner is configured.** Do not invent test commands. If adding tests, use Vitest.
 
-### TypeScript & Types
-
-- **Strict mode enabled** - no `any` (ESLint warns)
-- Use explicit return types for server actions/API functions
-- Prefer `type` over `interface` for object shapes
-- Use Zod for runtime validation (schemas in `/lib/schemas/`)
-- **CRITICAL:** Convert Prisma Decimal fields to `Number` before client serialization
-
-### Naming Conventions
-
-```typescript
-// Files: PascalCase for components, camelCase for utilities
-Button.tsx, Button.module.css, useHook.ts, car-actions.ts
-
-// Variables
-const CAR_STATUS = [...]     // Constants: UPPER_SNAKE_CASE
-const localVariable          // Variables: camelCase
-const ComponentName          // Components: PascalCase
-function handleSubmit()      // Handlers: 'handle' prefix
-function getFeaturedCars()   // Fetchers: 'get' prefix
+To run scripts directly:
+```bash
+npx tsx scripts/create-admin.ts <username> <password>
+npx tsx scripts/seed-cars.ts
 ```
 
-### Imports
-
-```typescript
-// Order: React/Next → External libs → Internal (@/*) → Local (./)
-import { Suspense } from 'react';
-import { z } from 'zod';
-import { prisma } from '@/lib/prisma';
-import { Button } from '@/components/ui/Button/Button';
-import styles from './Component.module.css';
-
-// Path alias: @/* maps to root
-```
-
-### React Components
-
-```typescript
-// Server Components (default)
-export default async function Page() {
-  const data = await getData();
-  return <Component data={data} />;
-}
-
-// Client Components (explicit directive)
-'use client';
-import { useState } from 'react';
-export default function ClientComponent() { ... }
-```
-
-### Server Actions Pattern
-
-```typescript
-'use server';
-import { requireAuth } from '@/lib/auth';
-
-export interface ActionResult {
-  success: boolean;
-  error?: string;
-  data?: SomeType;
-}
-
-export async function actionName(formData: FormData): Promise<ActionResult> {
-  try {
-    await requireAuth();  // Check auth first
-    const validation = schema.safeParse(Object.fromEntries(formData));
-    if (!validation.success) {
-      return { success: false, error: 'Validation failed' };
-    }
-    // Business logic
-    return { success: true, data: result };
-  } catch (error) {
-    console.error('[actionName] Error:', error);
-    return { success: false, error: 'Operation failed' };
-  }
-}
-```
-
-### Error Handling
-
-- Always wrap server actions in try/catch
-- Log with `[FunctionName]` prefix for debugging
-- Return `{ success: false, error: string }` - never throw to client
-- Validate auth with `requireAuth()` before protected actions
-
-### CSS Modules
-
-```css
-/* BEM-like naming */
-.button { }
-.button--primary { }
-.button--loading { }
-```
+---
 
 ## Project Structure
 
 ```
 app/
-  (public)/           # Public pages (Header/Footer)
-    catalogo/         # Car catalog
-    vende-tu-auto/    # Sell car form
-  (admin)/            # Admin panel (no layout extras)
-  (auth)/             # Login (no layout)
-  actions/            # Server actions (cars.ts, leads.ts, etc.)
-  api/                # API routes
-
+  (public)/          # Public-facing pages — Header/Footer layout
+  (admin)/admin/     # Protected admin panel — sidebar layout, auth-gated
+  (auth)/admin/      # Login page — no layout wrapper
+  actions/           # Server Actions (cars, leads, images, documents, admin)
+  api/               # Route handlers (leads POST, upload POST)
 components/
-  ui/                 # Reusable: Button, Input, Badge, Modal
-  forms/              # Form components
-  admin/              # Admin components
-  sections/           # Hero, FeaturedCars, etc.
-  layout/             # Header, Footer, Navigation
-
+  ui/                # Primitive components: Button, Input, Select, Badge, …
+  forms/             # Form components: CompleteCarForm, ContactForm, …
+  sections/          # Page sections: Hero, FeaturedCars, CarDetail, …
+  layout/            # Header, Footer, AdminSidebar, Navigation
+  admin/             # Admin-specific: CarsTable, ImageUploader, …
 lib/
-  schemas/            # Zod schemas (car.ts, admin.ts, contact.ts)
-  hooks/              # Custom React hooks
-  prisma.ts           # Prisma client singleton
-  auth.ts             # JWT utilities (generateToken, requireAuth)
-  utils.ts            # Helpers (cn for tailwind-merge)
-
-prisma/
-  schema.prisma       # Database models & enums
+  data/              # Data-access layer — all Prisma queries go here
+  schemas/           # Zod schemas and inferred types (car, contact, admin)
+  constants/         # Shared option arrays (car-options.ts)
+  auth.ts            # JWT + bcrypt helpers, cookie management
+  prisma.ts          # Prisma singleton with PrismaPg adapter
+  utils.ts           # cn(), formatPrice(), formatMileage(), etc.
+  cloudinary.ts      # Cloudinary upload/delete helpers
+  email.ts           # Resend email sending
+  notifications.ts   # sileo toast wrappers
+styles/
+  variables.css      # All CSS custom properties (colors, spacing, typography)
+  animations.css     # Shared keyframe animations
+types/index.ts       # Re-exports schema types + shared interfaces
 ```
 
-## Key Conventions
+---
 
-1. **Route Groups:** `(public)`, `(admin)`, `(auth)` for layout separation
-2. **Server Actions:** Define result interfaces; serialize Decimals
-3. **Forms:** React Hook Form + Zod resolver; validation: `onBlur`
-4. **Images:** next/image with Cloudinary URLs from DB
-5. **Auth:** JWT in httpOnly cookies; call `requireAuth()` in protected actions
-6. **Decimal Handling:** `Number(car.price)` before client components
-7. **Utilities:** Use `cn()` from `@/lib/utils` for class merging; `formatPrice()`, `formatDate()`, `slugify()` for formatting
+## Architecture Rules
 
-## ESLint Rules
+### Server vs Client Components
+- **Default to Server Components.** Add `'use client'` only when the component needs
+  hooks, event handlers, or browser APIs.
+- Pages are Server Components. Extract interactivity into named client wrappers
+  (e.g. `CarsTableWrapper.tsx` next to `page.tsx`).
+- Never put `'use client'` on a layout that wraps Server Component children.
 
-- `@typescript-eslint/no-explicit-any`: warn
-- `@typescript-eslint/no-unused-vars`: warn (allows `_` prefix)
-- Extends: `next/core-web-vitals`
+### Data Fetching
+- **All Prisma queries belong in `lib/data/`**, never directly in page files.
+- Use `React.cache()` on functions called from both `generateMetadata` and the page
+  component to avoid double queries.
+- Server Actions live in `app/actions/`. They call `lib/data/` or Prisma directly.
+  Always call `requireAuth()` first in every admin action.
 
-## Environment Variables (.env.local)
+### Middleware / Auth
+- `proxy.ts` at the root is the Next.js 16 Edge middleware (replaces `middleware.ts`).
+  Export the function as `proxy`, not `middleware`.
+- Admin layout (`app/(admin)/admin/layout.tsx`) performs a server-side token check as
+  a second layer. Both layers must remain in sync on the cookie name — always import
+  `ADMIN_COOKIE_OPTIONS` from `lib/auth.ts`, never hardcode `'admin_session'`.
 
-```
-DATABASE_URL=postgresql://...
-JWT_SECRET=...
-CLOUDINARY_CLOUD_NAME=...
-CLOUDINARY_API_KEY=...
-CLOUDINARY_API_SECRET=...
-RESEND_API_KEY=...
-```
+### Routing
+- Use `<Link href="…">` from `next/link` for **all** internal navigation.
+  Never use `<a href="…">` for same-domain paths.
+- Build pagination URLs with `URLSearchParams`, never string concatenation.
 
-## Git & Commits
+---
 
-- Use conventional commits: `feat:`, `fix:`, `chore:`, `docs:`
-- Never add "Co-Authored-By" or AI attribution
-- Keep commits focused and atomic
+## TypeScript
 
-## Additional Resources
+- **`strict: true`** is enabled. No implicit `any`.
+- Avoid `as any`. If you must suppress, use `as unknown as TargetType` and add a comment.
+- Avoid `eslint-disable` suppression comments. Fix the root cause.
+- Infer types from Zod schemas (`z.infer<typeof schema>`). Do not manually duplicate
+  types that already exist in `lib/schemas/`.
+- Shared display types (enums, interfaces reused across multiple files) go in
+  `types/index.ts` or a co-located `types.ts`. Never redefine the same type twice.
+- Return types on exported functions are mandatory.
 
-- **DEPLOY.md:** Comprehensive deployment guide for Vercel
-- **opencode.json:** Contains next-devtools MCP configuration
-- **Database Schema:** See `prisma/schema.prisma` for models and enums
+---
+
+## Naming Conventions
+
+| Thing | Convention | Example |
+|---|---|---|
+| Components | PascalCase file + folder | `components/ui/Button/Button.tsx` |
+| Hooks | `use` prefix, camelCase | `useDeleteCar` |
+| Server Actions | verb + noun, camelCase | `createCar`, `updateLeadStatus` |
+| Data functions | get/create/update/delete prefix | `getFeaturedCars`, `getDashboardStats` |
+| Constants | SCREAMING_SNAKE_CASE | `FUEL_TYPE_OPTIONS`, `ADMIN_COOKIE_OPTIONS` |
+| CSS modules | camelCase class names | `.filterInput`, `.sectionTitle` |
+| Route groups | lowercase in parens | `(public)`, `(admin)`, `(auth)` |
+
+---
+
+## Styling
+
+- **CSS Modules** for all component styles. No inline `style={{}}` props in production
+  code. No hardcoded hex values — use CSS custom properties from `styles/variables.css`.
+- **`cn()` from `lib/utils.ts`** for conditional class merging (wraps `clsx` + `twMerge`).
+- All spacing, color, and typography values come from CSS variables:
+  `--space-*`, `--color-*`, `--font-size-*`, `--font-weight-*`.
+- Screen-reader-only content: use the `.sr-only` utility class, not `display: none`.
+
+---
+
+## Forms & Validation
+
+- All forms use **react-hook-form** + **zodResolver** from `@hookform/resolvers/zod`.
+- Schemas live in `lib/schemas/`. Spanish error messages throughout.
+- Server Actions re-validate with the same Zod schema independently of the client.
+- Honeypot field (`name="honeypot"`, `aria-hidden="true"`, `tabIndex={-1}`) required
+  on all public-facing forms.
+- Never return the raw Prisma record from a public API response. Strip to minimal fields.
+
+---
+
+## Error Handling
+
+- Server Actions return `{ success: boolean; error?: string; data?: T }`. Never throw
+  to the client — catch internally and return `{ success: false, error: '…' }`.
+- `console.error(…)` is acceptable for server-side logging of unexpected errors.
+  `console.log(…)` is **never** acceptable in committed code.
+- Wrap every `requireAuth()` call in its own try/catch so a missing JWT_SECRET
+  produces a controlled redirect, not an unhandled crash.
+
+---
+
+## Key Libraries
+
+| Library | Purpose |
+|---|---|
+| `next` 16 | Framework — App Router, proxy.ts middleware |
+| `prisma` 7 + `@prisma/adapter-pg` | ORM with pg driver adapter |
+| `zod` | Schema validation (client + server) |
+| `react-hook-form` | Form state management |
+| `cloudinary` v2 | Image/document storage |
+| `resend` | Transactional email |
+| `sileo` | Toast notifications (`lib/notifications.ts` wrappers) |
+| `framer-motion` | Animations (keep in Client Components only) |
+| `lucide-react` | Icons |
+| `clsx` + `tailwind-merge` | Class merging via `cn()` |
+| `bcryptjs` + `jsonwebtoken` | Auth (BCRYPT_ROUNDS = 12, JWT 8 h) |
+
+---
+
+## Things to Never Do
+
+- Never add `console.log` to committed code.
+- Never call Prisma directly inside a page file — use `lib/data/`.
+- Never hardcode the cookie name `'admin_session'` — import `ADMIN_COOKIE_OPTIONS.name`.
+- Never define option arrays (fuel types, statuses, etc.) locally — import from
+  `lib/constants/car-options.ts`.
+- Never use `<a>` for internal links.
+- Never redefine types that already exist in `lib/schemas/` or `types/index.ts`.
+- Never add `force-dynamic` or `revalidate = 0` without a documented reason.
+- Never run `npm run build` as a verification step during implementation — just lint.

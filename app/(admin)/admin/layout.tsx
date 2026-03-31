@@ -1,11 +1,9 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { verifyToken } from '@/lib/auth';
+import { verifyToken, ADMIN_COOKIE_OPTIONS } from '@/lib/auth';
 import AdminSidebar from '@/components/layout/AdminSidebar/AdminSidebar';
 import Toaster from '@/components/ui/Toaster/Toaster';
 import styles from './layout.module.css';
-
-const ADMIN_COOKIE_NAME = 'admin_session';
 
 export default async function AdminLayout({
   children,
@@ -14,9 +12,16 @@ export default async function AdminLayout({
 }) {
   // Check authentication from cookie
   const cookieStore = await cookies();
-  const token = cookieStore.get(ADMIN_COOKIE_NAME)?.value;
-  
-  if (!token || !verifyToken(token)) {
+  const token = cookieStore.get(ADMIN_COOKIE_OPTIONS.name)?.value;
+
+  let isAuthenticated = false;
+  try {
+    isAuthenticated = !!token && !!verifyToken(token);
+  } catch {
+    isAuthenticated = false;
+  }
+
+  if (!isAuthenticated) {
     redirect('/admin/login');
   }
 

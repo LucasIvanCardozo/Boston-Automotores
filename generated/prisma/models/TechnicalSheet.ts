@@ -165,7 +165,7 @@ export type TechnicalSheetGroupByOutputType = {
   _max: TechnicalSheetMaxAggregateOutputType | null
 }
 
-type GetTechnicalSheetGroupByPayload<T extends TechnicalSheetGroupByArgs> = Prisma.PrismaPromise<
+export type GetTechnicalSheetGroupByPayload<T extends TechnicalSheetGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<TechnicalSheetGroupByOutputType, T['by']> &
       {

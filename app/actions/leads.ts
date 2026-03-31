@@ -111,39 +111,29 @@ export async function updateLeadStatus(
   id: string,
   status: LeadStatus
 ): Promise<{ success: boolean; error?: string }> {
-  'use server';
-  
-  console.log('updateLeadStatus called with:', { id, status });
-  
   // Validate inputs
   if (!id || typeof id !== 'string') {
-    console.log('Invalid ID');
     return { success: false, error: 'ID de consulta inválido' };
   }
-  
+
   if (!status || !['new', 'contacted', 'closed'].includes(status)) {
-    console.log('Invalid status');
     return { success: false, error: 'Estado inválido' };
   }
 
   try {
     await requireAuth();
-    console.log('Auth passed');
-  } catch (authError) {
-    console.error('Auth error:', authError);
+  } catch {
     return { success: false, error: 'No autorizado' };
   }
 
   try {
-    const lead = await prisma.lead.update({
+    await prisma.lead.update({
       where: { id },
       data: {
         status,
         contactedAt: status === 'contacted' ? new Date() : undefined,
       },
     });
-    
-    console.log('Lead updated:', lead.id);
 
     revalidatePath('/admin/consultas');
 

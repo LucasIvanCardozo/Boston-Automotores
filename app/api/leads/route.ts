@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    return NextResponse.json({ success: true, lead });
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error creating lead:', error);
     return NextResponse.json(

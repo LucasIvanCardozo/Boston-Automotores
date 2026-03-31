@@ -1,183 +1,54 @@
-'use client';
-
-import { useState, useEffect, useCallback, useRef, useTransition } from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { getAdminCars, deleteCar } from '@/app/actions/cars';
-import { confirm, notifySuccess, notifyError, notifyWarning, notifyInfo } from '@/lib/notifications';
-import { setFlashNotification, readFlashNotification } from '@/lib/flash-notifications';
+import { getAdminCars } from '@/app/actions/cars';
+import { ADMIN_STATUS_OPTIONS } from '@/lib/constants/car-options';
 import Button from '@/components/ui/Button/Button';
-import CarsTable from '@/components/admin/CarsTable/CarsTable';
+import CarsTableWrapper from './CarsTableWrapper';
 import styles from './autos.module.css';
+
+export const metadata: Metadata = {
+  title: 'Gestionar Autos | Boston Automotores',
+};
 
 type CarStatus = 'available' | 'sold' | 'reserved';
 
-interface Car {
-  id: string;
-  brand: string;
-  model: string;
-  year: number;
-  price: number;
-  status: CarStatus;
-  featured: boolean;
-  deletedAt: Date | null;
-  images: { url: string }[];
-  createdAt: Date;
+interface PageProps {
+  searchParams: Promise<{
+    page?: string;
+    limit?: string;
+    sortBy?: string;
+    sortOrder?: string;
+    brand?: string;
+    status?: string;
+  }>;
 }
 
-const statusOptions: { value: CarStatus | ''; label: string }[] = [
-  { value: '', label: 'Todos los estados' },
-  { value: 'available', label: 'Disponible' },
-  { value: 'sold', label: 'Vendido' },
-  { value: 'reserved', label: 'Reservado' },
-];
+export default async function AdminCarsPage({ searchParams }: PageProps) {
+  const params = await searchParams;
 
-export default function AdminCarsPage() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const page = parseInt(params.page || '1', 10);
+  const limit = parseInt(params.limit || '20', 10);
+  const sortBy = (params.sortBy || 'createdAt') as 'createdAt' | 'price' | 'year';
+  const sortOrder = (params.sortOrder || 'desc') as 'asc' | 'desc';
+  const brand = params.brand || '';
+  const status = (params.status || '') as CarStatus | '';
 
-  const [cars, setCars] = useState<Car[]>([]);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const result = await getAdminCars({
+    page,
+    limit,
+    sortBy,
+    sortOrder,
+    brand: brand || undefined,
+    status: status || undefined,
+  });
 
-  const page = parseInt(searchParams.get('page') || '1', 10);
-  const limit = parseInt(searchParams.get('limit') || '20', 10);
-  const sortBy = searchParams.get('sortBy') || 'createdAt';
-  const sortOrder = (searchParams.get('sortOrder') || 'desc') as 'asc' | 'desc';
-  const brand = searchParams.get('brand') || '';
-  const status = (searchParams.get('status') || '') as CarStatus | '';
-
-  const loadCars = useCallback(async () => {
-    setLoading(true);
-    const result = await getAdminCars({
-      page,
-      limit,
-      sortBy: sortBy as 'createdAt' | 'price' | 'year',
-      sortOrder,
-      brand: brand || undefined,
-      status: status || undefined,
-    });
-
-    setCars(
-      (result.cars || []).map((car: Record<string, unknown>) => ({
-        ...car,
-        price: Number(car.price),
-      })) as Car[]
-    );
-    setTotal(result.total || 0);
-    setLoading(false);
-  }, [page, limit, sortBy, sortOrder, brand, status]);
-
-  useEffect(() => {
-    loadCars();
-  }, [loadCars]);
-
-  const updateSearchParams = useCallback(
-    (updates: Record<string, string | undefined>) => {
-      const params = new URLSearchParams(searchParams);
-      Object.entries(updates).forEach(([key, value]) => {
-        if (value === undefined || value === '') {
-          params.delete(key);
-        } else {
-          params.set(key, value);
-        }
-      });
-      router.push(`/admin/autos?${params.toString()}`);
-    },
-    [searchParams, router]
-  );
-
-  const handlePageChange = useCallback(
-    (newPage: number) => {
-      updateSearchParams({ page: newPage.toString() });
-    },
-    [updateSearchParams]
-  );
-
-  const handlePageSizeChange = useCallback(
-    (newLimit: number) => {
-      updateSearchParams({ limit: newLimit.toString(), page: '1' });
-    },
-    [updateSearchParams]
-  );
-
-  const handleSortChange = useCallback(
-    (newSortBy: string, newSortOrder: 'asc' | 'desc') => {
-      updateSearchParams({ sortBy: newSortBy, sortOrder: newSortOrder, page: '1' });
-    },
-    [updateSearchParams]
-  );
-
-  // Check for flash notifications on mount - using in-memory store
-  const hasShownFlashNotification = useRef(false);
-  
-  useEffect(() => {
-    // Only run once per mount
-    if (hasShownFlashNotification.current) return;
-    hasShownFlashNotification.current = true;
-
-    // Read and clear the flash notification (sync, instant)
-    const notification = readFlashNotification();
-    
-    if (!notification) return;
-    
-    const { type, title, message } = notification;
-
-    switch (type) {
-      case 'success':
-        notifySuccess(title, message);
-        break;
-      case 'error':
-        notifyError(title, message);
-        break;
-      case 'warning':
-        notifyWarning(title, message);
-        break;
-      case 'info':
-        notifyInfo(title, message);
-        break;
-    }
-    // No URL params to clear - the in-memory store handles it
-  }, []); // Empty deps - only run on mount
-
-  const handleDeleteCar = useCallback(
-    async (car: Car) => {
-      const isConfirmed = await confirm({
-        title: 'Eliminar vehículo',
-        description: `¿Estás seguro de que deseas eliminar el ${car.brand} ${car.model}? Esta acción no se puede deshacer.`,
-        confirmText: 'Eliminar',
-        cancelText: 'Cancelar',
-        type: 'error',
-      });
-
-      if (!isConfirmed) return;
-
-      const result = await deleteCar(car.id);
-      if (result.success) {
-        // Optimistically remove from local state - avoids re-renders from loadCars()
-        // Using functional update so we don't need cars/setCars in dependency array
-        setCars((prevCars) => prevCars.filter((c) => c.id !== car.id));
-        setTotal((prevTotal) => prevTotal - 1);
-
-        // Show notification immediately - no setTimeout needed
-        // Direct state update means no React reconciliation chaos
-        notifySuccess('Éxito', `${car.brand} ${car.model} ha sido eliminado correctamente`);
-      } else {
-        notifyError('Error al eliminar', result.error || 'No se pudo eliminar el vehículo.');
-      }
-    },
-    [] // No dependencies needed - we use functional state updates
-  );
-
-  const handleFilterChange = useCallback(
-    (key: string, value: string) => {
-      startTransition(() => {
-        updateSearchParams({ [key]: value || undefined, page: '1' });
-      });
-    },
-    [updateSearchParams]
-  );
+  const cars = (result.cars || []).map((car) => ({
+    ...car,
+    price: Number(car.price),
+    deletedAt: car.deletedAt ?? null,
+    createdAt: car.createdAt instanceof Date ? car.createdAt : new Date(car.createdAt as string),
+  }));
+  const total = result.total || 0;
 
   return (
     <div className={styles.page}>
@@ -193,41 +64,44 @@ export default function AdminCarsPage() {
         </Link>
       </header>
 
-      <div className={styles.filters}>
+      {/* URL-driven filters — form submission updates search params */}
+      <form className={styles.filters} action="/admin/autos" method="GET">
+        <label htmlFor="filter-brand" className="sr-only">Filtrar por marca</label>
         <input
+          id="filter-brand"
           type="text"
           name="brand"
           placeholder="Buscar por marca..."
           defaultValue={brand}
-          onChange={(e) => handleFilterChange('brand', e.target.value)}
           className={styles.filterInput}
         />
+        <label htmlFor="filter-status" className="sr-only">Filtrar por estado</label>
         <select
+          id="filter-status"
           name="status"
           defaultValue={status}
-          onChange={(e) => handleFilterChange('status', e.target.value)}
           className={styles.filterSelect}
         >
-          {statusOptions.map((option) => (
+          {ADMIN_STATUS_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>
           ))}
         </select>
-      </div>
+        {/* Preserve other params */}
+        <input type="hidden" name="page" value="1" />
+        <button type="submit" className={styles.filterSubmit}>Buscar</button>
+      </form>
 
-      <CarsTable
-        data={cars}
-        totalCount={total}
+      <CarsTableWrapper
+        cars={cars}
+        total={total}
         page={page}
-        pageSize={limit}
+        limit={limit}
         sortBy={sortBy}
         sortOrder={sortOrder}
-        onPageChange={handlePageChange}
-        onPageSizeChange={handlePageSizeChange}
-        onSortChange={handleSortChange}
-        onDeleteCar={handleDeleteCar}
-        isLoading={loading}
+        brand={brand}
+        status={status}
       />
     </div>
   );

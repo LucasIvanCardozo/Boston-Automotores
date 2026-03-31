@@ -23,26 +23,8 @@ import Badge from '@/components/ui/Badge/Badge';
 import Button from '@/components/ui/Button/Button';
 import Portal from '@/components/ui/Portal/Portal';
 import { notifySuccess, notifyError } from '@/lib/notifications';
+import type { LeadRow, LeadStatus, LeadType } from './types';
 import styles from './consultas.module.css';
-
-type LeadStatus = 'new' | 'contacted' | 'closed';
-type LeadType = 'sell_car' | 'contact';
-
-interface LeadRow {
-  id: string;
-  type: LeadType;
-  name: string;
-  email: string;
-  phone: string;
-  status: LeadStatus;
-  sourcePage: string;
-  createdAt: Date;
-  carBrand?: string;
-  carModel?: string;
-  carYear?: number;
-  carMileage?: number;
-  message?: string;
-}
 
 const statusVariants: Record<LeadStatus, 'primary' | 'warning' | 'success'> = {
   new: 'primary',
@@ -79,21 +61,17 @@ export default function ConsultasTable({ leads }: ConsultasTableProps) {
     setUpdatingId(leadId);
     
     try {
-      console.log('Updating lead:', leadId, 'to status:', newStatus);
       const result = await updateLeadStatus(leadId, newStatus);
-      
-      console.log('Result:', result);
-      
+
       if (result.success) {
         notifySuccess('Éxito', `Consulta marcada como ${statusLabels[newStatus].toLowerCase()}`);
         // Use router.refresh() instead of window.location.reload()
         router.refresh();
       } else {
-        console.error('Error updating lead status:', result.error);
         notifyError('Error', result.error || 'No se pudo actualizar la consulta');
       }
     } catch (error) {
-      console.error('Unexpected error:', error);
+      console.error('Error inesperado actualizando consulta:', error);
       notifyError('Error', 'Error inesperado. Verificá tu conexión e intentá de nuevo.');
     } finally {
       setUpdatingId(null);

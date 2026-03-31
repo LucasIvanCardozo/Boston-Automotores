@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { uploadImage, uploadDocument, generateCarImagePublicId, generateTechnicalSheetPublicId } from '@/lib/cloudinary'
+import { uploadImage, uploadDocument } from '@/lib/cloudinary'
+import { requireAuth } from '@/lib/auth'
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 const MAX_PDF_SIZE = 20 * 1024 * 1024 // 20MB
@@ -7,6 +8,12 @@ const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 const PDF_TYPE = 'application/pdf'
 
 export async function POST(request: NextRequest) {
+  try {
+    await requireAuth()
+  } catch {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  }
+
   try {
     // Get carId from URL or body
     const formData = await request.formData()
@@ -55,7 +62,6 @@ export async function POST(request: NextRequest) {
 
     if (isTechnicalSheet) {
       // Upload PDF as document (raw resource type)
-      const publicId = generateTechnicalSheetPublicId(carId)
       result = await uploadDocument(dataUri, {
         folder: `client-boston/documents`,
         publicId: `${carId}/technical`,
@@ -68,7 +74,6 @@ export async function POST(request: NextRequest) {
       })
     } else {
       // Upload image
-      const publicId = generateCarImagePublicId(carId, order)
       result = await uploadImage(dataUri, {
         folder: `client-boston/cars/${carId}`,
         publicId: String(order),

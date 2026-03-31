@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from 'react';
 import { AlertCircle } from 'lucide-react';
 import styles from './Input.module.css';
 
@@ -28,7 +28,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) => {
-    const inputId = id || `input-${Math.random().toString(36).slice(2, 9)}`;
+    const generatedId = useId();
+    const inputId = id || generatedId;
     const hasError = !!error;
 
     return (

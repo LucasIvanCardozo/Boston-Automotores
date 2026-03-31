@@ -1,8 +1,9 @@
 'use client';
 
 import { z } from 'zod';
-import { useState, useCallback, useRef } from 'react';
-import { useForm, useFieldArray, Controller } from 'react-hook-form';
+import { useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle } from 'lucide-react';
 import { 
@@ -26,6 +27,14 @@ import Button from '@/components/ui/Button/Button';
 import ImageUploader from '@/components/admin/ImageUploader/ImageUploader';
 import type { ImageData } from '@/components/admin/ImageUploader/ImageUploader';
 import TechnicalSheetUploader from '@/components/admin/TechnicalSheetUploader/TechnicalSheetUploader';
+import {
+  FUEL_TYPE_OPTIONS,
+  TRANSMISSION_OPTIONS,
+  STATUS_OPTIONS,
+  STEERING_OPTIONS,
+  HEADLIGHTS_OPTIONS,
+  YEAR_OPTIONS,
+} from '@/lib/constants/car-options';
 import styles from './CompleteCarForm.module.css';
 
 /**
@@ -83,53 +92,14 @@ interface CompleteCarFormProps {
   isLoading?: boolean;
 }
 
-const fuelTypeOptions = [
-  { value: 'nafta', label: 'Nafta' },
-  { value: 'diesel', label: 'Diesel' },
-  { value: 'electrico', label: 'Eléctrico' },
-  { value: 'hibrido', label: 'Híbrido' },
-  { value: 'gnc', label: 'GNC' },
-];
-
-const transmissionOptions = [
-  { value: 'manual', label: 'Manual' },
-  { value: 'automatica', label: 'Automática' },
-  { value: 'cvt', label: 'CVT' },
-];
-
-const statusOptions = [
-  { value: 'available', label: 'Disponible' },
-  { value: 'sold', label: 'Vendido' },
-  { value: 'reserved', label: 'Reservado' },
-];
-
-const steeringOptions = [
-  { value: 'mechanical', label: 'Mecánica' },
-  { value: 'hydraulic', label: 'Hidráulica' },
-  { value: 'electric', label: 'Eléctrica' },
-];
-
-const headlightsOptions = [
-  { value: 'halogen', label: 'Halógeno' },
-  { value: 'led', label: 'LED' },
-  { value: 'xenon', label: 'Xenón' },
-  { value: 'full-led', label: 'Full LED' },
-];
-
 const sensorOptions = SENSOR_OPTIONS.map(s => ({ value: s, label: s.charAt(0).toUpperCase() + s.slice(1).replace('-', ' ') }));
-const securityFeatureOptions = SECURITY_FEATURE_OPTIONS.map(s => ({ 
-  value: s, 
-  label: s.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') 
+const securityFeatureOptions = SECURITY_FEATURE_OPTIONS.map(s => ({
+  value: s,
+  label: s.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
 }));
-const comfortFeatureOptions = COMFORT_FEATURE_OPTIONS.map(s => ({ 
-  value: s, 
-  label: s.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') 
-}));
-
-const currentYear = new Date().getFullYear();
-const yearOptions = Array.from({ length: currentYear - 1900 + 1 }, (_, i) => ({
-  value: String(currentYear - i),
-  label: String(currentYear - i),
+const comfortFeatureOptions = COMFORT_FEATURE_OPTIONS.map(s => ({
+  value: s,
+  label: s.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
 }));
 
 // Checkbox component for arrays
@@ -164,6 +134,7 @@ export default function CompleteCarForm({
   existingTechnicalSheet,
   isLoading = false,
 }: CompleteCarFormProps) {
+  const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
   
   // Default specs values
@@ -194,7 +165,7 @@ export default function CompleteCarForm({
     defaultValues: {
       brand: initialData?.brand || '',
       model: initialData?.model || '',
-      year: initialData?.year || currentYear,
+      year: initialData?.year || new Date().getFullYear(),
       price: initialData?.price || 0,
       mileage: initialData?.mileage || 0,
       fuelType: initialData?.fuelType || 'nafta',
@@ -355,7 +326,7 @@ export default function CompleteCarForm({
           
           <Select
             label="Año"
-            options={yearOptions}
+            options={YEAR_OPTIONS}
             {...register('year', { valueAsNumber: true })}
             error={errors.year?.message}
             required
@@ -381,7 +352,7 @@ export default function CompleteCarForm({
 
           <Select
             label="Tipo de Combustible"
-            options={fuelTypeOptions}
+            options={FUEL_TYPE_OPTIONS}
             {...register('fuelType')}
             error={errors.fuelType?.message}
             required
@@ -389,7 +360,7 @@ export default function CompleteCarForm({
           
           <Select
             label="Transmisión"
-            options={transmissionOptions}
+            options={TRANSMISSION_OPTIONS}
             {...register('transmission')}
             error={errors.transmission?.message}
             required
@@ -397,7 +368,7 @@ export default function CompleteCarForm({
           
           <Select
             label="Estado"
-            options={statusOptions}
+            options={STATUS_OPTIONS}
             {...register('status')}
             error={errors.status?.message}
             required
@@ -483,7 +454,7 @@ export default function CompleteCarForm({
           
           <Select
             label="Dirección"
-            options={steeringOptions}
+            options={STEERING_OPTIONS}
             {...register('specs.steering')}
             error={errors.specs?.steering?.message}
           />
@@ -528,7 +499,7 @@ export default function CompleteCarForm({
           
           <Select
             label="Faros"
-            options={headlightsOptions}
+            options={HEADLIGHTS_OPTIONS}
             {...register('specs.headlights')}
             error={errors.specs?.headlights?.message}
           />
@@ -619,7 +590,7 @@ export default function CompleteCarForm({
         <Button
           type="button"
           variant="secondary"
-          onClick={() => window.history.back()}
+          onClick={() => router.push('/admin/autos')}
           disabled={isLoading}
         >
           Cancelar
