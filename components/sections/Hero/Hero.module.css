@@ -1,9 +1,8 @@
 .hero {
   position: relative;
-  height: calc(100vh - var(--header-height-measured, 64px));
-  height: calc(100dvh - var(--header-height-measured, 64px));
-  max-height: calc(100vh - var(--header-height-measured, 64px));
-  max-height: calc(100dvh - var(--header-height-measured, 64px));
+  height: calc(100vh - var(--header-height));
+  height: calc(100dvh - var(--header-height));
+  min-height: 700px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,7 +11,7 @@
 
 @supports not (height: 100dvh) {
   .hero {
-    height: calc(100vh - var(--header-height-measured, 64px));
+    height: calc(100vh - var(--header-height));
   }
 }
 
@@ -143,9 +142,10 @@
 .secondaryButton {
   display: inline-flex;
   align-items: center;
+  text-wrap: none;
   justify-content: center;
   gap: var(--space-2);
-  padding: var(--space-4) var(--space-6);
+  padding: var(--space-2) var(--space-2);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   border-radius: var(--radius-md);
@@ -160,22 +160,19 @@
 }
 
 .primaryButton:hover {
-  background: var(--color-surface);
-  border-color: var(--color-surface);
-  color: var(--color-primary);
   transform: translateY(-2px);
+  color: var(--color-text-inverse);
 }
 
 .secondaryButton {
-  background: transparent;
-  color: var(--color-text-inverse);
+  background: var(--color-text-inverse);
+  color: var(--color-text);
   border: 2px solid var(--color-text-inverse);
 }
 
 .secondaryButton:hover {
-  background: var(--color-text-inverse);
-  color: var(--color-text);
   transform: translateY(-2px);
+  color: var(--color-text);
 }
 
 .trustBadges {
@@ -206,9 +203,9 @@
 }
 
 @media (min-width: 768px) {
-  .hero {
-    height: calc(100vh - var(--header-height-measured, 64px));
-    height: calc(100dvh - var(--header-height-measured, 64px));
+  .primaryButton,
+  .secondaryButton {
+    padding: var(--space-2) var(--space-6);
   }
 
   .content {
@@ -232,10 +229,14 @@
 }
 
 @media (min-width: 1024px) {
+  .primaryButton,
+  .secondaryButton {
+    padding: var(--space-2) var(--space-6);
+  }
+
   .hero {
-    height: calc(100vh - var(--header-height-measured, 64px));
-    height: calc(100dvh - var(--header-height-measured, 64px));
-    min-height: calc(700px - var(--header-height-measured, 64px));
+    height: calc(100vh - var(--header-height));
+    height: calc(100dvh - var(--header-height));
   }
 
   .title {

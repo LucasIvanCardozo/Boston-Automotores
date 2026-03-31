@@ -129,6 +129,12 @@
   margin: 0;
 }
 
+@media (max-width: 480px) {
+  .specGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (min-width: 768px) {
   .specGrid {
     grid-template-columns: repeat(4, 1fr);
