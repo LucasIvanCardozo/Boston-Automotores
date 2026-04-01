@@ -24,8 +24,7 @@ import {
 import Input from '@/components/ui/Input/Input';
 import Select from '@/components/ui/Select/Select';
 import Button from '@/components/ui/Button/Button';
-import ImageUploader from '@/components/admin/ImageUploader/ImageUploader';
-import type { ImageData } from '@/components/admin/ImageUploader/ImageUploader';
+import ImageUploader, { type ImageData, type StagedImage } from '@/components/admin/ImageUploader/ImageUploader';
 import TechnicalSheetUploader from '@/components/admin/TechnicalSheetUploader/TechnicalSheetUploader';
 import {
   FUEL_TYPE_OPTIONS,
@@ -136,6 +135,8 @@ export default function CompleteCarForm({
 }: CompleteCarFormProps) {
   const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [currentImages, setCurrentImages] = useState<ImageData[]>(existingImages);
+  const [stagedFiles, setStagedFiles] = useState<StagedImage[]>([]);
   
   // Default specs values
   const defaultSpecs = {
@@ -249,6 +250,31 @@ export default function CompleteCarForm({
       if (data.description) formData.append('description', data.description);
       formData.append('features', JSON.stringify(data.features.map(f => f.value).filter(Boolean)));
       formData.append('specs', JSON.stringify(specsValidation.data));
+
+      // Compute deleted image IDs (images that existed before but are no longer in current list)
+      const deletedImageIds = existingImages
+        .filter(existing => !currentImages.some(current => current.id === existing.id))
+        .map(img => img.id);
+      if (deletedImageIds.length > 0) {
+        formData.append('deletedImageIds', JSON.stringify(deletedImageIds));
+      }
+
+      // Send staged images (already uploaded to Cloudinary, just need DB save)
+      if (stagedFiles.length > 0) {
+        formData.append('stagedImages', JSON.stringify(stagedFiles));
+      }
+
+      // Detect reordered images (existing images whose order changed)
+      const reorderedImages = currentImages
+        .filter(current => {
+          const original = existingImages.find(e => e.id === current.id);
+          return original && original.order !== current.order;
+        })
+        .map(current => ({ id: current.id, order: current.order }));
+      
+      if (reorderedImages.length > 0) {
+        formData.append('reorderedImages', JSON.stringify(reorderedImages));
+      }
 
       await onSubmit(formData);
     } catch (err) {
@@ -563,6 +589,8 @@ export default function CompleteCarForm({
             carId={carId}
             initialImages={imageData}
             maxImages={20}
+            onImagesChange={setCurrentImages}
+            onStagedChange={setStagedFiles}
           />
         ) : (
           <p className={styles.infoText}>

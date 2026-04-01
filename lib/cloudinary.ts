@@ -154,6 +154,7 @@ export async function getResource(publicId: string): Promise<ResourceApiResponse
 export function generateSignedUploadParams(options: {
   folder: string;
   publicId?: string;
+  transformation?: string;
   timestamp?: number;
 }): {
   signature: string;
@@ -162,13 +163,15 @@ export function generateSignedUploadParams(options: {
   cloudName: string;
   folder: string;
   publicId?: string;
+  transformation?: string;
 } {
   const timestamp = options.timestamp || Math.round(Date.now() / 1000);
   
-  const params = {
+  const params: Record<string, string | number> = {
     timestamp,
     folder: options.folder,
     ...(options.publicId && { public_id: options.publicId }),
+    ...(options.transformation && { transformation: options.transformation }),
   };
 
   const signature = cloudinary.utils.api_sign_request(params, process.env.CLOUDINARY_API_SECRET || '');
@@ -180,6 +183,7 @@ export function generateSignedUploadParams(options: {
     cloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
     folder: options.folder,
     ...(options.publicId && { publicId: options.publicId }),
+    ...(options.transformation && { transformation: options.transformation }),
   };
 }
 

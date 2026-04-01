@@ -82,6 +82,7 @@ export default async function EditCarPage({ params }: PageProps) {
   const existingImages = car.images.map((img, idx) => ({
     id: img.id,
     url: img.url,
+    secureUrl: img.secureUrl,
     publicId: img.publicId || img.secureUrl,
     order: img.order ?? idx,
     width: img.width || 0,

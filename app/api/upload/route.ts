@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
           { width: 1920, height: 1080, crop: 'limit' },
           { quality: 'auto', fetch_format: 'auto' },
         ],
-      })
+      });
 
       return NextResponse.json({
         publicId: result.public_id,

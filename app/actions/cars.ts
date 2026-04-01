@@ -7,6 +7,7 @@ import { carCreateSchema, carUpdateSchema, carDeleteSchema, toggleFeaturedSchema
 import type { CarCreateInput, CarUpdateInput, CarSpecs } from '@/lib/schemas/car';
 import { requireAuth } from '@/lib/auth';
 import { hardDeleteCar } from '@/lib/car-deletion';
+import { deleteAsset, extractPublicIdFromUrl } from '@/lib/cloudinary';
 
 export interface CarResult {
   success: boolean;
@@ -214,6 +215,87 @@ export async function updateCar(id: string, formData: FormData): Promise<CarResu
       where: { id },
       data: validation.data,
     });
+
+    // Process deleted images (staged deletions from the edit form)
+    const deletedImageIdsRaw = formData.get('deletedImageIds');
+    if (deletedImageIdsRaw) {
+      const deletedImageIds = JSON.parse(deletedImageIdsRaw as string) as string[];
+
+      // Fetch images to get their Cloudinary public IDs
+      const imagesToDelete = await prisma.image.findMany({
+        where: { id: { in: deletedImageIds }, carId: id },
+      });
+
+      // Delete from Cloudinary
+      for (const image of imagesToDelete) {
+        try {
+          const publicId = image.publicId || extractPublicIdFromUrl(image.url);
+          if (publicId) {
+            await deleteAsset(publicId);
+          }
+        } catch (cloudinaryError) {
+          console.error('Error deleting image from Cloudinary during update:', cloudinaryError);
+        }
+      }
+
+      // Delete from database
+      await prisma.image.deleteMany({
+        where: { id: { in: deletedImageIds }, carId: id },
+      });
+    }
+
+    // Process staged (new) images — already uploaded to Cloudinary, just save to DB
+    const stagedImagesRaw = formData.get('stagedImages');
+    if (stagedImagesRaw) {
+      const stagedImages = JSON.parse(stagedImagesRaw as string) as Array<{
+        publicId: string;
+        url: string;
+        secureUrl: string;
+        width: number;
+        height: number;
+        format: string;
+        order: number;
+      }>;
+
+      for (const staged of stagedImages) {
+        try {
+          await prisma.image.create({
+            data: {
+              carId: id,
+              publicId: staged.publicId,
+              url: staged.url,
+              secureUrl: staged.secureUrl,
+              width: staged.width,
+              height: staged.height,
+              format: staged.format,
+              order: staged.order,
+            },
+          });
+        } catch (saveError) {
+          console.error('Error saving staged image to DB:', saveError);
+        }
+      }
+    }
+
+    // Process reordered images — update their order in the database
+    const reorderedImagesRaw = formData.get('reorderedImages');
+    if (reorderedImagesRaw) {
+      const reorderedImages = JSON.parse(reorderedImagesRaw as string) as Array<{
+        id: string;
+        order: number;
+      }>;
+
+      for (const reorder of reorderedImages) {
+        try {
+          await prisma.image.update({
+            where: { id: reorder.id, carId: id },
+            data: { order: reorder.order },
+          });
+        } catch (reorderError) {
+          console.error('Error updating image order:', reorderError);
+        }
+      }
+    }
 
     revalidatePath('/admin/autos');
     revalidatePath(`/admin/autos/${id}/editar`);
