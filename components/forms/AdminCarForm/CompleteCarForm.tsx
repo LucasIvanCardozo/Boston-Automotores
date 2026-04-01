@@ -284,6 +284,7 @@ export default function CompleteCarForm({
 
   // Transform existing images to ImageData format
   const imageData: ImageData[] = existingImages.map((img, idx) => ({
+    id: img.id,
     publicId: img.publicId,
     url: img.url,
     secureUrl: img.url,

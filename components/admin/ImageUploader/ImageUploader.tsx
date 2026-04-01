@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { addImage } from '@/app/actions/images';
+import { addImage, deleteImage } from '@/app/actions/images';
 import styles from './ImageUploader.module.css';
 
 export interface ImageData {
+  id?: string;
   publicId: string;
   url: string;
   secureUrl: string;
@@ -118,7 +119,15 @@ export default function ImageUploader({
     handleFileSelect(files);
   }, [handleFileSelect]);
 
-  const handleDelete = useCallback((index: number) => {
+  const handleDelete = useCallback(async (index: number) => {
+    const imageToDelete = images[index];
+    if (!imageToDelete) return;
+
+    // Delete from database and Cloudinary if the image was persisted
+    if (imageToDelete.id) {
+      await deleteImage(imageToDelete.id);
+    }
+
     const newImages = images.filter((_, i) => i !== index);
     const reorderedImages = newImages.map((img, idx) => ({
       ...img,
