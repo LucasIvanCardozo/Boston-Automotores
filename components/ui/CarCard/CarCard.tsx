@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Car, Fuel, Calendar, Gauge } from 'lucide-react';
+import { Car, Fuel, Calendar, Gauge, Settings } from 'lucide-react';
 import Badge from '@/components/ui/Badge/Badge';
 import styles from './CarCard.module.css';
 
@@ -93,15 +93,19 @@ export default function CarCard({ car }: CarCardProps) {
 
         <div className={styles.specs}>
           <div className={styles.spec}>
-            <Fuel size={14} />
-            <span>{fuelTypeLabels[car.fuelType] || car.fuelType}</span>
+            <Calendar size={14} />
+            <span>{car.year}</span>
           </div>
           <div className={styles.spec}>
             <Gauge size={14} />
             <span>{formatMileage(car.mileage)} km</span>
           </div>
           <div className={styles.spec}>
-            <Car size={14} />
+            <Fuel size={14} />
+            <span>{fuelTypeLabels[car.fuelType] || car.fuelType}</span>
+          </div>
+          <div className={styles.spec}>
+            <Settings size={14} />
             <span>{transmissionLabels[car.transmission] || car.transmission}</span>
           </div>
         </div>

@@ -1,5 +1,6 @@
-import { Car, Fuel, Calendar, Gauge, Settings, Droplets, CircleGauge, Armchair } from 'lucide-react';
+import { Car, Fuel, Calendar, Gauge, Settings, Droplets, CircleGauge, DoorOpen, Disc, Volume2, Lightbulb, ShieldCheck, Sofa, Radio } from 'lucide-react';
 import styles from './Specifications.module.css';
+import type { CarSpecs } from '@/lib/schemas/car';
 
 interface CarSpecificationsProps {
   car: {
@@ -12,6 +13,7 @@ interface CarSpecificationsProps {
     transmission: string;
     description?: string | null;
     features: string[];
+    specs?: CarSpecs | null;
   };
 }
 
@@ -29,17 +31,29 @@ const transmissionLabels: Record<string, string> = {
   cvt: 'CVT',
 };
 
-const formatPrice = (price: number) => {
-  return new Intl.NumberFormat('es-AR', {
+const steeringLabels: Record<string, string> = {
+  mecanica: 'Mecánica',
+  hidraulica: 'Hidráulica',
+  electronica: 'Electrónica',
+  'electro-hidraulica': 'Electro-hidráulica',
+};
+
+const headlightsLabels: Record<string, string> = {
+  halogenos: 'Halógenos',
+  led: 'LED',
+  xenon: 'Xenón',
+  laser: 'Láser',
+};
+
+const formatPrice = (price: number) =>
+  new Intl.NumberFormat('es-AR', {
     style: 'currency',
     currency: 'ARS',
     minimumFractionDigits: 0,
   }).format(price);
-};
 
-const formatMileage = (mileage: number) => {
-  return new Intl.NumberFormat('es-AR').format(mileage);
-};
+const formatMileage = (mileage: number) =>
+  new Intl.NumberFormat('es-AR').format(mileage);
 
 export default function Specifications({ car }: CarSpecificationsProps) {
   const basicSpecs = [
@@ -65,28 +79,40 @@ export default function Specifications({ car }: CarSpecificationsProps) {
     },
   ];
 
-  const technicalSpecs = [
-    {
-      icon: <CircleGauge size={20} />,
-      label: 'Motor',
-      value: '2.0L Turbo',
-    },
-    {
-      icon: <Droplets size={20} />,
-      label: 'Dirección',
-      value: 'Asistida',
-    },
-    {
-      icon: <Armchair size={20} />,
-      label: 'Interior',
-      value: 'Cuero',
-    },
-    {
-      icon: <Car size={20} />,
-      label: 'Carrocería',
-      value: 'SUV',
-    },
-  ];
+  // Build technical spec rows only from real data
+  const specs = car.specs;
+  const technicalRows: { icon: React.ReactNode; label: string; value: string }[] = [];
+
+  if (specs?.engine) {
+    technicalRows.push({ icon: <CircleGauge size={18} />, label: 'Motor', value: specs.engine });
+  }
+  if (specs?.steering) {
+    technicalRows.push({ icon: <Droplets size={18} />, label: 'Dirección', value: steeringLabels[specs.steering] || specs.steering });
+  }
+  if (specs?.color) {
+    technicalRows.push({ icon: <Car size={18} />, label: 'Color', value: specs.color });
+  }
+  if (specs?.doors) {
+    technicalRows.push({ icon: <DoorOpen size={18} />, label: 'Puertas', value: String(specs.doors) });
+  }
+  if (specs?.wheels) {
+    technicalRows.push({ icon: <Disc size={18} />, label: 'Llantas', value: specs.wheels });
+  }
+  if (specs?.wheelSize) {
+    technicalRows.push({ icon: <Disc size={18} />, label: 'Tamaño de llantas', value: specs.wheelSize });
+  }
+  if (specs?.audioSystem) {
+    technicalRows.push({ icon: <Volume2 size={18} />, label: 'Audio', value: specs.audioSystem });
+  }
+  if (specs?.headlights) {
+    technicalRows.push({ icon: <Lightbulb size={18} />, label: 'Faros', value: headlightsLabels[specs.headlights] || specs.headlights });
+  }
+
+  const hasTechnicalSpecs = technicalRows.length > 0;
+  const hasSensors = specs?.sensors && specs.sensors.length > 0;
+  const hasSecurity = specs?.securityFeatures && specs.securityFeatures.length > 0;
+  const hasComfort = specs?.comfortFeatures && specs.comfortFeatures.length > 0;
+  const hasAnySpecs = hasTechnicalSpecs || hasSensors || hasSecurity || hasComfort;
 
   return (
     <div className={styles.specifications}>
@@ -95,6 +121,7 @@ export default function Specifications({ car }: CarSpecificationsProps) {
         <span className={styles.price}>{formatPrice(car.price)}</span>
       </div>
 
+      {/* Basic info — 4 chips, no wrap allowed */}
       <section className={styles.section}>
         <h3 className={styles.sectionTitle}>Información General</h3>
         <div className={styles.specGrid}>
@@ -110,38 +137,78 @@ export default function Specifications({ car }: CarSpecificationsProps) {
         </div>
       </section>
 
-      <section className={styles.section}>
-        <h3 className={styles.sectionTitle}>Características</h3>
-        <ul className={styles.featureList}>
-          {car.features && car.features.length > 0 ? (
-            car.features.map((feature, index) => (
+      {/* Technical specs — only rendered when the car actually has specs */}
+      {hasAnySpecs && (
+        <section className={styles.section}>
+          <h3 className={styles.sectionTitle}>Especificaciones Técnicas</h3>
+
+          {hasTechnicalSpecs && (
+            <ul className={styles.techList}>
+              {technicalRows.map((row) => (
+                <li key={row.label} className={styles.techItem}>
+                  <span className={styles.techIcon}>{row.icon}</span>
+                  <span className={styles.techLabel}>{row.label}</span>
+                  <span className={styles.techValue}>{row.value}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {hasSensors && (
+            <div className={styles.chipGroup}>
+              <span className={styles.chipGroupTitle}>
+                <Radio size={14} /> Sensores
+              </span>
+              <div className={styles.chips}>
+                {specs!.sensors!.map((s) => (
+                  <span key={s} className={styles.chip}>{s}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {hasSecurity && (
+            <div className={styles.chipGroup}>
+              <span className={styles.chipGroupTitle}>
+                <ShieldCheck size={14} /> Seguridad
+              </span>
+              <div className={styles.chips}>
+                {specs!.securityFeatures!.map((s) => (
+                  <span key={s} className={styles.chip}>{s}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {hasComfort && (
+            <div className={styles.chipGroup}>
+              <span className={styles.chipGroupTitle}>
+                <Sofa size={14} /> Confort
+              </span>
+              <div className={styles.chips}>
+                {specs!.comfortFeatures!.map((s) => (
+                  <span key={s} className={styles.chip}>{s}</span>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* Features list */}
+      {car.features && car.features.length > 0 && (
+        <section className={styles.section}>
+          <h3 className={styles.sectionTitle}>Características</h3>
+          <ul className={styles.featureList}>
+            {car.features.map((feature, index) => (
               <li key={index} className={styles.featureItem}>
                 <span className={styles.featureCheck}>✓</span>
                 {feature}
               </li>
-            ))
-          ) : (
-            <>
-              <li className={styles.featureItem}>
-                <span className={styles.featureCheck}>✓</span>
-                Aire acondicionado
-              </li>
-              <li className={styles.featureItem}>
-                <span className={styles.featureCheck}>✓</span>
-                Dirección asistida
-              </li>
-              <li className={styles.featureItem}>
-                <span className={styles.featureCheck}>✓</span>
-                Ventanas eléctricas
-              </li>
-              <li className={styles.featureItem}>
-                <span className={styles.featureCheck}>✓</span>
-                Cierre centralizado
-              </li>
-            </>
-          )}
-        </ul>
-      </section>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {car.description && (
         <section className={styles.section}>

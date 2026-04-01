@@ -288,67 +288,69 @@ export default function CarsTable({
         </div>
       </div>
 
-      {/* Pagination */}
-      <div className={styles.pagination}>
-        <div className={styles.paginationInfo}>
-          <span>
-            Mostrando {(page - 1) * pageSize + 1} - {Math.min(page * pageSize, totalCount)} de {totalCount}
-          </span>
-        </div>
-
-        <div className={styles.paginationControls}>
-          <div className={styles.pageSizeSelect}>
-            <label htmlFor="pageSize">Filas:</label>
-            <select
-              id="pageSize"
-              value={pageSize}
-              onChange={(e) => {
-                onPageSizeChange(Number(e.target.value))
-                onPageChange(1)
-              }}
-              className={styles.select}
-            >
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-              <option value={50}>50</option>
-            </select>
+      {/* Pagination — only rendered when there is more than one page */}
+      {totalPages > 1 && (
+        <div className={styles.pagination}>
+          <div className={styles.paginationInfo}>
+            <span>
+              Mostrando {(page - 1) * pageSize + 1} - {Math.min(page * pageSize, totalCount)} de {totalCount}
+            </span>
           </div>
 
-          <div className={styles.pageButtons}>
-            <Button variant="ghost" size="sm" onClick={() => onPageChange(1)} disabled={page === 1} aria-label="Primera página">
-              <ChevronsLeft className={styles.pageButtonIcon} />
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => onPageChange(page - 1)} disabled={page === 1} aria-label="Página anterior">
-              <ChevronLeft className={styles.pageButtonIcon} />
-            </Button>
-
-            <div className={styles.pageNumbers}>
-              {generatePageNumbers(page, totalPages).map((pageNum, idx) =>
-                pageNum === '...' ? (
-                  <span key={`ellipsis-${idx}`} className={styles.ellipsis}>
-                    ...
-                  </span>
-                ) : (
-                  <button
-                    key={pageNum}
-                    onClick={() => onPageChange(pageNum as number)}
-                    className={`${styles.pageNumber} ${page === pageNum ? styles.active : ''}`}
-                  >
-                    {pageNum}
-                  </button>
-                )
-              )}
+          <div className={styles.paginationControls}>
+            <div className={styles.pageSizeSelect}>
+              <label htmlFor="pageSize">Filas:</label>
+              <select
+                id="pageSize"
+                value={pageSize}
+                onChange={(e) => {
+                  onPageSizeChange(Number(e.target.value))
+                  onPageChange(1)
+                }}
+                className={styles.select}
+              >
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+              </select>
             </div>
 
-            <Button variant="ghost" size="sm" onClick={() => onPageChange(page + 1)} disabled={page === totalPages} aria-label="Página siguiente">
-              <ChevronRight className={styles.pageButtonIcon} />
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => onPageChange(totalPages)} disabled={page === totalPages} aria-label="Última página">
-              <ChevronsRight className={styles.pageButtonIcon} />
-            </Button>
+            <div className={styles.pageButtons}>
+              <Button variant="ghost" size="sm" onClick={() => onPageChange(1)} disabled={page === 1} aria-label="Primera página">
+                <ChevronsLeft className={styles.pageButtonIcon} />
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => onPageChange(page - 1)} disabled={page === 1} aria-label="Página anterior">
+                <ChevronLeft className={styles.pageButtonIcon} />
+              </Button>
+
+              <div className={styles.pageNumbers}>
+                {generatePageNumbers(page, totalPages).map((pageNum, idx) =>
+                  pageNum === '...' ? (
+                    <span key={`ellipsis-${idx}`} className={styles.ellipsis}>
+                      ...
+                    </span>
+                  ) : (
+                    <button
+                      key={pageNum}
+                      onClick={() => onPageChange(pageNum as number)}
+                      className={`${styles.pageNumber} ${page === pageNum ? styles.active : ''}`}
+                    >
+                      {pageNum}
+                    </button>
+                  )
+                )}
+              </div>
+
+              <Button variant="ghost" size="sm" onClick={() => onPageChange(page + 1)} disabled={page === totalPages} aria-label="Página siguiente">
+                <ChevronRight className={styles.pageButtonIcon} />
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => onPageChange(totalPages)} disabled={page === totalPages} aria-label="Última página">
+                <ChevronsRight className={styles.pageButtonIcon} />
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

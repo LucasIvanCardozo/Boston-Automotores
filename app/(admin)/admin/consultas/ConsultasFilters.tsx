@@ -1,33 +1,36 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import styles from './consultas.module.css';
 
 export default function ConsultasFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const currentStatus = searchParams.get('status') || '';
   const currentType = searchParams.get('type') || '';
   const currentSearch = searchParams.get('search') || '';
 
-  const handleFilterChange = (key: string, value: string) => {
-    startTransition(() => {
-      const params = new URLSearchParams(searchParams);
-      
-      if (value === undefined || value === '') {
-        params.delete(key);
-      } else {
-        params.set(key, value);
-      }
-      
-      // Reset to page 1 when filters change
-      params.set('page', '1');
-      
-      router.push(`/admin/consultas?${params.toString()}`);
-    });
+  const navigate = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (value === '') {
+      params.delete(key);
+    } else {
+      params.set(key, value);
+    }
+    params.set('page', '1');
+    router.push(`/admin/consultas?${params.toString()}`);
+  };
+
+  const handleSelectChange = (key: string, value: string) => {
+    navigate(key, value);
+  };
+
+  const handleTextChange = (key: string, value: string) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => navigate(key, value), 400);
   };
 
   return (
@@ -38,13 +41,13 @@ export default function ConsultasFilters() {
           name="search"
           placeholder="Buscar por nombre, email o teléfono..."
           defaultValue={currentSearch}
-          onChange={(e) => handleFilterChange('search', e.target.value)}
+          onChange={(e) => handleTextChange('search', e.target.value)}
           className={styles.searchInput}
         />
         <select
           name="status"
           value={currentStatus}
-          onChange={(e) => handleFilterChange('status', e.target.value)}
+          onChange={(e) => handleSelectChange('status', e.target.value)}
           className={styles.filterSelect}
         >
           <option value="">Todos los estados</option>
@@ -55,14 +58,13 @@ export default function ConsultasFilters() {
         <select
           name="type"
           value={currentType}
-          onChange={(e) => handleFilterChange('type', e.target.value)}
+          onChange={(e) => handleSelectChange('type', e.target.value)}
           className={styles.filterSelect}
         >
           <option value="">Todos los tipos</option>
           <option value="contact">Contacto</option>
           <option value="sell_car">Vende su auto</option>
         </select>
-        {isPending && <span className={styles.loadingIndicator}>Actualizando...</span>}
       </div>
     </div>
   );

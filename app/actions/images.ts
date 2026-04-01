@@ -178,7 +178,7 @@ export async function getCarImages(carId: string): Promise<{
  * Get signed upload parameters for direct Cloudinary upload from the client.
  * This avoids sending large files through the Server Action body.
  */
-export async function getImageUploadParams(carId: string, order: number): Promise<{
+export async function getImageUploadParams(carId: string): Promise<{
   success: boolean;
   error?: string;
   params?: {
@@ -197,9 +197,14 @@ export async function getImageUploadParams(carId: string, order: number): Promis
     return { success: false, error: 'No autorizado' };
   }
 
+  // Use a crypto-random ID so the public_id is stable regardless of later reordering.
+  // Never use the `order` value as the public_id — it causes Cloudinary overwrites
+  // when an image is reordered after upload but before save.
+  const uniqueId = crypto.randomUUID();
+
   const params = generateSignedUploadParams({
     folder: `client-boston/cars/${carId}`,
-    publicId: String(order),
+    publicId: uniqueId,
     transformation: 'c_limit,w_1920,h_1080,q_auto,f_auto',
   });
 
@@ -211,7 +216,7 @@ export async function getImageUploadParams(carId: string, order: number): Promis
       apiKey: params.apiKey,
       cloudName: params.cloudName,
       folder: params.folder,
-      publicId: params.publicId || String(order),
+      publicId: params.publicId || uniqueId,
       transformation: params.transformation!,
     },
   };

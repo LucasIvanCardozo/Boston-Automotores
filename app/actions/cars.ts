@@ -300,6 +300,7 @@ export async function updateCar(id: string, formData: FormData): Promise<CarResu
     revalidatePath('/admin/autos');
     revalidatePath(`/admin/autos/${id}/editar`);
     revalidatePath('/catalogo');
+    revalidatePath(`/catalogo/${id}`);
 
     // Don't return car data - contains Decimal fields that can't serialize to client
     return { success: true };

@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getAdminCars } from '@/app/actions/cars';
-import { ADMIN_STATUS_OPTIONS } from '@/lib/constants/car-options';
 import Button from '@/components/ui/Button/Button';
 import CarsTableWrapper from './CarsTableWrapper';
+import CarsFilters from './CarsFilters';
 import styles from './autos.module.css';
 
 export const metadata: Metadata = {
@@ -64,34 +64,7 @@ export default async function AdminCarsPage({ searchParams }: PageProps) {
         </Link>
       </header>
 
-      {/* URL-driven filters — form submission updates search params */}
-      <form className={styles.filters} action="/admin/autos" method="GET">
-        <label htmlFor="filter-brand" className="sr-only">Filtrar por marca</label>
-        <input
-          id="filter-brand"
-          type="text"
-          name="brand"
-          placeholder="Buscar por marca..."
-          defaultValue={brand}
-          className={styles.filterInput}
-        />
-        <label htmlFor="filter-status" className="sr-only">Filtrar por estado</label>
-        <select
-          id="filter-status"
-          name="status"
-          defaultValue={status}
-          className={styles.filterSelect}
-        >
-          {ADMIN_STATUS_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        {/* Preserve other params */}
-        <input type="hidden" name="page" value="1" />
-        <button type="submit" className={styles.filterSubmit}>Buscar</button>
-      </form>
+      <CarsFilters />
 
       <CarsTableWrapper
         cars={cars}
