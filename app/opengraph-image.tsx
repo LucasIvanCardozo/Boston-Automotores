@@ -15,8 +15,8 @@ export default async function OpenGraphImage() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#0F6BBE',
-          backgroundImage: 'linear-gradient(135deg, #0F6BBE 0%, #0F3B9C 100%)',
+          backgroundColor: '#171717',
+          backgroundImage: 'linear-gradient(135deg, #171717 0%, #0a0a0a 100%)',
           padding: '40px',
         }}
       >

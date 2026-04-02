@@ -80,7 +80,7 @@ const valueStyles = {
 };
 
 const buttonStyles = {
-  backgroundColor: '#2563eb',
+  backgroundColor: '#171717',
   borderRadius: '6px',
   color: '#ffffff',
   fontSize: '16px',

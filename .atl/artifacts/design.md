@@ -820,7 +820,7 @@ boston-automotores/
 │
 ├── public/
 │   └── assets/
-│       ├── default.jpg
+│       ├── default.png
 │       └── logo.svg
 │
 ├── scripts/

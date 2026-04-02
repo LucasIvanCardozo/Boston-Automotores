@@ -11,7 +11,7 @@
 .header {
   position: relative;
   padding: var(--space-16) 0 var(--space-12);
-  background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 40%, var(--color-primary-light) 100%);
+  background: linear-gradient(135deg, var(--color-dark-surface) 0%, var(--color-primary-dark) 40%, var(--color-dark-surface-alt) 100%);
   overflow: hidden;
 }
 
@@ -198,7 +198,7 @@
 .filterSelect:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 4px rgba(15, 107, 190, 0.12);
+  box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.12);
 }
 
 .filterSelect {
@@ -270,12 +270,12 @@
   align-items: center;
   gap: var(--space-1);
   padding: var(--space-1) var(--space-3);
-  background: rgba(15, 107, 190, 0.08);
+  background: rgba(var(--color-primary-rgb), 0.08);
   color: var(--color-primary);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   border-radius: var(--radius-full);
-  border: 1px solid rgba(15, 107, 190, 0.2);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.2);
 }
 
 .activeFilterTag button {

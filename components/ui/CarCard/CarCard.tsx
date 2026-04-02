@@ -45,7 +45,7 @@ const transmissionLabels: Record<string, string> = {
 };
 
 export default function CarCard({ car }: CarCardProps) {
-  const primaryImage = car.images?.[0]?.secureUrl || car.images?.[0]?.url || '/assets/default.jpg';
+  const primaryImage = car.images?.[0]?.secureUrl || car.images?.[0]?.url || '/assets/default.png';
   const statusInfo = statusConfig[car.status] || statusConfig.available;
 
   const formatPrice = (price: number) => {

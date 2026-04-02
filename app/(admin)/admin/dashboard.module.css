@@ -25,13 +25,14 @@
 .roleBadge {
   align-self: flex-start;
   padding: var(--space-2) var(--space-4);
-  background-color: rgba(15, 107, 190, 0.1);
-  color: var(--color-primary);
+  background-color: var(--color-accent-subtle);
+  color: var(--color-accent);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   border-radius: var(--radius-full);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  border: 1px solid var(--color-accent-border);
 }
 
 .statsGrid {
@@ -66,8 +67,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(15, 107, 190, 0.1);
+  background-color: var(--color-accent-subtle);
+  color: var(--color-accent);
   border-radius: var(--radius-lg);
+  border: 1px solid var(--color-accent-border);
 }
 
 .statContent {
@@ -121,7 +124,7 @@
 
 .actionCard:hover {
   border-color: var(--color-primary);
-  background-color: rgba(15, 107, 190, 0.05);
+  background-color: rgba(var(--color-primary-rgb), 0.05);
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }

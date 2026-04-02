@@ -83,7 +83,7 @@
 
 .icon {
   flex-shrink: 0;
-  color: var(--color-primary);
+  color: var(--color-accent);
   margin-top: 2px;
 }
 

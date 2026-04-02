@@ -67,8 +67,8 @@
 
 .searchInput:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(15, 107, 190, 0.15);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-ring);
 }
 
 .filterSelect {
@@ -87,8 +87,8 @@
 
 .filterSelect:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(15, 107, 190, 0.15);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-ring);
 }
 
 .tableWrapper {
@@ -325,6 +325,7 @@
   max-width: 600px;
   max-height: calc(100vh - var(--space-8));
   overflow-y: auto;
+  overflow-x: hidden;
   animation: modalSlideIn 0.3s ease-out;
 }
 
@@ -345,6 +346,7 @@
   justify-content: space-between;
   padding: var(--space-6);
   border-bottom: 1px solid var(--color-border);
+  gap: var(--space-4);
 }
 
 .modalTitle {
@@ -352,6 +354,9 @@
   font-weight: var(--font-weight-bold);
   color: var(--color-text);
   margin: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
 }
 
 .modalClose {
@@ -378,12 +383,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
+  min-width: 0;
 }
 
 .detailSection {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  min-width: 0;
 }
 
 .sectionTitle {
@@ -398,7 +405,7 @@
 
 .detailGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--space-4);
 }
 
@@ -406,6 +413,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .detailLabel {
@@ -423,8 +432,12 @@
 
 .detailLink {
   font-size: var(--font-size-base);
-  color: var(--color-primary);
+  color: var(--color-accent);
   text-decoration: none;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  display: inline-block;
+  max-width: 100%;
 }
 
 .detailLink:hover {
@@ -541,6 +554,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .detailsItem.fullWidth {
@@ -562,8 +577,12 @@
 
 .detailsLink {
   font-size: var(--font-size-base);
-  color: var(--color-primary);
+  color: var(--color-accent);
   text-decoration: none;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  display: inline-block;
+  max-width: 100%;
 }
 
 .detailsLink:hover {
@@ -622,8 +641,9 @@
     flex: 1;
   }
 
-  .detailsGrid {
-    grid-template-columns: repeat(2, 1fr);
+  .detailsGrid,
+  .detailGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .pagination {

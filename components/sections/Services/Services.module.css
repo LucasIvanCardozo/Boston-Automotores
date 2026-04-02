@@ -57,12 +57,13 @@
 .iconWrapper {
   width: 72px;
   height: 72px;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 1.25rem;
+  box-shadow: 0 4px 15px rgba(var(--color-accent-rgb), 0.3);
 }
 
 .icon {
@@ -83,7 +84,7 @@
 }
 
 .financingSection {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 50%, var(--color-primary-dark) 100%);
+  background: linear-gradient(135deg, var(--color-dark-surface) 0%, var(--color-dark-surface-alt) 50%, var(--color-primary-dark) 100%);
   border-radius: 24px;
   padding: 2rem 1.5rem;
   color: var(--color-text-inverse);
@@ -99,8 +100,8 @@
   right: 0;
   bottom: 0;
   background: 
-    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(37, 99, 235, 0.1) 0%, transparent 50%);
+    radial-gradient(circle at 20% 80%, rgba(var(--color-primary-rgb), 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(var(--color-primary-rgb), 0.1) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -149,7 +150,7 @@
 .featureIcon {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%);
+  background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.3) 0%, rgba(var(--color-primary-rgb), 0.2) 100%);
   backdrop-filter: blur(10px);
   border-radius: 50%;
   display: flex;

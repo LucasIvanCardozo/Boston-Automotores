@@ -125,10 +125,11 @@
   justify-content: center;
   width: 56px;
   height: 56px;
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
   color: var(--color-text-inverse);
   border-radius: var(--radius-full);
   margin-bottom: var(--space-4);
+  box-shadow: 0 4px 15px rgba(var(--color-accent-rgb), 0.3);
 }
 
 .valueTitle {
@@ -219,7 +220,7 @@
 }
 
 .contactIcon {
-  color: var(--color-primary);
+  color: var(--color-accent);
   margin-bottom: var(--space-3);
 }
 

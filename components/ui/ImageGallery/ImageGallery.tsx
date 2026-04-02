@@ -1,63 +1,52 @@
-'use client';
+'use client'
 
-import { useState, useCallback } from 'react';
-import Image from 'next/image';
-import { ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import styles from './ImageGallery.module.css';
+import { useState, useCallback } from 'react'
+import Image from 'next/image'
+import { ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import styles from './ImageGallery.module.css'
 
 interface ImageGalleryProps {
   images: Array<{
-    id: string;
-    url: string;
-    secureUrl: string;
-    width?: number | null;
-    height?: number | null;
-  }>;
-  carName: string;
+    id: string
+    url: string
+    secureUrl: string
+    width?: number | null
+    height?: number | null
+  }>
+  carName: string
 }
 
 export default function ImageGallery({ images, carName }: ImageGalleryProps) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false)
 
-  const primaryImage = images[selectedIndex]?.secureUrl || images[selectedIndex]?.url || '/assets/default.jpg';
+  const primaryImage = images[selectedIndex]?.secureUrl || images[selectedIndex]?.url || '/assets/default.png'
 
   const goToPrevious = useCallback(() => {
-    setSelectedIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  }, [images.length]);
+    setSelectedIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
+  }, [images.length])
 
   const goToNext = useCallback(() => {
-    setSelectedIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  }, [images.length]);
+    setSelectedIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
+  }, [images.length])
 
-  const openLightbox = () => setIsLightboxOpen(true);
-  const closeLightbox = () => setIsLightboxOpen(false);
+  const openLightbox = () => setIsLightboxOpen(true)
+  const closeLightbox = () => setIsLightboxOpen(false)
 
   if (!images || images.length === 0) {
     return (
       <div className={styles.placeholder}>
-        <Image
-          src="/assets/default.jpg"
-          alt={carName}
-          fill
-          className={styles.placeholderImage}
-        />
+        <Image src="/assets/default.png" alt={carName} fill className={styles.placeholderImage} />
       </div>
-    );
+    )
   }
 
   return (
     <div className={styles.gallery}>
       {/* Main Image */}
       <div className={styles.mainWrapper}>
-        <motion.div
-          key={selectedIndex}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          className={styles.mainImage}
-        >
+        <motion.div key={selectedIndex} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className={styles.mainImage}>
           <Image
             src={primaryImage}
             alt={`${carName} - Imagen ${selectedIndex + 1}`}
@@ -70,28 +59,16 @@ export default function ImageGallery({ images, carName }: ImageGalleryProps) {
 
         {images.length > 1 && (
           <>
-            <button
-              className={`${styles.navButton} ${styles.navPrev}`}
-              onClick={goToPrevious}
-              aria-label="Imagen anterior"
-            >
+            <button className={`${styles.navButton} ${styles.navPrev}`} onClick={goToPrevious} aria-label="Imagen anterior">
               <ChevronLeft size={24} />
             </button>
-            <button
-              className={`${styles.navButton} ${styles.navNext}`}
-              onClick={goToNext}
-              aria-label="Imagen siguiente"
-            >
+            <button className={`${styles.navButton} ${styles.navNext}`} onClick={goToNext} aria-label="Imagen siguiente">
               <ChevronRight size={24} />
             </button>
           </>
         )}
 
-        <button
-          className={styles.zoomButton}
-          onClick={openLightbox}
-          aria-label="Ampliar imagen"
-        >
+        <button className={styles.zoomButton} onClick={openLightbox} aria-label="Ampliar imagen">
           <ZoomIn size={20} />
         </button>
 
@@ -110,13 +87,7 @@ export default function ImageGallery({ images, carName }: ImageGalleryProps) {
               onClick={() => setSelectedIndex(index)}
               aria-label={`Ver imagen ${index + 1}`}
             >
-              <Image
-                src={image.secureUrl || image.url}
-                alt={`${carName} - Miniatura ${index + 1}`}
-                fill
-                sizes="100px"
-                className={styles.thumbnailImage}
-              />
+              <Image src={image.secureUrl || image.url} alt={`${carName} - Miniatura ${index + 1}`} fill sizes="100px" className={styles.thumbnailImage} />
             </button>
           ))}
         </div>
@@ -125,18 +96,8 @@ export default function ImageGallery({ images, carName }: ImageGalleryProps) {
       {/* Lightbox */}
       <AnimatePresence>
         {isLightboxOpen && (
-          <motion.div
-            className={styles.lightbox}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={closeLightbox}
-          >
-            <button
-              className={styles.lightboxClose}
-              onClick={closeLightbox}
-              aria-label="Cerrar visor"
-            >
+          <motion.div className={styles.lightbox} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={closeLightbox}>
+            <button className={styles.lightboxClose} onClick={closeLightbox} aria-label="Cerrar visor">
               <X size={28} />
             </button>
 
@@ -147,13 +108,7 @@ export default function ImageGallery({ images, carName }: ImageGalleryProps) {
               exit={{ scale: 0.9 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <Image
-                src={primaryImage}
-                alt={`${carName} - Imagen ${selectedIndex + 1}`}
-                fill
-                sizes="100vw"
-                className={styles.lightboxImage}
-              />
+              <Image src={primaryImage} alt={`${carName} - Imagen ${selectedIndex + 1}`} fill sizes="100vw" className={styles.lightboxImage} />
             </motion.div>
 
             {images.length > 1 && (
@@ -161,8 +116,8 @@ export default function ImageGallery({ images, carName }: ImageGalleryProps) {
                 <button
                   className={`${styles.lightboxNav} ${styles.lightboxPrev}`}
                   onClick={(e) => {
-                    e.stopPropagation();
-                    goToPrevious();
+                    e.stopPropagation()
+                    goToPrevious()
                   }}
                   aria-label="Imagen anterior"
                 >
@@ -171,8 +126,8 @@ export default function ImageGallery({ images, carName }: ImageGalleryProps) {
                 <button
                   className={`${styles.lightboxNav} ${styles.lightboxNext}`}
                   onClick={(e) => {
-                    e.stopPropagation();
-                    goToNext();
+                    e.stopPropagation()
+                    goToNext()
                   }}
                   aria-label="Imagen siguiente"
                 >
@@ -184,5 +139,5 @@ export default function ImageGallery({ images, carName }: ImageGalleryProps) {
         )}
       </AnimatePresence>
     </div>
-  );
+  )
 }

@@ -81,10 +81,11 @@
   justify-content: center;
   width: 56px;
   height: 56px;
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
   color: var(--color-text-inverse);
   border-radius: var(--radius-full);
   margin-bottom: var(--space-4);
+  box-shadow: 0 4px 15px rgba(var(--color-accent-rgb), 0.3);
 }
 
 .benefitTitle {
@@ -123,12 +124,13 @@
   justify-content: center;
   width: 48px;
   height: 48px;
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
   color: var(--color-text-inverse);
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   border-radius: var(--radius-full);
   margin-bottom: var(--space-4);
+  box-shadow: 0 4px 15px rgba(var(--color-accent-rgb), 0.3);
 }
 
 .stepTitle {
