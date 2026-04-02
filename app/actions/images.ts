@@ -3,7 +3,6 @@
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
-import { generateSignedUploadParams } from '@/lib/cloudinary';
 import { deleteAsset } from '@/lib/cloudinary';
 
 export interface ImageData {
@@ -172,52 +171,4 @@ export async function getCarImages(carId: string): Promise<{
     console.error('Error getting images:', error);
     return { success: false, error: 'Error al obtener las imágenes' };
   }
-}
-
-/**
- * Get signed upload parameters for direct Cloudinary upload from the client.
- * This avoids sending large files through the Server Action body.
- */
-export async function getImageUploadParams(carId: string): Promise<{
-  success: boolean;
-  error?: string;
-  params?: {
-    signature: string;
-    timestamp: number;
-    apiKey: string;
-    cloudName: string;
-    folder: string;
-    publicId: string;
-    transformation: string;
-  };
-}> {
-  try {
-    await requireAuth();
-  } catch {
-    return { success: false, error: 'No autorizado' };
-  }
-
-  // Use a crypto-random ID so the public_id is stable regardless of later reordering.
-  // Never use the `order` value as the public_id — it causes Cloudinary overwrites
-  // when an image is reordered after upload but before save.
-  const uniqueId = crypto.randomUUID();
-
-  const params = generateSignedUploadParams({
-    folder: `client-boston/cars/${carId}`,
-    publicId: uniqueId,
-    transformation: 'c_limit,w_1920,h_1080,q_auto,f_auto',
-  });
-
-  return {
-    success: true,
-    params: {
-      signature: params.signature,
-      timestamp: params.timestamp,
-      apiKey: params.apiKey,
-      cloudName: params.cloudName,
-      folder: params.folder,
-      publicId: params.publicId || uniqueId,
-      transformation: params.transformation!,
-    },
-  };
 }

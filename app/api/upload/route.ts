@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { uploadImageBuffer, uploadDocument } from '@/lib/cloudinary'
+import { uploadImageBuffer, uploadDocument, deleteAsset } from '@/lib/cloudinary'
 import { requireAuth } from '@/lib/auth'
 import { 
   optimizeImage, 
@@ -49,7 +49,6 @@ export async function POST(
     const formData = await request.formData()
     const file = formData.get('file') as File | null
     const carId = formData.get('carId') as string | null
-    const order = parseInt((formData.get('order') as string) || '0', 10)
     const type = formData.get('type') as string | null
 
     // Validate required fields
@@ -165,10 +164,15 @@ export async function POST(
         console.log('[Upload] Skipping optimization - image is already optimized or small')
       }
 
+      // Use a crypto-random UUID as public_id — never the order value.
+      // This prevents Cloudinary overwrites when images are reordered
+      // after upload but before saving to the database.
+      const uniqueId = crypto.randomUUID()
+
       // Upload optimized (or original) buffer to Cloudinary
       const uploadResult = await uploadImageBuffer(uploadBuffer, {
         folder: `client-boston/cars/${carId}`,
-        publicId: String(order),
+        publicId: uniqueId,
         format: uploadFormat,
       })
 
@@ -195,6 +199,53 @@ export async function POST(
       { 
         success: false, 
         error: error instanceof Error ? error.message : 'Error al subir el archivo' 
+      },
+      { status: 500 }
+    )
+  }
+}
+
+/**
+ * DELETE /api/upload
+ * Deletes a staged (not yet saved to DB) Cloudinary asset.
+ * Called when the user removes an image from the uploader before saving the form.
+ * Body: { publicId: string }
+ */
+export async function DELETE(
+  request: NextRequest
+): Promise<NextResponse<{ success: boolean; error?: string }>> {
+  try {
+    await requireAuth()
+  } catch {
+    return NextResponse.json(
+      { success: false, error: 'No autorizado' },
+      { status: 401 }
+    )
+  }
+
+  try {
+    const body = await request.json() as { publicId?: unknown }
+    const publicId = body.publicId
+
+    if (!publicId || typeof publicId !== 'string' || publicId.trim() === '') {
+      return NextResponse.json(
+        { success: false, error: 'Se requiere publicId' },
+        { status: 400 }
+      )
+    }
+
+    await deleteAsset(publicId.trim())
+
+    console.log(`[Upload] Staged asset deleted from Cloudinary: ${publicId}`)
+
+    return NextResponse.json({ success: true })
+
+  } catch (error) {
+    console.error('[Upload] Error deleting staged asset:', error)
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error al eliminar el archivo',
       },
       { status: 500 }
     )

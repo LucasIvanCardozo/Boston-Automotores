@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { getImageUploadParams } from '@/app/actions/images';
 import styles from './ImageUploader.module.css';
 
 export interface ImageData {
@@ -40,6 +39,23 @@ interface UnifiedItem {
   // Staged-only
   isStaged?: boolean;
   previewUrl?: string;
+}
+
+interface UploadApiResponse {
+  success: true;
+  publicId: string;
+  url: string;
+  width: number;
+  height: number;
+  format: string;
+  originalSize?: number;
+  optimizedSize?: number;
+  compressionRatio?: number;
+}
+
+interface UploadApiError {
+  success: false;
+  error: string;
 }
 
 interface ImageUploaderProps {
@@ -186,49 +202,42 @@ export default function ImageUploader({
         }
 
         try {
-          // publicId is a UUID — never the order. This prevents Cloudinary overwrites
-          // when the user reorders images after uploading but before saving.
-          const paramsResult = await getImageUploadParams(carId);
-          if (!paramsResult.success || !paramsResult.params) {
-            throw new Error(paramsResult.error || 'Error al obtener parámetros de subida');
-          }
-
-          const { signature, timestamp, apiKey, cloudName, folder, publicId, transformation } =
-            paramsResult.params;
-
+          // Upload via API route which handles server-side optimization with Sharp.
+          // This avoids the 1MB Server Action body limit and gives full control
+          // over compression before storing in Cloudinary.
           const formData = new FormData();
           formData.append('file', file);
-          formData.append('signature', signature);
-          formData.append('timestamp', String(timestamp));
-          formData.append('api_key', apiKey);
-          formData.append('folder', folder);
-          formData.append('public_id', publicId);
-          formData.append('transformation', transformation);
+          formData.append('carId', carId);
+          formData.append('order', String(items.length + newItems.length));
 
-          const response = await fetch(
-            `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-            { method: 'POST', body: formData }
-          );
+          const response = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+          });
 
-          if (!response.ok) {
-            const err = await response.json().catch(() => ({}));
-            throw new Error(err.error?.message || `Error HTTP ${response.status}`);
+          const json = (await response.json()) as UploadApiResponse | UploadApiError;
+
+          if (!response.ok || !json.success) {
+            throw new Error(
+              'error' in json ? json.error : `Error HTTP ${response.status}`
+            );
           }
 
-          const result = await response.json();
+          const result = json as UploadApiResponse;
           const previewUrl = URL.createObjectURL(file);
           objectURLsRef.current.add(previewUrl);
 
           newItems.push({
-            publicId: result.public_id,
-            url: result.secure_url,
-            secureUrl: result.secure_url,
+            publicId: result.publicId,
+            url: result.url,
+            secureUrl: result.url,
             width: result.width,
             height: result.height,
             format: result.format,
             isStaged: true,
             previewUrl,
           });
+
         } catch (err) {
           setError(err instanceof Error ? err.message : 'Error al subir imagen');
           newItems.forEach((s) => {
@@ -262,10 +271,26 @@ export default function ImageUploader({
   const handleDelete = useCallback((index: number) => {
     setItems((prev) => {
       const item = prev[index];
+
+      // Revoke object URL to free memory
       if (item?.previewUrl) {
         objectURLsRef.current.delete(item.previewUrl);
         URL.revokeObjectURL(item.previewUrl);
       }
+
+      // If the image was already uploaded to Cloudinary but not yet saved to the DB
+      // (isStaged), delete it from Cloudinary to avoid orphaned assets.
+      // Fire-and-forget: UI removes immediately, deletion happens in background.
+      if (item?.isStaged && item.publicId) {
+        fetch('/api/upload', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ publicId: item.publicId }),
+        }).catch((err) => {
+          console.warn('[ImageUploader] Failed to delete staged asset from Cloudinary:', err);
+        });
+      }
+
       return prev.filter((_, i) => i !== index);
     });
   }, []);
