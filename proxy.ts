@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { verifyToken } from '@/lib/auth'
-
-const ADMIN_COOKIE_NAME = 'admin_session'
+import { verifyToken, ADMIN_COOKIE_OPTIONS } from '@/lib/auth'
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -14,7 +12,7 @@ export function proxy(request: NextRequest) {
 
   // Protect all other /admin/* routes
   if (pathname.startsWith('/admin')) {
-    const token = request.cookies.get(ADMIN_COOKIE_NAME)?.value
+    const token = request.cookies.get(ADMIN_COOKIE_OPTIONS.name)?.value
 
     if (!token) {
       // No token - redirect to login
@@ -31,7 +29,7 @@ export function proxy(request: NextRequest) {
       loginUrl.searchParams.set('callbackUrl', pathname)
       
       const response = NextResponse.redirect(loginUrl)
-      response.cookies.delete(ADMIN_COOKIE_NAME)
+      response.cookies.delete(ADMIN_COOKIE_OPTIONS.name)
       return response
     }
 

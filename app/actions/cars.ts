@@ -177,10 +177,22 @@ export async function updateCar(id: string, formData: FormData): Promise<CarResu
     return { success: false, error: 'ID de vehículo inválido' };
   }
 
-  // Build raw data object - uses explicit type to bypass TS inference issues with partial types
-  // The schema validation at runtime is what matters
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rawData: Record<string, any> = {
+  // Build raw data object for partial update - all fields optional
+  type CarUpdateFormData = {
+    brand?: string;
+    model?: string;
+    year?: number;
+    price?: number;
+    mileage?: number;
+    fuelType?: string;
+    transmission?: string;
+    status?: string;
+    featured?: boolean;
+    description?: string;
+    features?: string[];
+    specs?: CarSpecs;
+  };
+  const rawData: CarUpdateFormData = {
     brand: formData.get('brand') as string,
     model: formData.get('model') as string,
     year: formData.get('year') ? parseInt(formData.get('year') as string, 10) : undefined,
@@ -438,11 +450,10 @@ export async function getAdminCars(options?: {
     ]);
 
     // Convert Decimal to number for client components
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const serializedCars = cars.map((car: any) => ({
+    const serializedCars = cars.map((car) => ({
       ...car,
       price: Number(car.price),
-      specs: car.specs as CarSpecs | null,
+      specs: carSpecsSchema.parse(car.specs),
     }));
 
     return { success: true, cars: serializedCars, total };
@@ -482,7 +493,14 @@ export async function getAdminCar(id: string): Promise<CarResult> {
       return { success: false, error: 'Vehículo no encontrado' };
     }
 
-    return { success: true, data: car };
+    return {
+      success: true,
+      data: {
+        ...car,
+        price: Number(car.price),
+        specs: carSpecsSchema.parse(car.specs),
+      },
+    };
   } catch (error) {
     console.error('Error fetching admin car:', error);
     return { success: false, error: 'Error al obtener el vehículo' };

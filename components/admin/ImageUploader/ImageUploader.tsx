@@ -121,6 +121,16 @@ export default function ImageUploader({
   const dragIndexRef = useRef<number | null>(null);
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
 
+  // Track all created object URLs for cleanup on unmount
+  const objectURLsRef = useRef<Set<string>>(new Set());
+
+  // Cleanup all object URLs on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      objectURLsRef.current.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, []);
+
   // Sync to parent after every items change — useEffect guarantees this runs
   // after the render is committed, never during render (avoids the
   // "setState on a different component while rendering" warning).
@@ -154,13 +164,23 @@ export default function ImageUploader({
 
         if (!ALLOWED_TYPES.includes(file.type)) {
           setError(`"${file.name}" no es un formato válido. Solo JPG, PNG o WebP.`);
-          newItems.forEach((s) => s.previewUrl && URL.revokeObjectURL(s.previewUrl));
+          newItems.forEach((s) => {
+            if (s.previewUrl) {
+              objectURLsRef.current.delete(s.previewUrl);
+              URL.revokeObjectURL(s.previewUrl);
+            }
+          });
           setIsUploading(false);
           return;
         }
         if (file.size > MAX_SIZE) {
           setError(`"${file.name}" supera los 10MB.`);
-          newItems.forEach((s) => s.previewUrl && URL.revokeObjectURL(s.previewUrl));
+          newItems.forEach((s) => {
+            if (s.previewUrl) {
+              objectURLsRef.current.delete(s.previewUrl);
+              URL.revokeObjectURL(s.previewUrl);
+            }
+          });
           setIsUploading(false);
           return;
         }
@@ -197,6 +217,7 @@ export default function ImageUploader({
 
           const result = await response.json();
           const previewUrl = URL.createObjectURL(file);
+          objectURLsRef.current.add(previewUrl);
 
           newItems.push({
             publicId: result.public_id,
@@ -210,7 +231,12 @@ export default function ImageUploader({
           });
         } catch (err) {
           setError(err instanceof Error ? err.message : 'Error al subir imagen');
-          newItems.forEach((s) => s.previewUrl && URL.revokeObjectURL(s.previewUrl));
+          newItems.forEach((s) => {
+            if (s.previewUrl) {
+              objectURLsRef.current.delete(s.previewUrl);
+              URL.revokeObjectURL(s.previewUrl);
+            }
+          });
           setIsUploading(false);
           return;
         }
@@ -236,7 +262,10 @@ export default function ImageUploader({
   const handleDelete = useCallback((index: number) => {
     setItems((prev) => {
       const item = prev[index];
-      if (item?.previewUrl) URL.revokeObjectURL(item.previewUrl);
+      if (item?.previewUrl) {
+        objectURLsRef.current.delete(item.previewUrl);
+        URL.revokeObjectURL(item.previewUrl);
+      }
       return prev.filter((_, i) => i !== index);
     });
   }, []);

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import {
   MessageCircle,
   Mail,
+  Phone,
   CheckCircle2,
   Eye,
   X,
@@ -14,8 +15,7 @@ import {
   FileText,
   User,
   Clock,
-  Tag,
-  MapPin
+  Tag
 } from 'lucide-react';
 import { updateLeadStatus } from '@/app/actions/leads';
 import AdminTable, { type Column } from '@/components/admin/AdminTable/AdminTable';
@@ -334,14 +334,6 @@ export default function ConsultasTable({ leads }: ConsultasTableProps) {
                   </div>
                 )}
 
-                {/* Source */}
-                <div className={styles.detailSection}>
-                  <h3 className={styles.sectionTitle}>
-                    <MapPin size={18} />
-                    Origen
-                  </h3>
-                  <span className={styles.detailValue}>{selectedLead.sourcePage}</span>
-                </div>
               </div>
 
               <div className={styles.modalFooter}>
@@ -360,6 +352,13 @@ export default function ConsultasTable({ leads }: ConsultasTableProps) {
                 >
                   <Mail size={18} />
                   Email
+                </a>
+                <a
+                  href={`tel:${selectedLead.phone}`}
+                  className={styles.modalButtonCall}
+                >
+                  <Phone size={18} />
+                  Llamar
                 </a>
               </div>
             </div>

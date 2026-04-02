@@ -11,6 +11,24 @@ const COOKIE_NAME = 'admin_session';
 // Bcrypt configuration
 const BCRYPT_ROUNDS = 12;
 
+// JWT_SECRET validation — checked once at startup, cached for subsequent calls
+let jwtSecretValidated = false;
+let jwtSecretError: Error | null = null;
+
+function validateJwtSecret(): void {
+  if (jwtSecretValidated) {
+    if (jwtSecretError) throw jwtSecretError;
+    return;
+  }
+  jwtSecretValidated = true;
+  if (!JWT_SECRET) {
+    jwtSecretError = new Error(
+      'JWT_SECRET environment variable is not set. Please add JWT_SECRET to your .env file.'
+    );
+    throw jwtSecretError;
+  }
+}
+
 /**
  * Hash a password using bcrypt
  */
@@ -32,11 +50,9 @@ export async function verifyPassword(
  * Generate a JWT token for an admin
  */
 export function generateToken(payload: Omit<JwtPayload, 'iat' | 'exp'>): string {
-  if (!JWT_SECRET) {
-    throw new Error('JWT_SECRET environment variable is not set');
-  }
+  validateJwtSecret();
   
-  return jwt.sign(payload, JWT_SECRET, {
+  return jwt.sign(payload, JWT_SECRET!, {
     expiresIn: JWT_EXPIRES_IN,
   });
 }
@@ -45,12 +61,10 @@ export function generateToken(payload: Omit<JwtPayload, 'iat' | 'exp'>): string 
  * Verify and decode a JWT token
  */
 export function verifyToken(token: string): JwtPayload | null {
-  if (!JWT_SECRET) {
-    throw new Error('JWT_SECRET environment variable is not set');
-  }
+  validateJwtSecret();
   
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    const decoded = jwt.verify(token, JWT_SECRET!) as JwtPayload;
     return decoded;
   } catch {
     return null;

@@ -1,7 +1,8 @@
 import { v2 as cloudinary } from 'cloudinary';
+import { Readable } from 'stream';
 
 // Define response types
-interface UploadApiResponse {
+export interface UploadApiResponse {
   public_id: string;
   version: number;
   signature: string;
@@ -15,12 +16,12 @@ interface UploadApiResponse {
   url: string;
   secure_url: string;
   original_filename: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface DeleteApiResponse {
   result: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface ResourceApiResponse {
@@ -35,7 +36,7 @@ interface ResourceApiResponse {
   height: number;
   url: string;
   secure_url: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 // Configure Cloudinary with environment variables
@@ -103,6 +104,48 @@ export async function uploadImage(
     resource_type: 'image',
     overwrite: true,
   }) as Promise<UploadApiResponse>;
+}
+
+/**
+ * Upload an image buffer to Cloudinary using streaming
+ * More memory-efficient than base64 for large files
+ */
+export async function uploadImageBuffer(
+  buffer: Buffer,
+  options: {
+    folder?: string;
+    publicId?: string;
+    format?: string;
+  } = {}
+): Promise<UploadApiResponse> {
+  const { folder = CLOUDINARY_FOLDER, publicId, format } = options;
+
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder,
+        public_id: publicId,
+        resource_type: 'image',
+        overwrite: true,
+        ...(format && { format }),
+      },
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else if (result) {
+          resolve(result as UploadApiResponse);
+        } else {
+          reject(new Error('Upload failed: no result returned'));
+        }
+      }
+    );
+
+    // Convert buffer to stream and pipe to Cloudinary
+    const readableStream = new Readable();
+    readableStream.push(buffer);
+    readableStream.push(null);
+    readableStream.pipe(uploadStream);
+  });
 }
 
 /**

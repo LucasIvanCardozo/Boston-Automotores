@@ -127,11 +127,11 @@ export async function reorderImages(
   }
 
   try {
-    // Update all images with new orders
+    // Update all images with new orders, verifying they belong to the car
     await Promise.all(
       imageOrders.map(({ id, order }) =>
         prisma.image.update({
-          where: { id },
+          where: { id, carId },
           data: { order },
         })
       )

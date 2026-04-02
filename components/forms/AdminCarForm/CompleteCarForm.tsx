@@ -3,7 +3,7 @@
 import { z } from 'zod';
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm, useFieldArray, type FieldErrors, type FieldValues, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle } from 'lucide-react';
 import { 
@@ -161,7 +161,7 @@ export default function CompleteCarForm({
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<CompleteCarFormData>({
-    resolver: zodResolver(initialData ? carUpdateFormSchema : carCreateFormSchema) as any,
+    resolver: zodResolver(initialData ? carUpdateFormSchema : carCreateFormSchema),
     mode: 'onBlur',
     defaultValues: {
       brand: initialData?.brand || '',
@@ -283,11 +283,12 @@ export default function CompleteCarForm({
   };
 
   // Scroll to first error on validation failure
-  const onInvalid = (errors: any) => {
+  const onInvalid = (errors: FieldErrors<CompleteCarFormData>) => {
     // Extract error messages from react-hook-form errors
-    const errorMessages = Object.values(errors).map((err: any) => {
-      if (err?.message) return err.message;
-      if (err?.type) return `Campo inválido: ${err.type}`;
+    const errorMessages = Object.values(errors).map((err) => {
+      const error = err as { message?: string; type?: string | number } | undefined;
+      if (error?.message) return error.message;
+      if (error?.type) return `Campo inválido: ${error.type}`;
       return null;
     }).filter(Boolean);
     
