@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getPublicCar, getRelatedCars } from '@/lib/data/cars';
+import { getPublicCar, getRelatedCars, getAllAvailableCarIds } from '@/lib/data/cars';
 import ImageGallery from '@/components/ui/ImageGallery/ImageGallery';
 import Specifications from '@/components/sections/CarDetail/Specifications';
 import ContactCTA from '@/components/sections/CarDetail/ContactCTA';
@@ -9,6 +9,17 @@ import RelatedCars from '@/components/sections/CarDetail/RelatedCars';
 import styles from './page.module.css';
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.com.ar';
+
+/**
+ * Generate static params for all available car pages at build time.
+ * Only includes 'available' status cars since inventory changes frequently.
+ * Uses React.cache() to deduplicate with getPublicCar calls in the page.
+ */
+export async function generateStaticParams() {
+  const carIds = await getAllAvailableCarIds();
+  
+  return carIds.map((id) => ({ id }));
+}
 
 interface CarDetailPageProps {
   params: Promise<{ id: string }>;

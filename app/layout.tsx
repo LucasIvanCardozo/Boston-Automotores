@@ -71,6 +71,41 @@ export default function RootLayout({
         
         {/* DNS prefetch for additional performance */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+
+        {/* LocalBusiness Structured Data for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'AutoDealer',
+              name: 'Boston Automotores',
+              description: 'Concesionaria de autos usados en Mar del Plata',
+              url: 'https://bostonautomotores.com.ar',
+              telephone: '+5492236329761',
+              email: 'bostonautomotores@hotmail.com',
+              address: {
+                '@type': 'PostalAddress',
+                streetAddress: 'Av. Colón 4469',
+                addressLocality: 'Mar del Plata',
+                addressRegion: 'Buenos Aires',
+                addressCountry: 'AR',
+              },
+              geo: {
+                '@type': 'GeoCoordinates',
+                latitude: -38.0055,
+                longitude: -57.5426,
+              },
+              openingHours: ['Mo-Fr 09:00-18:00', 'Sa 09:00-13:00'],
+              sameAs: [
+                'https://www.instagram.com/boston_automotores/',
+                'https://www.facebook.com/www.bostonautomotores.com.ar/',
+              ],
+              image: '/assets/logo-sin-fondo.png',
+              priceRange: '$$',
+            }),
+          }}
+        />
       </head>
       <body>
         {children}

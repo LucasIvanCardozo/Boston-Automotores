@@ -6,7 +6,7 @@ import styles from './page.module.css';
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.com.ar';
 
 export const metadata: Metadata = {
-  title: 'Vende tu Auto',
+  title: 'Vendé tu Auto al Mejor Precio | Boston Automotores | Mar del Plata',
   description:
     'Vendé tu auto a Boston Automotores. Te ofrecemos la mejor tasación, proceso rápido y pago inmediato. ¡Contactanos hoy!',
   alternates: {

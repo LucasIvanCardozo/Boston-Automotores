@@ -10,7 +10,7 @@ import styles from './page.module.css'
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.com.ar';
 
 export const metadata: Metadata = {
-  title: 'Catálogo de Autos',
+  title: 'Autos Usados en Mar del Plata | Catálogo | Boston Automotores',
   description: 'Explorá nuestro catálogo de autos usados en Mar del Plata. Encontrá tu próximo vehículo con las mejores condiciones de financiación.',
   alternates: {
     canonical: `${baseUrl}/catalogo`,

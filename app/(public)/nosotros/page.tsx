@@ -5,7 +5,7 @@ import styles from './page.module.css';
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.com.ar';
 
 export const metadata: Metadata = {
-  title: 'Nosotros',
+  title: 'Sobre Nosotros | Boston Automotores — 20+ Años en Mar del Plata',
   description:
     'Conacé Boston Automotores, tu concesionaria de confianza en Mar del Plata. Más de 20 años vendiendo autos usados de calidad con garantía.',
   alternates: {

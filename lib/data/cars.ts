@@ -200,3 +200,26 @@ export async function getAvailableBrands(): Promise<string[]> {
     return [];
   }
 }
+
+/**
+ * Get all available car IDs for static generation.
+ * Uses React.cache() to avoid double-fetching between generateStaticParams
+ * and the page component.
+ */
+export const getAllAvailableCarIds = cache(async (): Promise<string[]> => {
+  try {
+    const cars = await prisma.car.findMany({
+      where: {
+        deletedAt: null,
+        status: 'available',
+      },
+      select: { id: true },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return cars.map((car) => car.id);
+  } catch (error) {
+    console.error('[getAllAvailableCarIds] Error:', error);
+    return [];
+  }
+});

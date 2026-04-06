@@ -5,6 +5,7 @@ import FeaturedCars from '@/components/sections/FeaturedCars/FeaturedCars';
 import InstagramFeed from '@/components/sections/InstagramFeed/InstagramFeed';
 import LocationMap from '@/components/sections/LocationMap/LocationMap';
 import ContactSection from '@/components/sections/ContactSection/ContactSection';
+import SeoContent from '@/components/sections/SeoContent/SeoContent';
 import type { Metadata } from 'next';
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.com.ar';
@@ -29,6 +30,7 @@ export default async function HomePage() {
       <InstagramFeed />
       <LocationMap />
       <ContactSection />
+      <SeoContent />
     </>
   );
 }
