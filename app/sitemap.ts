@@ -1,22 +1,11 @@
 import { MetadataRoute } from 'next';
-import { prisma } from '@/lib/prisma';
+import { getCarIdsForSitemap } from '@/lib/data/cars';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.com.ar';
   
   // Get all published cars for dynamic routes
-  const cars = await prisma.car.findMany({
-    where: {
-      deletedAt: null,
-      status: { in: ['available', 'reserved'] },
-    },
-    select: {
-      id: true,
-      updatedAt: true,
-      status: true,
-    },
-    orderBy: { updatedAt: 'desc' },
-  });
+  const cars = await getCarIdsForSitemap();
 
   // Static routes
   const staticRoutes: MetadataRoute.Sitemap = [

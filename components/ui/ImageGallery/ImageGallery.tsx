@@ -21,7 +21,7 @@ export default function ImageGallery({ images, carName }: ImageGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
 
-  const primaryImage = images[selectedIndex]?.secureUrl || images[selectedIndex]?.url || '/assets/default.png'
+  const primaryImage = images[selectedIndex]?.secureUrl || images[selectedIndex]?.url || '/assets/default.webp'
 
   const goToPrevious = useCallback(() => {
     setSelectedIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
@@ -37,7 +37,7 @@ export default function ImageGallery({ images, carName }: ImageGalleryProps) {
   if (!images || images.length === 0) {
     return (
       <div className={styles.placeholder}>
-        <Image src="/assets/default.png" alt={carName} fill className={styles.placeholderImage} />
+        <Image src="/assets/default.webp" alt={carName} fill className={styles.placeholderImage} />
       </div>
     )
   }

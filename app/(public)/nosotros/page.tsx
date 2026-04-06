@@ -7,15 +7,60 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.co
 export const metadata: Metadata = {
   title: 'Sobre Nosotros | Boston Automotores — 20+ Años en Mar del Plata',
   description:
-    'Conacé Boston Automotores, tu concesionaria de confianza en Mar del Plata. Más de 20 años vendiendo autos usados de calidad con garantía.',
+    'Más de 20 años en Mar del Plata vendiendo autos usados de calidad. Garantía mecánica, financiación flexible y atención personalizada. Tu concesionaria de confianza.',
   alternates: {
     canonical: `${baseUrl}/nosotros`,
   },
 };
 
 export default function AboutPage() {
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: '¿Dónde están ubicados?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Estamos ubicados en Av. Colón 4469, Mar del Plata, Argentina.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '¿Cuál es el horario de atención?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Nuestro horario de atención es de lunes a viernes de 9:00 a 18:00 y sábados de 9:00 a 13:00.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '¿Ofrecen garantía en los vehículos?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Sí, todos nuestros vehículos incluyen garantía mecánica para tu tranquilidad.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '¿Trabajan con financiación?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Sí, ofrecemos planes de financiación bancaria adaptados a tu presupuesto y necesidades.',
+        },
+      },
+    ],
+  };
+
   return (
     <div className={styles.page}>
+      {/* SEO Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+
       {/* Hero Section */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>

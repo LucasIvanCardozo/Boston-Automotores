@@ -1,4 +1,4 @@
-import { MetadataRoute } from 'next';
+import { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -16,15 +16,15 @@ export default function manifest(): MetadataRoute.Manifest {
         type: 'image/x-icon',
       },
       {
-        src: '/assets/logo-sin-fondo.png',
+        src: '/assets/logo-sin-fondo.webp',
         sizes: '192x192',
         type: 'image/png',
       },
       {
-        src: '/assets/logo-sin-fondo.png',
+        src: '/assets/logo-sin-fondo.webp',
         sizes: '512x512',
         type: 'image/png',
       },
     ],
-  };
+  }
 }

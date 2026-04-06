@@ -8,7 +8,7 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.co
 export const metadata: Metadata = {
   title: 'Vendé tu Auto al Mejor Precio | Boston Automotores | Mar del Plata',
   description:
-    'Vendé tu auto a Boston Automotores. Te ofrecemos la mejor tasación, proceso rápido y pago inmediato. ¡Contactanos hoy!',
+    'Vendé tu auto en Mar del Plata al mejor precio. Tasación gratuita, proceso rápido y pago inmediato. ¡Solicitá tu presupuesto hoy!',
   alternates: {
     canonical: `${baseUrl}/vende-tu-auto`,
   },
@@ -56,8 +56,53 @@ const processSteps = [
 ];
 
 export default function SellCarPage() {
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: '¿Cómo vendo mi auto?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Simplemente completá el formulario de contacto, nuestro equipo evaluará tu vehículo y te haremos una oferta.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '¿Cuánto tardan en pagar?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'El pago es inmediato una vez que aceptes la oferta. Realizamos la transferencia el mismo día.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '¿Aceptan autos con deuda?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Evaluamos cada caso de forma individual. Contamos con opciones para vehículos con deuda prendaria.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '¿Puedo dejar mi auto en parte de pago?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Sí, aceptamos permutas. Te recibirnos tu auto actual como parte de pago con la mejor tasación del mercado.',
+        },
+      },
+    ],
+  };
+
   return (
     <div className={styles.page}>
+      {/* SEO Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+
       {/* Hero Section */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>

@@ -11,13 +11,13 @@ export default function Hero() {
     <section className={styles.hero}>
       <div className={styles.backgroundWrapper}>
         <Image
-          src="/assets/portada-banner.png"
+          src="/assets/portada-banner.webp"
           alt="Boston Automotores - Concesionaria de autos"
           fill
           loading="eager"
           priority
+          unoptimized
           className={styles.backgroundImage}
-          sizes="100vw"
         />
         <div className={styles.overlay} />
       </div>
@@ -50,7 +50,7 @@ export default function Hero() {
               {/* Glow effect - Behind the logo */}
               <div className={styles.logoGlow} />
               <div className={styles.logoWrapper}>
-                <Image src="/assets/logo-sin-fondo.png" alt="Boston Automotores" width={400} height={200} priority className={styles.logoImage} />
+                <Image src="/assets/logo-sin-fondo.webp" alt="Boston Automotores" width={400} height={200} priority className={styles.logoImage} />
               </div>
             </motion.div>
           </motion.div>

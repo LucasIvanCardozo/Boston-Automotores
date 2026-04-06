@@ -11,7 +11,7 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.co
 
 export const metadata: Metadata = {
   title: 'Autos Usados en Mar del Plata | Catálogo | Boston Automotores',
-  description: 'Explorá nuestro catálogo de autos usados en Mar del Plata. Encontrá tu próximo vehículo con las mejores condiciones de financiación.',
+  description: 'Autos usados en Mar del Plata | Catálogo con garantía y financiación en 12 cuotas. Encontrá tu próximo vehículo en Boston Automotores.',
   alternates: {
     canonical: `${baseUrl}/catalogo`,
   },

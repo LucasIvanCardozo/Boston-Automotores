@@ -67,7 +67,9 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
   const relatedCars = await getRelatedCars(id, car.brand);
 
   const carName = `${car.brand} ${car.model} ${car.year}`;
-  const jsonLd = {
+  const currentUrl = `${baseUrl}/catalogo/${id}`;
+
+  const productJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: carName,
@@ -84,6 +86,33 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
     },
     image: car.images[0]?.secureUrl,
   };
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Inicio',
+        item: 'https://bostonautomotores.com.ar/',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Catálogo',
+        item: 'https://bostonautomotores.com.ar/catalogo',
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: carName,
+        item: currentUrl,
+      },
+    ],
+  };
+
+  const jsonLd = [productJsonLd, breadcrumbJsonLd];
 
   return (
     <>

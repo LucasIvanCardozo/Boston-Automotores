@@ -29,7 +29,7 @@
 .overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(23, 23, 23, 0.2) 100%);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.35) 0%, rgba(23, 23, 23, 0.25) 100%);
 }
 
 .content {
@@ -91,7 +91,13 @@
   transform: translate(-50%, -50%) translateZ(-100px);
   width: 140%;
   aspect-ratio: 1;
-  background: radial-gradient(ellipse 80% 60% at center, rgba(var(--color-primary-rgb), 0.3) 0%, rgba(var(--color-primary-rgb), 0.2) 30%, rgba(var(--color-primary-rgb), 0.1) 60%, transparent 75%);
+  background: radial-gradient(
+    ellipse 80% 60% at center,
+    rgba(var(--color-primary-rgb), 0.3) 0%,
+    rgba(var(--color-primary-rgb), 0.2) 30%,
+    rgba(var(--color-primary-rgb), 0.1) 60%,
+    transparent 75%
+  );
   border-radius: 50%;
   pointer-events: none;
   animation: pulseGlow 3s ease-in-out infinite;

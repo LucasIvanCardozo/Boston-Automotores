@@ -223,3 +223,37 @@ export const getAllAvailableCarIds = cache(async (): Promise<string[]> => {
     return [];
   }
 });
+
+export interface CarIdForSitemap {
+  id: string;
+  updatedAt: Date;
+  status: string;
+}
+
+/**
+ * Get car IDs with timestamps for sitemap generation.
+ * Uses React.cache() to avoid double-fetching between sitemap generation
+ * and other page components.
+ * Filters: deletedAt = null, status in ['available', 'reserved']
+ */
+export const getCarIdsForSitemap = cache(async (): Promise<CarIdForSitemap[]> => {
+  try {
+    const cars = await prisma.car.findMany({
+      where: {
+        deletedAt: null,
+        status: { in: ['available', 'reserved'] },
+      },
+      select: {
+        id: true,
+        updatedAt: true,
+        status: true,
+      },
+      orderBy: { updatedAt: 'desc' },
+    });
+
+    return cars;
+  } catch (error) {
+    console.error('[getCarIdsForSitemap] Error:', error);
+    return [];
+  }
+});
