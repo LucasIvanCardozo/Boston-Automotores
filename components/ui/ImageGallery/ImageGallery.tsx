@@ -47,14 +47,7 @@ export default function ImageGallery({ images, carName }: ImageGalleryProps) {
       {/* Main Image */}
       <div className={styles.mainWrapper}>
         <motion.div key={selectedIndex} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className={styles.mainImage}>
-          <Image
-            src={primaryImage}
-            alt={`${carName} - Imagen ${selectedIndex + 1}`}
-            fill
-            priority={selectedIndex === 0}
-            sizes="(max-width: 768px) 100vw, 60vw"
-            className={styles.image}
-          />
+          <Image src={primaryImage} alt={`${carName} - Imagen ${selectedIndex + 1}`} fill priority={selectedIndex === 0} unoptimized className={styles.image} />
         </motion.div>
 
         {images.length > 1 && (
@@ -108,7 +101,7 @@ export default function ImageGallery({ images, carName }: ImageGalleryProps) {
               exit={{ scale: 0.9 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <Image src={primaryImage} alt={`${carName} - Imagen ${selectedIndex + 1}`} fill sizes="100vw" className={styles.lightboxImage} />
+              <Image src={primaryImage} alt={`${carName} - Imagen ${selectedIndex + 1}`} fill unoptimized className={styles.lightboxImage} />
             </motion.div>
 
             {images.length > 1 && (

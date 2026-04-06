@@ -7,7 +7,7 @@ import CarGrid from '@/components/sections/CarGrid/CarGrid'
 import Loading from '@/components/ui/Loading/Loading'
 import styles from './page.module.css'
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.com.ar';
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.com.ar'
 
 export const metadata: Metadata = {
   title: 'Autos Usados en Mar del Plata | Catálogo | Boston Automotores',
@@ -25,12 +25,12 @@ interface SearchParams {
 }
 
 function buildPageUrl(params: SearchParams, page: number): string {
-  const query = new URLSearchParams();
-  query.set('page', String(page));
-  if (params.brand) query.set('brand', params.brand);
-  if (params.maxPrice) query.set('maxPrice', params.maxPrice);
-  if (params.maxMileage) query.set('maxMileage', params.maxMileage);
-  return query.toString();
+  const query = new URLSearchParams()
+  query.set('page', String(page))
+  if (params.brand) query.set('brand', params.brand)
+  if (params.maxPrice) query.set('maxPrice', params.maxPrice)
+  if (params.maxMileage) query.set('maxMileage', params.maxMileage)
+  return query.toString()
 }
 
 export default async function CatalogPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
@@ -76,8 +76,8 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
               <span className={styles.statLabel}>Cuotas</span>
             </div>
             <div className={styles.statItem}>
-              <span className={styles.statValue}>0km</span>
-              <span className={styles.statLabel}>Recién llegados</span>
+              <span className={styles.statValue}>24</span>
+              <span className={styles.statLabel}>Cuotas</span>
             </div>
           </div>
         </div>
@@ -102,18 +102,12 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
             </div>
             <div className={styles.paginationLinks}>
               {currentPage > 1 && (
-                <Link
-                  href={`?${buildPageUrl(params, currentPage - 1)}`}
-                  className={styles.paginationLink}
-                >
+                <Link href={`?${buildPageUrl(params, currentPage - 1)}`} className={styles.paginationLink}>
                   Anterior
                 </Link>
               )}
               {currentPage < totalPages && (
-                <Link
-                  href={`?${buildPageUrl(params, currentPage + 1)}`}
-                  className={styles.paginationLink}
-                >
+                <Link href={`?${buildPageUrl(params, currentPage + 1)}`} className={styles.paginationLink}>
                   Siguiente
                 </Link>
               )}
