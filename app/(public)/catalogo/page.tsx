@@ -7,9 +7,14 @@ import CarGrid from '@/components/sections/CarGrid/CarGrid'
 import Loading from '@/components/ui/Loading/Loading'
 import styles from './page.module.css'
 
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.com.ar';
+
 export const metadata: Metadata = {
   title: 'Catálogo de Autos',
   description: 'Explorá nuestro catálogo de autos usados en Mar del Plata. Encontrá tu próximo vehículo con las mejores condiciones de financiación.',
+  alternates: {
+    canonical: `${baseUrl}/catalogo`,
+  },
 }
 
 interface SearchParams {

@@ -2,10 +2,15 @@ import type { Metadata } from 'next';
 import { Phone, Mail, MapPin, Clock, Users, Award, ThumbsUp, Car } from 'lucide-react';
 import styles from './page.module.css';
 
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.com.ar';
+
 export const metadata: Metadata = {
   title: 'Nosotros',
   description:
-    'Conocé Boston Automotores, tu concesionaria de confianza en Mar del Plata. Más de 20 años vendiendo autos usados de calidad con garantía.',
+    'Conacé Boston Automotores, tu concesionaria de confianza en Mar del Plata. Más de 20 años vendiendo autos usados de calidad con garantía.',
+  alternates: {
+    canonical: `${baseUrl}/nosotros`,
+  },
 };
 
 export default function AboutPage() {

@@ -3,10 +3,15 @@ import { Shield, Clock, DollarSign, Car, CheckCircle, Phone, MessageCircle } fro
 import SellCarForm from '@/components/forms/SellCarForm/SellCarForm';
 import styles from './page.module.css';
 
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.com.ar';
+
 export const metadata: Metadata = {
   title: 'Vende tu Auto',
   description:
     'Vendé tu auto a Boston Automotores. Te ofrecemos la mejor tasación, proceso rápido y pago inmediato. ¡Contactanos hoy!',
+  alternates: {
+    canonical: `${baseUrl}/vende-tu-auto`,
+  },
 };
 
 const benefits = [

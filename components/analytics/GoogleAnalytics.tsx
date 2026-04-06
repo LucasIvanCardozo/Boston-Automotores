@@ -59,7 +59,7 @@ export default function GoogleAnalytics({ gaId }: GoogleAnalyticsProps) {
               allow_google_signs: false,
               // Enable cross-domain tracking if needed
               linker: {
-                domains: ['bostonautomotores.com']
+                domains: ['bostonautomotores.com.ar']
               }
             });
           `,

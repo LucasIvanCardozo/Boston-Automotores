@@ -30,7 +30,7 @@ export default function Hero() {
           className={styles.contentWrapper}
         >
           {/* Logo 3D */}
-          <motion.div 
+          <motion.div
             className={styles.logo3DContainer}
             initial={{ opacity: 0, scale: 0.8, rotateY: -30 }}
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
@@ -50,14 +50,7 @@ export default function Hero() {
               {/* Glow effect - Behind the logo */}
               <div className={styles.logoGlow} />
               <div className={styles.logoWrapper}>
-                <Image
-                  src="/assets/logo-sin-fondo.png"
-                  alt="Boston Automotores"
-                  width={400}
-                  height={200}
-                  priority
-                  className={styles.logoImage}
-                />
+                <Image src="/assets/logo-sin-fondo.png" alt="Boston Automotores" width={400} height={200} priority className={styles.logoImage} />
               </div>
             </motion.div>
           </motion.div>

@@ -8,6 +8,8 @@ import ContactCTA from '@/components/sections/CarDetail/ContactCTA';
 import RelatedCars from '@/components/sections/CarDetail/RelatedCars';
 import styles from './page.module.css';
 
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.com.ar';
+
 interface CarDetailPageProps {
   params: Promise<{ id: string }>;
 }
@@ -36,6 +38,9 @@ export async function generateMetadata({ params }: CarDetailPageProps): Promise<
       title: `${carName} | Boston Automotores`,
       description: `${carName} - ${priceFormatted}`,
       images: car.images[0]?.secureUrl ? [car.images[0].secureUrl] : [],
+    },
+    alternates: {
+      canonical: `${baseUrl}/catalogo/${id}`,
     },
   };
 }
