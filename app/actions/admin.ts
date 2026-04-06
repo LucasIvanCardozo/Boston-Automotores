@@ -5,7 +5,7 @@ import type { LoginInput } from '@/lib/schemas/admin'
 import { loginSchema } from '@/lib/schemas/admin'
 import { prisma } from '@/lib/prisma'
 import { verifyPassword, generateToken, setSessionCookie, clearSessionCookie } from '@/lib/auth'
-import { AdminRole } from '@/generated/prisma/enums'
+import { AdminRole } from '@/prisma/generated/enums'
 
 export interface LoginResult {
   success: boolean

@@ -6,11 +6,11 @@ import 'dotenv/config'
  * Usage: npx tsx scripts/create-admin.ts <username> <password>
  */
 
-import { PrismaClient } from '../generated/prisma/client'
+import { PrismaClient } from '../prisma/generated/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { Pool } from 'pg'
 import bcrypt from 'bcryptjs'
-import { AdminRole } from '../generated/prisma/enums'
+import { AdminRole } from '../prisma/generated/enums'
 
 const BCRYPT_ROUNDS = 12
 
