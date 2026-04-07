@@ -25,8 +25,10 @@ model Car {
   images         Image[]
   technicalSheet TechnicalSheet?
 
-  // Technical specifications (JSON)
-  specs Json?
+  // Basic car info (optional fields)
+  engine   String?    // Motor (e.g., "1.6 16v")
+  doors    Int?       // Number of doors (e.g., 4)
+  currency Currency   @default(ARS) // Price currency
 
   // Soft delete
   deletedAt DateTime?
@@ -155,6 +157,11 @@ enum Transmission {
   manual
   automatica
   cvt
+}
+
+enum Currency {
+  ARS
+  USD
 }
 
 enum LeadType {

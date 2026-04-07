@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
+import { prisma } from '@/lib/prisma';
 import type { JwtPayload } from '@/lib/schemas/admin';
 
 // JWT configuration
@@ -121,12 +122,24 @@ export async function getSession(): Promise<JwtPayload | null> {
 
 /**
  * Check if request has valid admin session
+ * Also verifies that the admin still exists in the database
  */
 export async function requireAuth(): Promise<JwtPayload> {
   const session = await getSession();
   
   if (!session) {
-    throw new Error('Unauthorized');
+    throw new Error('No autorizado');
+  }
+  
+  // Verify that the admin still exists in the database
+  const admin = await prisma.admin.findUnique({
+    where: { id: session.adminId },
+  });
+  
+  if (!admin) {
+    // Admin was deleted, clear the cookie
+    await clearSessionCookie();
+    throw new Error('No autorizado');
   }
   
   return session;

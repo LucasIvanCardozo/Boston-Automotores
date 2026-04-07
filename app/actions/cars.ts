@@ -3,8 +3,8 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { carCreateSchema, carUpdateSchema, carDeleteSchema, toggleFeaturedSchema, carSpecsSchema } from '@/lib/schemas/car';
-import type { CarCreateInput, CarUpdateInput, CarSpecs } from '@/lib/schemas/car';
+import { carCreateSchema, carUpdateSchema, carDeleteSchema, toggleFeaturedSchema } from '@/lib/schemas/car';
+import type { CarCreateInput } from '@/lib/schemas/car';
 import { requireAuth } from '@/lib/auth';
 import { hardDeleteCar } from '@/lib/car-deletion';
 import { deleteAsset, extractPublicIdFromUrl } from '@/lib/cloudinary';
@@ -31,7 +31,9 @@ export interface CarListResult {
     featured: boolean;
     description: string | null;
     features: string[];
-    specs: CarSpecs | null;
+    engine: string | null;
+    doors: number | null;
+    currency: 'ARS' | 'USD';
     deletedAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
@@ -42,63 +44,6 @@ export interface CarListResult {
     }>;
   }>;
   total?: number;
-}
-
-/**
- * Parse specs from FormData (handles both JSON string and individual fields)
- */
-function parseSpecsFromFormData(formData: FormData): CarSpecs | undefined {
-  const specsStr = formData.get('specs');
-  
-  if (specsStr && typeof specsStr === 'string') {
-    try {
-      const parsed = JSON.parse(specsStr);
-      const validation = carSpecsSchema.safeParse(parsed);
-      if (validation.success) {
-        return validation.data;
-      }
-    } catch {
-      // If parsing fails, try to build from individual fields
-    }
-  }
-  
-  // Fallback: build specs from individual fields
-  const sensors = formData.getAll('specs.sensors');
-  const securityFeatures = formData.getAll('specs.securityFeatures');
-  const comfortFeatures = formData.getAll('specs.comfortFeatures');
-  
-  const specs: Partial<CarSpecs> = {};
-  
-  const engine = formData.get('specs.engine');
-  if (engine) specs.engine = engine as string;
-  
-  const steering = formData.get('specs.steering');
-  if (steering) specs.steering = steering as CarSpecs['steering'];
-  
-  const color = formData.get('specs.color');
-  if (color) specs.color = color as string;
-  
-  const doors = formData.get('specs.doors');
-  if (doors) specs.doors = parseInt(doors as string, 10);
-  
-  const wheels = formData.get('specs.wheels');
-  if (wheels) specs.wheels = wheels as string;
-  
-  const wheelSize = formData.get('specs.wheelSize');
-  if (wheelSize) specs.wheelSize = wheelSize as string;
-  
-  const audioSystem = formData.get('specs.audioSystem');
-  if (audioSystem) specs.audioSystem = audioSystem as string;
-  
-  const headlights = formData.get('specs.headlights');
-  if (headlights) specs.headlights = headlights as CarSpecs['headlights'];
-  
-  if (sensors.length > 0) specs.sensors = sensors as string[];
-  if (securityFeatures.length > 0) specs.securityFeatures = securityFeatures as string[];
-  if (comfortFeatures.length > 0) specs.comfortFeatures = comfortFeatures as string[];
-  
-  const validation = carSpecsSchema.safeParse(specs);
-  return validation.success ? validation.data : undefined;
 }
 
 /**
@@ -125,13 +70,11 @@ export async function createCar(formData: FormData): Promise<CarResult> {
     features: formData.get('features')
       ? (JSON.parse(formData.get('features') as string) as string[])
       : [],
+    currency: (formData.get('currency') as CarCreateInput['currency']) || 'ARS',
+    // Optional fields
+    engine: (formData.get('engine') as string) || undefined,
+    doors: formData.get('doors') ? parseInt(formData.get('doors') as string, 10) : undefined,
   };
-
-  // Parse specs from formData
-  const specs = parseSpecsFromFormData(formData);
-  if (specs) {
-    rawData.specs = specs;
-  }
 
   const validation = carCreateSchema.safeParse(rawData);
   if (!validation.success) {
@@ -190,7 +133,9 @@ export async function updateCar(id: string, formData: FormData): Promise<CarResu
     featured?: boolean;
     description?: string;
     features?: string[];
-    specs?: CarSpecs;
+    currency?: string;
+    engine?: string;
+    doors?: number;
   };
   const rawData: CarUpdateFormData = {
     brand: formData.get('brand') as string,
@@ -208,13 +153,11 @@ export async function updateCar(id: string, formData: FormData): Promise<CarResu
     features: formData.get('features')
       ? (JSON.parse(formData.get('features') as string) as string[])
       : undefined,
+    currency: formData.get('currency') as string || undefined,
+    // Optional fields
+    engine: (formData.get('engine') as string) || undefined,
+    doors: formData.get('doors') ? parseInt(formData.get('doors') as string, 10) : undefined,
   };
-
-  // Parse specs from formData
-  const specs = parseSpecsFromFormData(formData);
-  if (specs) {
-    rawData.specs = specs;
-  }
 
   const validation = carUpdateSchema.safeParse(rawData);
   if (!validation.success) {
@@ -453,7 +396,9 @@ export async function getAdminCars(options?: {
     const serializedCars = cars.map((car) => ({
       ...car,
       price: Number(car.price),
-      specs: carSpecsSchema.parse(car.specs),
+      engine: car.engine,
+      doors: car.doors,
+      currency: car.currency,
     }));
 
     return { success: true, cars: serializedCars, total };
@@ -498,7 +443,6 @@ export async function getAdminCar(id: string): Promise<CarResult> {
       data: {
         ...car,
         price: Number(car.price),
-        specs: carSpecsSchema.parse(car.specs),
       },
     };
   } catch (error) {

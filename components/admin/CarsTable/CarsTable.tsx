@@ -29,6 +29,7 @@ import {
 } from 'lucide-react'
 import Button from '@/components/ui/Button/Button'
 import Badge from '@/components/ui/Badge/Badge'
+import { formatPrice } from '@/lib/utils'
 import styles from './CarsTable.module.css'
 
 type CarStatus = 'available' | 'sold' | 'reserved'
@@ -41,6 +42,7 @@ interface Car {
   price: number
   status: CarStatus
   featured: boolean
+  currency?: 'ARS' | 'USD'
   deletedAt: Date | null
   images: { url: string }[]
   createdAt: Date
@@ -151,7 +153,10 @@ export default function CarsTable({
             )}
           </Button>
         ),
-        cell: ({ row }) => <span className={styles.price}>${row.original.price.toLocaleString('es-AR')}</span>,
+        cell: ({ row }) => {
+          const currency = row.original.currency || 'ARS'
+          return <span className={styles.price}>{formatPrice(row.original.price, currency)}</span>
+        },
         enableSorting: true,
       },
       {

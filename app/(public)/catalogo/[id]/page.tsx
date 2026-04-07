@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Fuel, Calendar, Gauge, Settings } from 'lucide-react';
 import { getPublicCar, getRelatedCars, getAllAvailableCarIds } from '@/lib/data/cars';
+import { formatPrice, formatMileage } from '@/lib/utils';
 import ImageGallery from '@/components/ui/ImageGallery/ImageGallery';
-import Specifications from '@/components/sections/CarDetail/Specifications';
 import ContactCTA from '@/components/sections/CarDetail/ContactCTA';
 import RelatedCars from '@/components/sections/CarDetail/RelatedCars';
 import styles from './page.module.css';
@@ -36,11 +37,8 @@ export async function generateMetadata({ params }: CarDetailPageProps): Promise<
   }
 
   const carName = `${car.brand} ${car.model} ${car.year}`;
-  const priceFormatted = new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-    minimumFractionDigits: 0,
-  }).format(car.price);
+  const currency = (car.currency as 'ARS' | 'USD') || 'ARS';
+  const priceFormatted = formatPrice(car.price, currency);
 
   return {
     title: carName,
@@ -56,6 +54,20 @@ export async function generateMetadata({ params }: CarDetailPageProps): Promise<
   };
 }
 
+const fuelTypeLabels: Record<string, string> = {
+  nafta: 'Nafta',
+  diesel: 'Diesel',
+  electrico: 'Eléctrico',
+  hibrido: 'Híbrido',
+  gnc: 'GNC',
+};
+
+const transmissionLabels: Record<string, string> = {
+  manual: 'Manual',
+  automatica: 'Automática',
+  cvt: 'CVT',
+};
+
 export default async function CarDetailPage({ params }: CarDetailPageProps) {
   const { id } = await params;
   const car = await getPublicCar(id);
@@ -68,6 +80,7 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
 
   const carName = `${car.brand} ${car.model} ${car.year}`;
   const currentUrl = `${baseUrl}/catalogo/${id}`;
+  const currency = (car.currency as 'ARS' | 'USD') || 'ARS';
 
   const productJsonLd = {
     '@context': 'https://schema.org',
@@ -77,7 +90,7 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
     offers: {
       '@type': 'Offer',
       price: car.price,
-      priceCurrency: 'ARS',
+      priceCurrency: currency,
       availability: car.status === 'available'
         ? 'https://schema.org/InStock'
         : car.status === 'reserved'
@@ -137,7 +150,89 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
             </div>
 
             <div className={styles.details}>
-              <Specifications car={car} />
+              {/* Car Details Card */}
+              <div className={styles.detailsCard}>
+                <div className={styles.priceSection}>
+                  <span className={styles.priceLabel}>Precio</span>
+                  <span className={styles.price}>{formatPrice(car.price, currency)}</span>
+                </div>
+
+                {/* Basic info — 4 chips */}
+                <section className={styles.section}>
+                  <h3 className={styles.sectionTitle}>Información General</h3>
+                  <div className={styles.specGrid}>
+                    <div className={styles.specItem}>
+                      <div className={styles.specIcon}><Calendar size={20} /></div>
+                      <div className={styles.specContent}>
+                        <span className={styles.specLabel}>Año</span>
+                        <span className={styles.specValue}>{car.year}</span>
+                      </div>
+                    </div>
+                    <div className={styles.specItem}>
+                      <div className={styles.specIcon}><Gauge size={20} /></div>
+                      <div className={styles.specContent}>
+                        <span className={styles.specLabel}>Kilometraje</span>
+                        <span className={styles.specValue}>{formatMileage(car.mileage)}</span>
+                      </div>
+                    </div>
+                    <div className={styles.specItem}>
+                      <div className={styles.specIcon}><Fuel size={20} /></div>
+                      <div className={styles.specContent}>
+                        <span className={styles.specLabel}>Combustible</span>
+                        <span className={styles.specValue}>{fuelTypeLabels[car.fuelType] || car.fuelType}</span>
+                      </div>
+                    </div>
+                    <div className={styles.specItem}>
+                      <div className={styles.specIcon}><Settings size={20} /></div>
+                      <div className={styles.specContent}>
+                        <span className={styles.specLabel}>Transmisión</span>
+                        <span className={styles.specValue}>{transmissionLabels[car.transmission] || car.transmission}</span>
+                      </div>
+                    </div>
+                    {car.engine && (
+                      <div className={styles.specItem}>
+                        <div className={styles.specIcon}><Settings size={20} /></div>
+                        <div className={styles.specContent}>
+                          <span className={styles.specLabel}>Motor</span>
+                          <span className={styles.specValue}>{car.engine}</span>
+                        </div>
+                      </div>
+                    )}
+                    {car.doors && (
+                      <div className={styles.specItem}>
+                        <div className={styles.specIcon}><Settings size={20} /></div>
+                        <div className={styles.specContent}>
+                          <span className={styles.specLabel}>Puertas</span>
+                          <span className={styles.specValue}>{car.doors}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </section>
+
+                {/* Features list */}
+                {car.features && car.features.length > 0 && (
+                  <section className={styles.section}>
+                    <h3 className={styles.sectionTitle}>Características</h3>
+                    <ul className={styles.featureList}>
+                      {car.features.map((feature, index) => (
+                        <li key={index} className={styles.featureItem}>
+                          <span className={styles.featureCheck}>✓</span>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+
+                {car.description && (
+                  <section className={styles.section}>
+                    <h3 className={styles.sectionTitle}>Descripción</h3>
+                    <p className={styles.description}>{car.description}</p>
+                  </section>
+                )}
+              </div>
+
               <ContactCTA carName={carName} />
             </div>
           </div>

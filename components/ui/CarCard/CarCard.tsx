@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Car, Fuel, Calendar, Gauge, Settings } from 'lucide-react'
 import Badge from '@/components/ui/Badge/Badge'
+import { formatPrice, formatMileage } from '@/lib/utils'
 import styles from './CarCard.module.css'
 
 interface CarCardProps {
@@ -16,6 +17,7 @@ interface CarCardProps {
     transmission: string
     status: string
     featured: boolean
+    currency?: 'ARS' | 'USD'
     images: Array<{
       id: string
       url: string
@@ -47,18 +49,7 @@ const transmissionLabels: Record<string, string> = {
 export default function CarCard({ car }: CarCardProps) {
   const primaryImage = car.images?.[0]?.secureUrl || car.images?.[0]?.url || '/assets/default.webp'
   const statusInfo = statusConfig[car.status] || statusConfig.available
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('es-AR', {
-      style: 'currency',
-      currency: 'ARS',
-      minimumFractionDigits: 0,
-    }).format(price)
-  }
-
-  const formatMileage = (mileage: number) => {
-    return new Intl.NumberFormat('es-AR').format(mileage)
-  }
+  const currency = car.currency || 'ARS'
 
   return (
     <Link href={`/catalogo/${car.id}`} className={styles.card}>
@@ -83,7 +74,7 @@ export default function CarCard({ car }: CarCardProps) {
           <p className={styles.year}>{car.year}</p>
         </div>
 
-        <div className={styles.price}>{formatPrice(car.price)}</div>
+        <div className={styles.price}>{formatPrice(car.price, currency)}</div>
 
         <div className={styles.specs}>
           <div className={styles.spec}>
@@ -92,7 +83,7 @@ export default function CarCard({ car }: CarCardProps) {
           </div>
           <div className={styles.spec}>
             <Gauge size={14} />
-            <span>{formatMileage(car.mileage)} km</span>
+            <span>{formatMileage(car.mileage)}</span>
           </div>
           <div className={styles.spec}>
             <Fuel size={14} />

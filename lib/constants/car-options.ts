@@ -23,19 +23,6 @@ export const STATUS_OPTIONS = [
   { value: 'reserved', label: 'Reservado' },
 ];
 
-export const STEERING_OPTIONS = [
-  { value: 'mechanical', label: 'Mecánica' },
-  { value: 'hydraulic', label: 'Hidráulica' },
-  { value: 'electric', label: 'Eléctrica' },
-];
-
-export const HEADLIGHTS_OPTIONS = [
-  { value: 'halogen', label: 'Halógeno' },
-  { value: 'led', label: 'LED' },
-  { value: 'xenon', label: 'Xenón' },
-  { value: 'full-led', label: 'Full LED' },
-];
-
 const currentYear = new Date().getFullYear();
 export const YEAR_OPTIONS = Array.from({ length: currentYear - 1900 + 1 }, (_, i) => ({
   value: String(currentYear - i),
@@ -47,4 +34,9 @@ export const ADMIN_STATUS_OPTIONS: { value: 'available' | 'sold' | 'reserved' | 
   { value: 'available', label: 'Disponible' },
   { value: 'sold', label: 'Vendido' },
   { value: 'reserved', label: 'Reservado' },
+];
+
+export const CURRENCY_OPTIONS = [
+  { value: 'ARS', label: 'Pesos ($)' },
+  { value: 'USD', label: 'Dólares (U$D)' },
 ];

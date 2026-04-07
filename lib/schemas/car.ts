@@ -4,59 +4,7 @@ import { z } from 'zod';
 export const fuelTypeEnum = z.enum(['nafta', 'diesel', 'electrico', 'hibrido', 'gnc']);
 export const transmissionEnum = z.enum(['manual', 'automatica', 'cvt']);
 export const carStatusEnum = z.enum(['available', 'sold', 'reserved']);
-export const steeringEnum = z.enum(['mechanical', 'hydraulic', 'electric']);
-export const headlightsEnum = z.enum(['halogen', 'led', 'xenon', 'full-led']);
-
-// Sensor options
-export const SENSOR_OPTIONS = ['parking', 'reverse', 'blindspot', 'rain'] as const;
-export const sensorEnum = z.enum(SENSOR_OPTIONS);
-
-// Security feature options
-export const SECURITY_FEATURE_OPTIONS = [
-  'airbags',
-  'abs',
-  'esp',
-  'traction-control',
-  'brake-assist',
-  'stabilitätsprogramm',
-  'hill-holder',
-  'isofix',
-] as const;
-export const securityFeatureEnum = z.enum(SECURITY_FEATURE_OPTIONS);
-
-// Comfort feature options
-export const COMFORT_FEATURE_OPTIONS = [
-  'cruise-control',
-  'sunroof',
-  'leather-seats',
-  'heated-seats',
-  'electric-mirrors',
-  'electric-windows',
-  'climate-control',
-  'dual-zone-climate',
-  'start-stop',
-  'parking-brake-electric',
-  'sunroof-panoramic',
-  'ambient-lighting',
-] as const;
-export const comfortFeatureEnum = z.enum(COMFORT_FEATURE_OPTIONS);
-
-// Car Specifications Schema
-export const carSpecsSchema = z.object({
-  engine: z.string().max(100, 'El motor no puede exceder 100 caracteres').optional(),
-  steering: steeringEnum.optional(),
-  color: z.string().max(50, 'El color no puede exceder 50 caracteres').optional(),
-  doors: z.number().int().min(2, 'El número de puertas debe ser entre 2 y 5').max(5, 'El número de puertas debe ser entre 2 y 5').optional(),
-  wheels: z.string().max(100).optional(),
-  wheelSize: z.string().max(50).optional(),
-  audioSystem: z.string().max(200).optional(),
-  headlights: headlightsEnum.optional(),
-  sensors: z.array(z.string()).max(10).default([]),
-  securityFeatures: z.array(z.string()).max(20).default([]),
-  comfortFeatures: z.array(z.string()).max(20).default([]),
-});
-
-export type CarSpecs = z.infer<typeof carSpecsSchema>;
+export const currencyEnum = z.enum(['ARS', 'USD']);
 
 // Car Create Schema with full specifications
 const currentYear = new Date().getFullYear();
@@ -77,7 +25,18 @@ export const carCreateSchema = z.object({
   featured: z.boolean().default(false),
   description: z.string().max(5000, 'La descripción no puede exceder 5000 caracteres').optional(),
   features: z.array(z.string()).max(50).default([]),
-  specs: carSpecsSchema.optional(),
+  // Currency
+  currency: currencyEnum.default('ARS'),
+  // Optional fields moved from technical specs
+  engine: z.string().max(100, 'El motor no puede exceder 100 caracteres').optional(),
+  doors: z.preprocess(
+    (val) => {
+      // Convert NaN to undefined, otherwise pass through
+      if (val === undefined || val === null || Number.isNaN(val)) return undefined;
+      return val;
+    },
+    z.number().int().min(2, 'El número de puertas debe ser entre 2 y 6').max(6, 'El número de puertas debe ser entre 2 y 6').optional()
+  ),
 });
 
 // NOTE: .partial() makes fields optional (undefined passes), but if a value IS provided,
@@ -125,5 +84,4 @@ export type ToggleFeaturedInput = z.infer<typeof toggleFeaturedSchema>;
 export type FuelType = z.infer<typeof fuelTypeEnum>;
 export type Transmission = z.infer<typeof transmissionEnum>;
 export type CarStatus = z.infer<typeof carStatusEnum>;
-export type Steering = z.infer<typeof steeringEnum>;
-export type Headlights = z.infer<typeof headlightsEnum>;
+export type Currency = z.infer<typeof currencyEnum>;

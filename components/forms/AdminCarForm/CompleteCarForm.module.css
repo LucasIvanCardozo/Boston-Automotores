@@ -46,7 +46,8 @@
   border-radius: var(--radius-md);
   resize: vertical;
   min-height: 100px;
-  transition: border-color var(--transition-fast) var(--ease-out),
+  transition:
+    border-color var(--transition-fast) var(--ease-out),
     box-shadow var(--transition-fast) var(--ease-out);
 }
 
@@ -68,7 +69,7 @@
 
 .textareaError {
   border-color: var(--color-error);
-  background-color: #FEF2F2;
+  background-color: #fef2f2;
 }
 
 .textareaError:focus {
@@ -219,6 +220,26 @@
   border-radius: var(--radius-md);
   color: var(--color-error);
   font-size: var(--font-size-sm);
+}
+
+/* Price field with currency */
+.priceField {
+  grid-column: 1 / -1;
+}
+
+.priceInputWrapper {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+}
+
+.priceInput {
+  flex: 1;
+}
+
+.currencySelect {
+  width: 140px;
+  flex-shrink: 0;
 }
 
 /* Tablet+ */

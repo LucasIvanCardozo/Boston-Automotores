@@ -525,14 +525,6 @@ export type ImageUncheckedUpdateManyWithoutCarNestedInput = {
   deleteMany?: Prisma.ImageScalarWhereInput | Prisma.ImageScalarWhereInput[]
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type ImageCreateWithoutCarInput = {
   id?: string
   publicId: string

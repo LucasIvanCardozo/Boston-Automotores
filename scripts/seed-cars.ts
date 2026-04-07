@@ -504,14 +504,16 @@ async function seed() {
         featured: carData.featured,
         description: carData.description,
         features: carData.features,
-        specs: carData.specs,
+        // New flat fields - extract from specs if available
+        engine: carData.specs?.engine,
+        doors: carData.specs?.doors,
       },
     });
 
     console.log(`✅ ${car.brand} ${car.model} (${car.year})`);
     console.log(`   💰 $${Number(car.price).toLocaleString('es-AR')}`);
-    console.log(`   🎨 ${carData.specs.color}`);
-    console.log(`   ⚙️  ${carData.specs.engine}`);
+    console.log(`   ⚙️  ${carData.specs?.engine || 'N/A'}`);
+    console.log(`   🚪 ${carData.specs?.doors || 'N/A'} puertas`);
     console.log(`   📋 ${carData.features.length} características`);
     console.log();
   }

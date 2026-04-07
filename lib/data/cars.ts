@@ -1,6 +1,5 @@
 import { cache } from 'react';
 import { prisma } from '@/lib/prisma';
-import type { CarSpecs } from '@/lib/schemas/car';
 
 /**
  * Get featured cars for the homepage.
@@ -56,7 +55,6 @@ export const getPublicCar = cache(async (id: string) => {
     return {
       ...car,
       price: Number(car.price),
-      specs: car.specs as CarSpecs | null,
     };
   } catch (error) {
     console.error('[getPublicCar] Error:', error);

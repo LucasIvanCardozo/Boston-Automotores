@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
-import { cookies } from 'next/headers';
-import { verifyToken, ADMIN_COOKIE_OPTIONS } from '@/lib/auth';
+import { requireAuth } from '@/lib/auth';
 import AdminSidebar from '@/components/layout/AdminSidebar/AdminSidebar';
 import Toaster from '@/components/ui/Toaster/Toaster';
 import styles from './layout.module.css';
@@ -10,18 +9,10 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Check authentication from cookie
-  const cookieStore = await cookies();
-  const token = cookieStore.get(ADMIN_COOKIE_OPTIONS.name)?.value;
-
-  let isAuthenticated = false;
+  // Check authentication and verify admin exists in database
   try {
-    isAuthenticated = !!token && !!verifyToken(token);
+    await requireAuth();
   } catch {
-    isAuthenticated = false;
-  }
-
-  if (!isAuthenticated) {
     redirect('/admin/login');
   }
 

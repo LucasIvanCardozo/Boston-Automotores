@@ -38,6 +38,14 @@ export const Transmission = {
 export type Transmission = (typeof Transmission)[keyof typeof Transmission]
 
 
+export const Currency = {
+  ARS: 'ARS',
+  USD: 'USD'
+} as const
+
+export type Currency = (typeof Currency)[keyof typeof Currency]
+
+
 export const LeadType = {
   sell_car: 'sell_car',
   contact: 'contact'

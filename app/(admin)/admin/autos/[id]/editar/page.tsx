@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getAdminCar } from '@/app/actions/cars';
 import EditCarPageClient from './EditCarPageClient';
-import type { CarCreateInput, CarSpecs } from '@/lib/schemas/car';
+import type { CarCreateInput } from '@/lib/schemas/car';
 
 // Extended car type with relations
 interface CarWithRelations {
@@ -18,7 +18,9 @@ interface CarWithRelations {
   featured: boolean;
   description: string | null;
   features: string[];
-  specs: CarSpecs | unknown | null;
+  engine: string | null;
+  doors: number | null;
+  currency: 'ARS' | 'USD';
   deletedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
@@ -61,11 +63,11 @@ export default async function EditCarPage({ params }: PageProps) {
   const car = result.data as unknown as CarWithRelations;
 
   // Transform the car data to match the form expected format
-  const initialData: Partial<CarCreateInput & { specs?: CarSpecs | null }> = {
+  const initialData: Partial<CarCreateInput> = {
     brand: car.brand,
     model: car.model,
     year: car.year,
-    price: typeof car.price === 'object' && car.price !== null 
+    price: typeof car.price === 'object' && car.price !== null
       ? Number((car.price as { toString: () => string }).toString())
       : Number(car.price),
     mileage: car.mileage,
@@ -75,7 +77,9 @@ export default async function EditCarPage({ params }: PageProps) {
     featured: car.featured,
     description: car.description || '',
     features: car.features || [],
-    specs: car.specs && car.specs !== null ? car.specs as CarSpecs : undefined,
+    currency: car.currency || 'ARS',
+    engine: car.engine || '',
+    doors: car.doors || undefined,
   };
 
   // Transform images

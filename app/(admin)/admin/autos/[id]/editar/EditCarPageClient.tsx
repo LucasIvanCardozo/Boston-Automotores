@@ -6,11 +6,11 @@ import CompleteCarForm from '@/components/forms/AdminCarForm/CompleteCarForm';
 import { updateCar } from '@/app/actions/cars';
 import { notifyLoading, updateNotification } from '@/lib/notifications';
 import { setFlashNotification } from '@/lib/flash-notifications';
-import type { CarCreateInput, CarSpecs } from '@/lib/schemas/car';
+import type { CarCreateInput } from '@/lib/schemas/car';
 
 interface EditCarPageClientProps {
   carId: string;
-  initialData: Partial<CarCreateInput & { specs: CarSpecs | null }>;
+  initialData: Partial<CarCreateInput>;
   existingImages: Array<{ id: string; url: string; publicId: string; order: number; width?: number; height?: number }>;
   existingTechnicalSheet?: { publicId: string; url: string; filename: string };
   carName: string;

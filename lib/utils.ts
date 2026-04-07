@@ -10,16 +10,19 @@ export function cn(...inputs: ClassValue[]): string {
 }
 
 /**
- * Format a price in Argentine Pesos
+ * Format a price with proper currency symbol
+ * ARS uses $ and USD uses U$D (Argentine convention)
  */
-export function formatPrice(price: number | string): string {
+export function formatPrice(price: number | string, currency: 'ARS' | 'USD' = 'ARS'): string {
   const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
-  return new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
+  const formattedNumber = new Intl.NumberFormat('es-AR', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(numericPrice);
+  
+  // Use Argentine convention: $ for pesos, U$D for dollars
+  const symbol = currency === 'USD' ? 'U$D' : '$';
+  return `${symbol} ${formattedNumber}`;
 }
 
 /**
