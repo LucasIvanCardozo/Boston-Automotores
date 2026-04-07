@@ -9,34 +9,34 @@ export const FUEL_TYPE_OPTIONS = [
   { value: 'electrico', label: 'Eléctrico' },
   { value: 'hibrido', label: 'Híbrido' },
   { value: 'gnc', label: 'GNC' },
-];
+]
 
 export const TRANSMISSION_OPTIONS = [
   { value: 'manual', label: 'Manual' },
   { value: 'automatica', label: 'Automática' },
   { value: 'cvt', label: 'CVT' },
-];
+]
 
 export const STATUS_OPTIONS = [
   { value: 'available', label: 'Disponible' },
   { value: 'sold', label: 'Vendido' },
   { value: 'reserved', label: 'Reservado' },
-];
+]
 
-const currentYear = new Date().getFullYear();
+const currentYear = new Date().getFullYear()
 export const YEAR_OPTIONS = Array.from({ length: currentYear - 1900 + 1 }, (_, i) => ({
   value: String(currentYear - i),
   label: String(currentYear - i),
-}));
+}))
 
 export const ADMIN_STATUS_OPTIONS: { value: 'available' | 'sold' | 'reserved' | ''; label: string }[] = [
   { value: '', label: 'Todos los estados' },
   { value: 'available', label: 'Disponible' },
   { value: 'sold', label: 'Vendido' },
   { value: 'reserved', label: 'Reservado' },
-];
+]
 
 export const CURRENCY_OPTIONS = [
-  { value: 'ARS', label: 'Pesos ($)' },
-  { value: 'USD', label: 'Dólares (U$D)' },
-];
+  { value: 'ARS', label: '$' },
+  { value: 'USD', label: 'U$D' },
+]

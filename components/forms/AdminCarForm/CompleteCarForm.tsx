@@ -255,18 +255,18 @@ export default function CompleteCarForm({
             required
           />
 
-          <Select label="Tipo de Combustible" options={FUEL_TYPE_OPTIONS} {...register('fuelType')} error={errors.fuelType?.message} required />
+          <Select label="Combustible" options={FUEL_TYPE_OPTIONS} {...register('fuelType')} error={errors.fuelType?.message} required />
 
           <Select label="Transmisión" options={TRANSMISSION_OPTIONS} {...register('transmission')} error={errors.transmission?.message} required />
 
           <Select label="Estado" options={STATUS_OPTIONS} {...register('status')} error={errors.status?.message} required />
 
           {/* Motor - moved from technical specs */}
-          <Input label="Motor (opcional)" {...register('engine')} error={errors.engine?.message} placeholder="Ej: 1.6 16v" />
+          <Input label="Motor" {...register('engine')} error={errors.engine?.message} placeholder="Ej: 1.6 16v" />
 
           {/* Puertas - moved from technical specs */}
           <Input
-            label="Puertas (opcional)"
+            label="Puertas"
             type="number"
             min={2}
             max={6}

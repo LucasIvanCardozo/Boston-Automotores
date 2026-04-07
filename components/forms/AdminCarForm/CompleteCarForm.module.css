@@ -222,9 +222,9 @@
   font-size: var(--font-size-sm);
 }
 
-/* Price field with currency */
+/* Price field with currency - occupies 2 columns exactly */
 .priceField {
-  grid-column: 1 / -1;
+  grid-column: span 1;
 }
 
 .priceInputWrapper {
@@ -235,17 +235,26 @@
 
 .priceInput {
   flex: 1;
+  min-width: 0;
+}
+
+.priceInput input {
+  width: 100%;
 }
 
 .currencySelect {
-  width: 140px;
+  width: 80px;
   flex-shrink: 0;
 }
 
 /* Tablet+ */
 @media (min-width: 768px) {
   .grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .priceField {
+    grid-column: span 2;
   }
 
   .actions {
