@@ -17,6 +17,7 @@ export default function Hero() {
           loading="eager"
           priority
           unoptimized
+          fetchPriority="high"
           className={styles.backgroundImage}
         />
         <div className={styles.overlay} />
@@ -50,7 +51,15 @@ export default function Hero() {
               {/* Glow effect - Behind the logo */}
               <div className={styles.logoGlow} />
               <div className={styles.logoWrapper}>
-                <Image src="/assets/logo-sin-fondo.webp" alt="Boston Automotores" width={400} height={200} priority unoptimized className={styles.logoImage} />
+                <Image
+                  src="/assets/logo-sin-fondo.webp"
+                  alt="Boston Automotores"
+                  width={400}
+                  height={200}
+                  priority
+                  fetchPriority="high"
+                  className={styles.logoImage}
+                />
               </div>
             </motion.div>
           </motion.div>

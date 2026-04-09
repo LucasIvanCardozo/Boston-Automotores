@@ -46,13 +46,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es">
       <head>
-        {/* Preconnect to external resources for performance */}
+        {/* Preconnect to Google Fonts for faster font loading */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://res.cloudinary.com" />
-
-        {/* DNS prefetch for additional performance */}
-        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
 
         {/* LocalBusiness Structured Data for SEO */}
         <script
