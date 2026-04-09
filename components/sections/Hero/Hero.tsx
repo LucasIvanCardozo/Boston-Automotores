@@ -75,7 +75,7 @@ export default function Hero() {
               <span className={styles.badgeLabel}>Años de experiencia</span>
             </div>
             <div className={styles.badge}>
-              <span className={styles.badgeNumber}>500+</span>
+              <span className={styles.badgeNumber}>4000+</span>
               <span className={styles.badgeLabel}>Autos vendidos</span>
             </div>
             <div className={styles.badge}>

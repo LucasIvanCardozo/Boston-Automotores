@@ -1,8 +1,8 @@
-import type { Metadata } from 'next';
-import { Phone, Mail, MapPin, Clock, Users, Award, ThumbsUp, Car } from 'lucide-react';
-import styles from './page.module.css';
+import type { Metadata } from 'next'
+import { Phone, Mail, MapPin, Clock, Users, Award, ThumbsUp, Car } from 'lucide-react'
+import styles from './page.module.css'
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.com.ar';
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.com.ar'
 
 export const metadata: Metadata = {
   title: 'Sobre Nosotros | Boston Automotores — 20+ Años en Mar del Plata',
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${baseUrl}/nosotros`,
   },
-};
+}
 
 export default function AboutPage() {
   const faqJsonLd = {
@@ -51,23 +51,18 @@ export default function AboutPage() {
         },
       },
     ],
-  };
+  }
 
   return (
     <div className={styles.page}>
       {/* SEO Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       {/* Hero Section */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>Sobre Nosotros</h1>
-          <p className={styles.heroSubtitle}>
-            Tu concesionaria de confianza en Mar del Plata desde hace más de 20 años
-          </p>
+          <p className={styles.heroSubtitle}>Tu concesionaria de confianza en Mar del Plata desde hace más de 20 años</p>
         </div>
       </section>
 
@@ -78,18 +73,16 @@ export default function AboutPage() {
             <div className={styles.storyContent}>
               <h2 className={styles.sectionTitle}>Nuestra Historia</h2>
               <p className={styles.text}>
-                Boston Automotores nació en el corazón de Mar del Plata con una misión clara:
-                ofrecer vehículos usados de calidad a precios justos, respaldados por un servicio
-                excepcional y honesto.
+                Boston Automotores nació en el corazón de Mar del Plata con una misión clara: ofrecer vehículos usados de calidad a precios justos, respaldados
+                por un servicio excepcional y honesto.
               </p>
               <p className={styles.text}>
-                A lo largo de más de dos décadas, hemos ayudado a miles de familias a encontrar
-                el auto perfecto para sus necesidades. Lo que comenzó como un pequeño emprendimiento
-                familiar, hoy es una de las concesionarias más reconocidas de la zona.
+                A lo largo de más de dos décadas, hemos ayudado a miles de familias a encontrar el auto perfecto para sus necesidades. Lo que comenzó como un
+                pequeño emprendimiento familiar, hoy es una de las concesionarias más reconocidas de la zona.
               </p>
               <p className={styles.text}>
-                Nuestro compromiso con la transparencia y la satisfacción del cliente nos ha permitido
-                construir relaciones duraderas y generar recomendaciones que son nuestro mayor orgullo.
+                Nuestro compromiso con la transparencia y la satisfacción del cliente nos ha permitido construir relaciones duraderas y generar recomendaciones
+                que son nuestro mayor orgullo.
               </p>
             </div>
             <div className={styles.storyImage}>
@@ -112,30 +105,21 @@ export default function AboutPage() {
                 <ThumbsUp size={28} />
               </div>
               <h3 className={styles.valueTitle}>Honestidad</h3>
-              <p className={styles.valueText}>
-                Cada vehículo es verificado exhaustivamente. Te informamos todo sobre el auto,
-                sin sorpresas ni letra chica.
-              </p>
+              <p className={styles.valueText}>Cada vehículo es verificado exhaustivamente. Te informamos todo sobre el auto, sin sorpresas ni letra chica.</p>
             </div>
             <div className={styles.valueCard}>
               <div className={styles.valueIcon}>
                 <Award size={28} />
               </div>
               <h3 className={styles.valueTitle}>Calidad</h3>
-              <p className={styles.valueText}>
-                Solo ofrecemos vehículos que cumplen con nuestros estándares de calidad.
-                Tu seguridad es nuestra prioridad.
-              </p>
+              <p className={styles.valueText}>Solo ofrecemos vehículos que cumplen con nuestros estándares de calidad. Tu seguridad es nuestra prioridad.</p>
             </div>
             <div className={styles.valueCard}>
               <div className={styles.valueIcon}>
                 <Users size={28} />
               </div>
               <h3 className={styles.valueTitle}>Atención Personal</h3>
-              <p className={styles.valueText}>
-                Te acompañamos en cada paso del proceso. Desde la elección hasta el
-                financiamiento y la post-venta.
-              </p>
+              <p className={styles.valueText}>Te acompañamos en cada paso del proceso. Desde la elección hasta el financiamiento y la post-venta.</p>
             </div>
           </div>
         </div>
@@ -149,30 +133,22 @@ export default function AboutPage() {
             <div className={styles.offerItem}>
               <Car size={24} className={styles.offerIcon} />
               <h3 className={styles.offerTitle}>Autos Usados Verificados</h3>
-              <p className={styles.offerText}>
-                Amplio stock de vehículos usados inspectedos y listos para circular.
-              </p>
+              <p className={styles.offerText}>Amplio stock de vehículos usados inspectedos y listos para circular.</p>
             </div>
             <div className={styles.offerItem}>
               <Award size={24} className={styles.offerIcon} />
               <h3 className={styles.offerTitle}>Garantía Mecánica</h3>
-              <p className={styles.offerText}>
-                Todos nuestros vehículos incluyen garantía mecánica para tu tranquilidad.
-              </p>
+              <p className={styles.offerText}>Todos nuestros vehículos incluyen garantía mecánica para tu tranquilidad.</p>
             </div>
             <div className={styles.offerItem}>
               <Users size={24} className={styles.offerIcon} />
               <h3 className={styles.offerTitle}>Financiación Flexible</h3>
-              <p className={styles.offerText}>
-                Planes de financiación adaptados a tu presupuesto y necesidades.
-              </p>
+              <p className={styles.offerText}>Planes de financiación adaptados a tu presupuesto y necesidades.</p>
             </div>
             <div className={styles.offerItem}>
               <ThumbsUp size={24} className={styles.offerIcon} />
               <h3 className={styles.offerTitle}>Aceptamos tu Usado</h3>
-              <p className={styles.offerText}>
-                Te recibimos tu usado como parte de pago con la mejor tasación del mercado.
-              </p>
+              <p className={styles.offerText}>Te recibimos tu usado como parte de pago con la mejor tasación del mercado.</p>
             </div>
           </div>
         </div>
@@ -181,12 +157,10 @@ export default function AboutPage() {
       {/* Trust Section */}
       <section className={`${styles.section} ${styles.sectionPrimary}`}>
         <div className={styles.container}>
-          <h2 className={`${styles.sectionTitle} ${styles.sectionTitleLight}`}>
-            ¿Por Qué Elegirnos?
-          </h2>
+          <h2 className={`${styles.sectionTitle} ${styles.sectionTitleLight}`}>¿Por Qué Elegirnos?</h2>
           <div className={styles.trustGrid}>
             <div className={styles.trustStat}>
-              <span className={styles.trustNumber}>500+</span>
+              <span className={styles.trustNumber}>4000+</span>
               <span className={styles.trustLabel}>Autos vendidos</span>
             </div>
             <div className={styles.trustStat}>
@@ -218,7 +192,9 @@ export default function AboutPage() {
             <div className={styles.contactCard}>
               <Phone size={24} className={styles.contactIcon} />
               <h3 className={styles.contactTitle}>Teléfono</h3>
-              <a href="tel:+5492236329761" className={styles.contactLink}>+54 9 223 632-9761</a>
+              <a href="tel:+5492236329761" className={styles.contactLink}>
+                +54 9 223 632-9761
+              </a>
             </div>
             <div className={styles.contactCard}>
               <Mail size={24} className={styles.contactIcon} />
@@ -231,7 +207,8 @@ export default function AboutPage() {
               <Clock size={24} className={styles.contactIcon} />
               <h3 className={styles.contactTitle}>Horarios</h3>
               <p className={styles.contactText}>
-                Lunes a Viernes: 9:00 - 18:00<br />
+                Lunes a Viernes: 9:00 - 18:00
+                <br />
                 Sábados: 9:00 - 13:00
               </p>
             </div>
@@ -239,5 +216,5 @@ export default function AboutPage() {
         </div>
       </section>
     </div>
-  );
+  )
 }
