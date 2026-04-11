@@ -7,7 +7,7 @@ import styles from './LocationMap.module.css'
 const businessInfo = {
   address: 'Av. Colón 4469, Mar del Plata, Argentina',
   phone: '+54 9 223 632-9761',
-  email: 'bostonautomotoresmdp@hotmail.com',
+  email: 'bostonautomotoresmdp@gmail.com',
   hours: 'Lunes a Viernes: 9:00 - 18:00 | Sábados: 9:00 - 13:00',
 }
 

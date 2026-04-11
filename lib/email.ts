@@ -10,7 +10,7 @@ function getResend(): Resend | null {
   return resendInstance
 }
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'bostonautomotoresmdp@hotmail.com'
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'bostonautomotoresmdp@gmail.com'
 const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@bostonautomotores.com'
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 

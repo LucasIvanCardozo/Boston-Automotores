@@ -27,7 +27,7 @@ export default function ContactCTA({ carName }: ContactCTAProps) {
           Llamar
         </a>
 
-        <a href="mailto:bostonautomotoresmdp@hotmail.com" className={styles.emailButton}>
+        <a href="mailto:bostonautomotoresmdp@gmail.com" className={styles.emailButton}>
           <Mail size={20} />
           Email
         </a>

@@ -19,7 +19,7 @@ const socialLinks = [
 
 const contactInfo = {
   phone: '+54 9 223 632-9761',
-  email: 'bostonautomotoresmdp@hotmail.com',
+  email: 'bostonautomotoresmdp@gmail.com',
 }
 
 export default function Navigation() {

@@ -61,7 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               description: 'Concesionaria de autos usados en Mar del Plata',
               url: 'https://bostonautomotores.com.ar',
               telephone: '+5492236329761',
-              email: 'bostonautomotoresmdp@hotmail.com',
+              email: 'bostonautomotoresmdp@gmail.com',
               address: {
                 '@type': 'PostalAddress',
                 streetAddress: 'Av. Colón 4469',
