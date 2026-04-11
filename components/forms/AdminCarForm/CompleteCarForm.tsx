@@ -12,7 +12,7 @@ import Select from '@/components/ui/Select/Select'
 import Button from '@/components/ui/Button/Button'
 import ImageUploader, { type ImageData, type StagedImage } from '@/components/admin/ImageUploader/ImageUploader'
 import TechnicalSheetUploader from '@/components/admin/TechnicalSheetUploader/TechnicalSheetUploader'
-import { FUEL_TYPE_OPTIONS, TRANSMISSION_OPTIONS, STATUS_OPTIONS, YEAR_OPTIONS, CURRENCY_OPTIONS } from '@/lib/constants/car-options'
+import { FUEL_TYPE_OPTIONS, TRANSMISSION_OPTIONS, STATUS_OPTIONS, YEAR_OPTIONS, CURRENCY_OPTIONS, MODELS_OPTIONS } from '@/lib/constants/car-options'
 import styles from './CompleteCarForm.module.css'
 
 /**
@@ -222,7 +222,7 @@ export default function CompleteCarForm({
         <h3 className={styles.sectionTitle}>Información Básica</h3>
 
         <div className={styles.grid}>
-          <Input label="Marca" {...register('brand')} error={errors.brand?.message} placeholder="Ej: Toyota" required />
+          <Select label="Marca" options={MODELS_OPTIONS} {...register('brand')} error={errors.brand?.message} placeholder="Elegir modelo" required />
 
           <Input label="Modelo" {...register('model')} error={errors.model?.message} placeholder="Ej: Corolla" required />
 
