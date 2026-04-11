@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import { motion } from 'framer-motion';
-import { Camera, Heart, MessageCircle } from 'lucide-react';
-import styles from './InstagramFeed.module.css';
+import { motion } from 'framer-motion'
+import { Camera, Heart, MessageCircle } from 'lucide-react'
+import styles from './InstagramFeed.module.css'
 
 // Instagram icon SVG inline (lucide-react Instagram is deprecated)
 const InstagramIcon = ({ size = 64 }: { size?: number }) => (
@@ -21,7 +21,7 @@ const InstagramIcon = ({ size = 64 }: { size?: number }) => (
     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
     <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
   </svg>
-);
+)
 
 export default function InstagramFeed() {
   return (
@@ -35,26 +35,25 @@ export default function InstagramFeed() {
           className={styles.content}
         >
           {/* Icono grande de Instagram */}
-          <motion.div 
+          <motion.div
             className={styles.iconWrapper}
-            animate={{ 
+            animate={{
               scale: [1, 1.1, 1],
-              rotate: [0, 5, -5, 0]
+              rotate: [0, 5, -5, 0],
             }}
-            transition={{ 
-              duration: 4, 
-              repeat: Infinity, 
-              ease: 'easeInOut' 
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: 'easeInOut',
             }}
           >
             <InstagramIcon size={64} />
           </motion.div>
 
           <h2 className={styles.title}>Seguinos en Instagram</h2>
-          
+
           <p className={styles.subtitle}>
-            Descubrí nuestros últimos ingresos, promociones exclusivas y 
-            todo lo que tenemos para ofrecerte. ¡Sé parte de nuestra comunidad!
+            Descubrí nuestros últimos ingresos, promociones exclusivas y todo lo que tenemos para ofrecerte. ¡Sé parte de nuestra comunidad!
           </p>
 
           {/* Stats decorativos */}
@@ -74,7 +73,7 @@ export default function InstagramFeed() {
           </div>
 
           <motion.a
-            href="https://www.instagram.com/boston_automotores"
+            href="https://www.instagram.com/bostonautomotores"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.ctaButton}
@@ -82,10 +81,10 @@ export default function InstagramFeed() {
             whileTap={{ scale: 0.95 }}
           >
             <InstagramIcon size={24} />
-            <span>@boston_automotores</span>
+            <span>@bostonautomotores</span>
           </motion.a>
         </motion.div>
       </div>
     </section>
-  );
+  )
 }

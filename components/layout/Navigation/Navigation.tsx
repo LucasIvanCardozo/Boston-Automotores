@@ -1,41 +1,36 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { Menu, X, Instagram, Facebook, Phone, Mail } from 'lucide-react';
-import styles from './Navigation.module.css';
+import { useState } from 'react'
+import Link from 'next/link'
+import { Menu, X, Instagram, Facebook, Phone, Mail } from 'lucide-react'
+import styles from './Navigation.module.css'
 
 const navLinks = [
   { href: '/', label: 'Inicio' },
   { href: '/catalogo', label: 'Catálogo' },
   { href: '/nosotros', label: 'Nosotros' },
   { href: '/vende-tu-auto', label: 'Vende tu auto' },
-];
+]
 
 const socialLinks = [
-  { href: 'https://www.instagram.com/boston_automotores/', label: 'Instagram', icon: Instagram },
+  { href: 'https://www.instagram.com/bostonautomotores/', label: 'Instagram', icon: Instagram },
   { href: 'https://www.facebook.com/www.bostonautomotores.com.ar/', label: 'Facebook', icon: Facebook },
-];
+]
 
 const contactInfo = {
   phone: '+54 9 223 632-9761',
-  email: 'bostonautomotores@hotmail.com',
-};
+  email: 'bostonautomotoresmdp@hotmail.com',
+}
 
 export default function Navigation() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
 
-  const toggleMenu = () => setIsOpen(!isOpen);
-  const closeMenu = () => setIsOpen(false);
+  const toggleMenu = () => setIsOpen(!isOpen)
+  const closeMenu = () => setIsOpen(false)
 
   return (
     <nav className={styles.nav} aria-label="Navegación principal">
-      <button
-        className={styles.menuButton}
-        onClick={toggleMenu}
-        aria-expanded={isOpen}
-        aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
-      >
+      <button className={styles.menuButton} onClick={toggleMenu} aria-expanded={isOpen} aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}>
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
@@ -44,11 +39,7 @@ export default function Navigation() {
         <ul className={styles.navList}>
           {navLinks.map((link) => (
             <li key={link.href} className={styles.navItem}>
-              <Link
-                href={link.href}
-                className={styles.navLink}
-                onClick={closeMenu}
-              >
+              <Link href={link.href} className={styles.navLink} onClick={closeMenu}>
                 {link.label}
               </Link>
             </li>
@@ -93,13 +84,7 @@ export default function Navigation() {
       </div>
 
       {/* Overlay */}
-      {isOpen && (
-        <div
-          className={styles.overlay}
-          onClick={closeMenu}
-          aria-hidden="true"
-        />
-      )}
+      {isOpen && <div className={styles.overlay} onClick={closeMenu} aria-hidden="true" />}
     </nav>
-  );
+  )
 }

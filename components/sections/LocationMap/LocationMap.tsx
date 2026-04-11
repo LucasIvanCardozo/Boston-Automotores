@@ -1,19 +1,19 @@
-'use client';
+'use client'
 
-import { motion } from 'framer-motion';
-import { Phone, Mail, Clock, MapPin } from 'lucide-react';
-import styles from './LocationMap.module.css';
+import { motion } from 'framer-motion'
+import { Phone, Mail, Clock, MapPin } from 'lucide-react'
+import styles from './LocationMap.module.css'
 
 const businessInfo = {
   address: 'Av. Colón 4469, Mar del Plata, Argentina',
   phone: '+54 9 223 632-9761',
-  email: 'bostonautomotores@hotmail.com',
+  email: 'bostonautomotoresmdp@hotmail.com',
   hours: 'Lunes a Viernes: 9:00 - 18:00 | Sábados: 9:00 - 13:00',
-};
+}
 
 export default function LocationMap() {
   // Proper Google Maps embed URL for Av. Colón 4469, Mar del Plata
-  const mapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3142.4769!2d-57.5712!3d-38.0176!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9584dec4cd4f9d0b%3A0x2b0a2c1e45c9b!2sAv.%20Col%C3%B3n%204469%2C%20Mar%20del%20Plata!5e0!3m2!1ses!2sar!4v1704067200000!5m2!1ses!2sar`;
+  const mapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3142.4769!2d-57.5712!3d-38.0176!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9584dec4cd4f9d0b%3A0x2b0a2c1e45c9b!2sAv.%20Col%C3%B3n%204469%2C%20Mar%20del%20Plata!5e0!3m2!1ses!2sar!4v1704067200000!5m2!1ses!2sar`
 
   return (
     <section className={styles.section}>
@@ -26,9 +26,7 @@ export default function LocationMap() {
           className={styles.header}
         >
           <h2 className={styles.title}>Dónde Estamos</h2>
-          <p className={styles.subtitle}>
-            Visitanos en nuestro local o contactanos por los medios disponibles
-          </p>
+          <p className={styles.subtitle}>Visitanos en nuestro local o contactanos por los medios disponibles</p>
         </motion.div>
 
         <div className={styles.content}>
@@ -79,10 +77,7 @@ export default function LocationMap() {
                 <Mail size={20} className={styles.icon} />
                 <div>
                   <h4 className={styles.infoLabel}>Email</h4>
-                  <a
-                    href={`mailto:${businessInfo.email}`}
-                    className={styles.infoLink}
-                  >
+                  <a href={`mailto:${businessInfo.email}`} className={styles.infoLink}>
                     {businessInfo.email}
                   </a>
                 </div>
@@ -100,5 +95,5 @@ export default function LocationMap() {
         </div>
       </div>
     </section>
-  );
+  )
 }

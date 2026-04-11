@@ -199,8 +199,8 @@ export default function AboutPage() {
             <div className={styles.contactCard}>
               <Mail size={24} className={styles.contactIcon} />
               <h3 className={styles.contactTitle}>Email</h3>
-              <a href="mailto:bostonautomotores@hotmail.com" className={styles.contactLink}>
-                bostonautomotores@hotmail.com
+              <a href="mailto:bostonautomotoresmdp@hotmail.com" className={styles.contactLink}>
+                bostonautomotoresmdp@hotmail.com
               </a>
             </div>
             <div className={styles.contactCard}>

@@ -1,25 +1,25 @@
-import Link from 'next/link';
-import { Phone, Mail, MapPin, Instagram, Facebook } from 'lucide-react';
-import styles from './Footer.module.css';
+import Link from 'next/link'
+import { Phone, Mail, MapPin, Instagram, Facebook } from 'lucide-react'
+import styles from './Footer.module.css'
 
 const contactInfo = {
   phone: '+54 9 223 632-9761',
-  email: 'bostonautomotores@hotmail.com',
+  email: 'bostonautomotoresmdp@hotmail.com',
   address: 'Av. Colón 4469, Mar del Plata',
   hours: 'Lunes a Viernes: 9:00 - 18:00 | Sábados: 9:00 - 13:00',
-};
+}
 
 const quickLinks = [
   { href: '/', label: 'Inicio' },
   { href: '/catalogo', label: 'Catálogo' },
   { href: '/nosotros', label: 'Nosotros' },
   { href: '/vende-tu-auto', label: 'Vende tu auto' },
-];
+]
 
 const socialLinks = [
-  { href: 'https://www.instagram.com/boston_automotores/', label: 'Instagram', icon: Instagram },
+  { href: 'https://www.instagram.com/bostonautomotores/', label: 'Instagram', icon: Instagram },
   { href: 'https://www.facebook.com/www.bostonautomotores.com.ar/', label: 'Facebook', icon: Facebook },
-];
+]
 
 export default function Footer() {
   return (
@@ -28,19 +28,10 @@ export default function Footer() {
         {/* Brand Section */}
         <div className={styles.brandSection}>
           <h3 className={styles.brandName}>Boston Automotores</h3>
-          <p className={styles.brandTagline}>
-            Tu concesionaria de confianza en Mar del Plata desde hace más de 20 años.
-          </p>
+          <p className={styles.brandTagline}>Tu concesionaria de confianza en Mar del Plata desde hace más de 20 años.</p>
           <div className={styles.socialLinks}>
             {socialLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.socialLink}
-                aria-label={link.label}
-              >
+              <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" className={styles.socialLink} aria-label={link.label}>
                 <link.icon size={20} />
               </a>
             ))}
@@ -96,5 +87,5 @@ export default function Footer() {
         <p>© {new Date().getFullYear()} Boston Automotores. Todos los derechos reservados.</p>
       </div>
     </footer>
-  );
+  )
 }
