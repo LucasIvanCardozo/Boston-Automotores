@@ -12,18 +12,8 @@ export default function manifest(): MetadataRoute.Manifest {
     icons: [
       {
         src: '/favicon.ico',
-        sizes: 'any',
+        sizes: '256x256',
         type: 'image/x-icon',
-      },
-      {
-        src: '/assets/logo-sin-fondo.webp',
-        sizes: '192x192',
-        type: 'image/png',
-      },
-      {
-        src: '/assets/logo-sin-fondo.webp',
-        sizes: '512x512',
-        type: 'image/png',
       },
     ],
   }
