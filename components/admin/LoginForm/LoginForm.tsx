@@ -1,58 +1,43 @@
-'use client';
+'use client'
 
-import { useFormStatus } from 'react-dom';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { loginSchema, type LoginInput } from '@/lib/schemas/admin';
-import { loginAction } from '@/app/actions/admin';
-import styles from './LoginForm.module.css';
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className={styles.submitButton}
-    >
-      {pending ? (
-        <>
-          <span className={styles.spinner}></span>
-          <span>Iniciando sesión...</span>
-        </>
-      ) : (
-        <span>Iniciar Sesión</span>
-      )}
-    </button>
-  );
-}
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { loginSchema, type LoginInput } from '@/lib/schemas/admin'
+import { loginAction } from '@/app/actions/admin'
+import styles from './LoginForm.module.css'
+import { useState } from 'react'
 
 interface LoginFormProps {
-  error?: string;
+  error?: string
 }
 
 export default function LoginForm({ error }: LoginFormProps) {
+  const [loading, setLoading] = useState(false)
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
-  });
+  })
 
   const onSubmit = async (data: LoginInput) => {
-    const formData = new FormData();
-    formData.append('username', data.username);
-    formData.append('password', data.password);
+    setLoading(true)
+    try {
+      const formData = new FormData()
+      formData.append('username', data.username)
+      formData.append('password', data.password)
 
-    const result = await loginAction(formData);
-    if (!result.success && result.error) {
-      // Trigger a re-render with error
-      window.location.href = '/admin/login?error=' + encodeURIComponent(result.error);
+      const result = await loginAction(formData)
+
+      if (!result.success && result.error) {
+        window.location.href = '/admin/login?error=' + encodeURIComponent(result.error)
+      }
+    } finally {
+      setLoading(false)
     }
-    // Success will redirect via server action
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
@@ -75,13 +60,9 @@ export default function LoginForm({ error }: LoginFormProps) {
           autoComplete="username"
           className={`${styles.input} ${errors.username ? styles.inputError : ''}`}
           placeholder="Ingrese su nombre de usuario"
-          disabled={false}
+          disabled={loading}
         />
-        {errors.username && (
-          <span className={styles.fieldError}>
-            {errors.username.message}
-          </span>
-        )}
+        {errors.username && <span className={styles.fieldError}>{errors.username.message}</span>}
       </div>
 
       <div className={styles.field}>
@@ -96,16 +77,21 @@ export default function LoginForm({ error }: LoginFormProps) {
           autoComplete="current-password"
           className={`${styles.input} ${errors.password ? styles.inputError : ''}`}
           placeholder="Ingrese su contraseña"
-          disabled={false}
+          disabled={loading}
         />
-        {errors.password && (
-          <span className={styles.fieldError}>
-            {errors.password.message}
-          </span>
-        )}
+        {errors.password && <span className={styles.fieldError}>{errors.password.message}</span>}
       </div>
 
-      <SubmitButton />
+      <button type="submit" disabled={loading} className={styles.submitButton}>
+        {loading ? (
+          <>
+            <span className={styles.spinner} />
+            <span>Iniciando sesión...</span>
+          </>
+        ) : (
+          <span>Iniciar Sesión</span>
+        )}
+      </button>
     </form>
-  );
+  )
 }
