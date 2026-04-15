@@ -39,7 +39,7 @@ export default async function AdminLoginPage({
       </div>
 
       <div className={styles.footer}>
-        <p>© 2024 Boston Automotores. Todos los derechos reservados.</p>
+        <p>© {new Date().getFullYear()} Boston Automotores. Todos los derechos reservados.</p>
       </div>
     </div>
   );
