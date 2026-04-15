@@ -15,26 +15,18 @@
   overflow: hidden;
 }
 
-/* Decorative geometric pattern */
-.header::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.06) 0%, transparent 40%),
-    radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.04) 0%, transparent 30%);
-  pointer-events: none;
+
+.backgroundImage {
+  object-fit: cover;
+  object-position: center;
 }
 
-/* Subtle diagonal lines pattern */
-.header::after {
-  content: '';
+.overlay {
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(255, 255, 255, 0.015) 40px, rgba(255, 255, 255, 0.015) 80px);
-  pointer-events: none;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(23, 23, 23, 0.6) 100%);
 }
+
 
 .headerContent {
   position: relative;

@@ -6,6 +6,7 @@ import CarFilterForm from '@/components/forms/CarFilterForm/CarFilterForm'
 import CarGrid from '@/components/sections/CarGrid/CarGrid'
 import Loading from '@/components/ui/Loading/Loading'
 import styles from './page.module.css'
+import Image from 'next/image'
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.com.ar'
 
@@ -41,6 +42,19 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
     <div className={styles.page}>
       {/* Epic Header */}
       <header className={styles.header}>
+        <div className={styles.backgroundWrapper}>
+        <Image
+          src="/assets/portada-catalogo.webp"
+          alt="Boston Automotores - Concesionaria de autos"
+          fill
+          loading="eager"
+          priority
+          unoptimized
+          fetchPriority="high"
+          className={styles.backgroundImage}
+        />
+        <div className={styles.overlay} />
+      </div>
         <div className={styles.headerContent}>
           <div className={styles.headerBadge}>
             <svg
