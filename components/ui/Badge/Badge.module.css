@@ -27,7 +27,7 @@
 }
 
 .primary {
-  background-color: rgba(var(--color-primary-rgb), 0.8);
+  background-color: #d0d0d0;
   color: var(--color-primary);
 }
 
