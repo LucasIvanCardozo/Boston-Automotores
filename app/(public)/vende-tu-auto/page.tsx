@@ -166,7 +166,7 @@ export default function SellCarPage() {
           <div className={styles.trustSignals}>
             <div className={styles.trustItem}>
               <CheckCircle size={24} />
-              <span>+500 autos comprados</span>
+              <span>+4000 autos comprados</span>
             </div>
             <div className={styles.trustItem}>
               <CheckCircle size={24} />

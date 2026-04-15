@@ -11,7 +11,7 @@ interface Metric {
 }
 
 const metrics: Metric[] = [
-  { value: 500, label: 'Autos vendidos', suffix: '+' },
+  { value: 4000, label: 'Autos vendidos', suffix: '+' },
   { value: 1000, label: 'Clientes satisfechos', suffix: '+' },
   { value: 20, label: 'Años de experiencia', suffix: '+' },
   { value: 15, label: 'Marcas disponibles', suffix: '+' },
