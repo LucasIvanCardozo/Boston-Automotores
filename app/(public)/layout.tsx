@@ -16,8 +16,9 @@ const whatsappMessage = encodeURIComponent(`Hola! Quiero realizar una consulta!`
   return (
     <>
       <Header />
-      <Link href={`https://wa.me/${phoneNumber}?text=${whatsappMessage}`} target='_blank' className={styles.logowsp}>
-        <Image src="/assets/whatsapp.webp" alt="Whatsapp - Boston Automotores" fill={true} objectFit='contain'/>
+      <Link  href={`https://wa.me/${phoneNumber}?text=${whatsappMessage}`} target='_blank' className={styles.logowsp}>
+        <label  className={styles.logowspText}>Whatsapp</label>
+        <Image src="/assets/whatsapp.webp" alt="Whatsapp - Boston Automotores" width={50} height={50}/>
       </Link>
       <main>{children}</main>
       <Footer />
