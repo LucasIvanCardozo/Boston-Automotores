@@ -75,8 +75,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 longitude: -57.5426,
               },
               openingHours: ['Mo-Fr 09:00-18:00', 'Sa 09:00-13:00'],
-              sameAs: ['https://www.instagram.com/bostonautomotores/', 'https://www.facebook.com/www.bostonautomotores.com.ar/'],
-              image: '/assets/logo-sin-fondo.webp',
+              sameAs: ['https://www.instagram.com/bostonautomotoresmdp/', 'https://www.facebook.com/www.bostonautomotores.com.ar/'],
+              image: '/assets/logo-con-fondo.webp',
               priceRange: '$$',
             }),
           }}

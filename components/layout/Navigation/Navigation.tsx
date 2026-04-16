@@ -13,7 +13,7 @@ const navLinks = [
 ]
 
 const socialLinks = [
-  { href: 'https://www.instagram.com/bostonautomotores/', label: 'Instagram', icon: Instagram },
+  { href: 'https://www.instagram.com/bostonautomotoresmdp/', label: 'Instagram', icon: Instagram },
   { href: 'https://www.facebook.com/www.bostonautomotores.com.ar/', label: 'Facebook', icon: Facebook },
 ]
 

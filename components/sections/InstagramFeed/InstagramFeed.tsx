@@ -73,7 +73,7 @@ export default function InstagramFeed() {
           </div>
 
           <motion.a
-            href="https://www.instagram.com/bostonautomotores"
+            href="https://www.instagram.com/bostonautomotoresmdp"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.ctaButton}
@@ -81,7 +81,7 @@ export default function InstagramFeed() {
             whileTap={{ scale: 0.95 }}
           >
             <InstagramIcon size={24} />
-            <span>@bostonautomotores</span>
+            <span>@bostonautomotoresmdp</span>
           </motion.a>
         </motion.div>
       </div>
