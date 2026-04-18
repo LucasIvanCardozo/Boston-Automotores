@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
 }
 
-export const revalidate = 10
+export const revalidate = 3600
 
 export default async function HomePage() {
   const featuredCars = await getFeaturedCars()
