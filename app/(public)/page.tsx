@@ -1,14 +1,14 @@
-import { getFeaturedCars } from '@/lib/data/cars';
-import Hero from '@/components/sections/Hero/Hero';
-import Services from '@/components/sections/Services/Services';
-import FeaturedCars from '@/components/sections/FeaturedCars/FeaturedCars';
-import InstagramFeed from '@/components/sections/InstagramFeed/InstagramFeed';
-import LocationMap from '@/components/sections/LocationMap/LocationMap';
-import ContactSection from '@/components/sections/ContactSection/ContactSection';
-import SeoContent from '@/components/sections/SeoContent/SeoContent';
-import type { Metadata } from 'next';
+import { getFeaturedCars } from '@/lib/data/cars'
+import Hero from '@/components/sections/Hero/Hero'
+import Services from '@/components/sections/Services/Services'
+import FeaturedCars from '@/components/sections/FeaturedCars/FeaturedCars'
+import InstagramFeed from '@/components/sections/InstagramFeed/InstagramFeed'
+import LocationMap from '@/components/sections/LocationMap/LocationMap'
+import ContactSection from '@/components/sections/ContactSection/ContactSection'
+import SeoContent from '@/components/sections/SeoContent/SeoContent'
+import type { Metadata } from 'next'
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.com.ar';
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bostonautomotores.com.ar'
 
 export const metadata: Metadata = {
   title: 'Boston Automotores - Autos Usados en Mar del Plata',
@@ -17,10 +17,12 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${baseUrl}/`,
   },
-};
+}
+
+export const revalidate = 10
 
 export default async function HomePage() {
-  const featuredCars = await getFeaturedCars();
+  const featuredCars = await getFeaturedCars()
 
   return (
     <>
@@ -32,5 +34,5 @@ export default async function HomePage() {
       <ContactSection />
       <SeoContent />
     </>
-  );
+  )
 }
